@@ -5,11 +5,11 @@ requirementPath = this_directory / 'requirements.txt'
 with open(requirementPath) as f:
     install_requires = f.read().splitlines()
 
-
+exec(open("nowcasting_utils/version.py").read())
 setup(
     name="nowcasting_utils",
     packages=find_packages(),
-    version="0.0.1",
+    version=__version__,
     license="MIT",
     description="Nowcasting Utilities",
     author="Jacob Bieker, Jack Kelly, Peter Dudfield",

@@ -11,6 +11,8 @@ from typing import Union, Optional
 import pytorch_lightning
 import torch
 
+from nowcasting_utils import __version__
+
 try:
     from torch.hub import get_dir
 except ImportError:
@@ -20,7 +22,7 @@ try:
     from huggingface_hub import hf_hub_url
     from huggingface_hub import cached_download
 
-    cached_download = partial(cached_download, library_name="satflow", library_version=__version__)
+    cached_download = partial(cached_download, library_name="nowcasting_utils", library_version=__version__)
 except ImportError:
     hf_hub_url = None
     cached_download = None
