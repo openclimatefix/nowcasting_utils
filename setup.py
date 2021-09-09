@@ -1,10 +1,4 @@
 from setuptools import setup, find_packages
-from pathlib import Path
-
-this_directory = Path(__file__).parent
-requirementPath = this_directory / "requirements.txt"
-with open(requirementPath) as f:
-    install_requires = f.read().splitlines()
 
 exec(open("nowcasting_utils/version.py").read())
 setup(
@@ -22,7 +16,9 @@ setup(
         "deep learning",
         "transformer",
     ],
-    install_requires=install_requires,
+    install_requires=["huggingface_hub>=0.0.16",
+                      "einops>=0.3.2",
+                      "numpy"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
