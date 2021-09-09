@@ -17,8 +17,11 @@ def metnet_normalization(data: np.ndarray) -> np.ndarray:
     # Get IQR
     iqr = np.subtract(*np.percentile(data, [75, 25]))
     data = (data - np.median(data)) / iqr
+    #
     # Now hyperbolic tangent
-    return np.tanh(data)
+    # data = np.tanh(data)
+    # TODO tanh seems to give an issue of not forcing between -1 and 1, but gives between ~-0.76 and 0.76
+    return np.clip(data, -1., 1.)
 
 
 def standard_normalization(data: np.ndarray, std: np.ndarray, mean: np.ndarray) -> np.ndarray:
