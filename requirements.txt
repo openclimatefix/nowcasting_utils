@@ -1,2 +1,4 @@
 huggingface_hub>=0.0.16
 einops>=0.3.2
+pytest
+numpy
