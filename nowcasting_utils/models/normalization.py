@@ -20,7 +20,7 @@ def metnet_normalization(data: np.ndarray) -> np.ndarray:
     #
     # Now hyperbolic tangent
     # data = np.tanh(data)
-    # TODO This seems to give an issue of not forcing between -1 and 1, but gives between ~-0.76 and 0.76
+    # TODO tanh seems to give an issue of not forcing between -1 and 1, but gives between ~-0.76 and 0.76
     return np.clip(data, -1., 1.)
 
 
