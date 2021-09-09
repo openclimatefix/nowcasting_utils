@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 from pathlib import Path
+
 this_directory = Path(__file__).parent
-requirementPath = this_directory / 'requirements.txt'
+requirementPath = this_directory / "requirements.txt"
 with open(requirementPath) as f:
     install_requires = f.read().splitlines()
 
