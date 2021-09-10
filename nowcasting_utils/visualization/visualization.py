@@ -9,9 +9,23 @@ from nowcasting_dataset.example import DATETIME_FEATURE_NAMES
 
 def plot_example(
         batch, model_output, history_len: int, forecast_len: int,
-        nwp_channels: Iterable[str], example_i: int = 0, border: int = 0,
+        nwp_channels: Iterable[str], example_i: int = 0,
         epoch: Optional[int] = None
 ) -> plt.Figure:
+    """
+    Plots an example with the satellite imagery, timeseries and PV yield
+    Args:
+        batch: The batch to plot
+        model_output: The output from the model
+        history_len: The length of the input history
+        forecast_len: The number of forecast steps
+        nwp_channels: The names of nwp channels
+        example_i: Which example to plot from the batch
+        epoch: The optional epoch number
+
+    Returns:
+        Matplotlib Figure containing the plotted graphs and images
+    """
 
     fig = plt.figure(figsize=(20, 20))
     ncols = 4
