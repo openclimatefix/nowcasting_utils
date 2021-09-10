@@ -3,3 +3,4 @@ einops>=0.3.2
 pytest
 numpy
 tilemapbase
+plotly
