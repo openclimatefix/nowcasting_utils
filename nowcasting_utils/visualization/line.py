@@ -46,7 +46,13 @@ def plot_one_result(x, y, y_hat):
 
 
 # plot all of batch
-def plot_batch_results(x: Union[np.array, List], y: np.array, y_hat: np.array, model_name: str, x_hat: Union[np.array, List] = None):
+def plot_batch_results(
+    x: Union[np.array, List],
+    y: np.array,
+    y_hat: np.array,
+    model_name: str,
+    x_hat: Union[np.array, List] = None,
+):
     """
     Plot batch results
 

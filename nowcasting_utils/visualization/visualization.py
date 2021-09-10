@@ -8,9 +8,13 @@ from nowcasting_dataset.example import DATETIME_FEATURE_NAMES
 
 
 def plot_example(
-        batch, model_output, history_len: int, forecast_len: int,
-        nwp_channels: Iterable[str], example_i: int = 0,
-        epoch: Optional[int] = None
+    batch,
+    model_output,
+    history_len: int,
+    forecast_len: int,
+    nwp_channels: Iterable[str],
+    example_i: int = 0,
+    epoch: Optional[int] = None,
 ) -> plt.Figure:
     """
     Plots an example with the satellite imagery, timeseries and PV yield
@@ -33,43 +37,43 @@ def plot_example(
 
     # ******************* SATELLITE IMAGERY ***********************************
     extent = (  # left, right, bottom, top
-        float(batch['sat_x_coords'][example_i, 0].cpu().numpy()),
-        float(batch['sat_x_coords'][example_i, -1].cpu().numpy()),
-        float(batch['sat_y_coords'][example_i, -1].cpu().numpy()),
-        float(batch['sat_y_coords'][example_i, 0].cpu().numpy()))
+        float(batch["sat_x_coords"][example_i, 0].cpu().numpy()),
+        float(batch["sat_x_coords"][example_i, -1].cpu().numpy()),
+        float(batch["sat_y_coords"][example_i, -1].cpu().numpy()),
+        float(batch["sat_y_coords"][example_i, 0].cpu().numpy()),
+    )
 
     def _format_ax(ax):
-        if 'x_meters_center' in batch:
+        if "x_meters_center" in batch:
             ax.scatter(
-                batch['x_meters_center'][example_i].cpu(),
-                batch['y_meters_center'][example_i].cpu(),
-                s=500, color='white', marker='x')
+                batch["x_meters_center"][example_i].cpu(),
+                batch["y_meters_center"][example_i].cpu(),
+                s=500,
+                color="white",
+                marker="x",
+            )
 
     ax = fig.add_subplot(nrows, ncols, 1)
-    sat_data = batch['sat_data'][example_i, :, :, :, 0].cpu().numpy()
+    sat_data = batch["sat_data"][example_i, :, :, :, 0].cpu().numpy()
     sat_min = np.min(sat_data)
     sat_max = np.max(sat_data)
-    ax.imshow(
-        sat_data[0], extent=extent, interpolation='none',
-        vmin=sat_min, vmax=sat_max)
-    ax.set_title('t = -{}'.format(history_len))
+    ax.imshow(sat_data[0], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
+    ax.set_title("t = -{}".format(history_len))
     _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 2)
     ax.imshow(
-        sat_data[history_len+1], extent=extent, interpolation='none',
-        vmin=sat_min, vmax=sat_max)
+        sat_data[history_len + 1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max
+    )
     if epoch is None:
-        ax.set_title('t = 0')
+        ax.set_title("t = 0")
     else:
-        ax.set_title(f't = 0, epoch = {epoch}')
+        ax.set_title(f"t = 0, epoch = {epoch}")
     _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 3)
-    ax.imshow(
-        sat_data[-1], extent=extent, interpolation='none',
-        vmin=sat_min, vmax=sat_max)
-    ax.set_title('t = {}'.format(forecast_len))
+    ax.imshow(sat_data[-1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
+    ax.set_title("t = {}".format(forecast_len))
     _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 4)
@@ -80,26 +84,26 @@ def plot_example(
         longitude_min=lat_lon_bottom_left[1],
         longitude_max=lat_lon_top_right[1],
         latitude_min=lat_lon_bottom_left[0],
-        latitude_max=lat_lon_top_right[0])
+        latitude_max=lat_lon_top_right[0],
+    )
     plotter = tilemapbase.Plotter(lat_lon_extent, tile_provider=tiles, zoom=6)
     plotter.plot(ax, tiles)
 
     # ******************* TIMESERIES ******************************************
     # NWP
     ax = fig.add_subplot(nrows, ncols, 5)
-    nwp_dt_index = pd.to_datetime(
-        batch['nwp_target_time'][example_i].cpu().numpy(), unit='s')
+    nwp_dt_index = pd.to_datetime(batch["nwp_target_time"][example_i].cpu().numpy(), unit="s")
     pd.DataFrame(
-        batch['nwp'][example_i, :, :, 0, 0].T.cpu().numpy(),
+        batch["nwp"][example_i, :, :, 0, 0].T.cpu().numpy(),
         index=nwp_dt_index,
-        columns=nwp_channels).plot(ax=ax)
-    ax.set_title('NWP')
+        columns=nwp_channels,
+    ).plot(ax=ax)
+    ax.set_title("NWP")
 
     # datetime features
     ax = fig.add_subplot(nrows, ncols, 6)
-    ax.set_title('datetime features')
-    datetime_features_df = pd.DataFrame(
-        index=nwp_dt_index, columns=DATETIME_FEATURE_NAMES)
+    ax.set_title("datetime features")
+    datetime_features_df = pd.DataFrame(index=nwp_dt_index, columns=DATETIME_FEATURE_NAMES)
     for key in DATETIME_FEATURE_NAMES:
         datetime_features_df[key] = batch[key][example_i].cpu().numpy()
     datetime_features_df.plot(ax=ax)
@@ -110,12 +114,14 @@ def plot_example(
     ax = fig.add_subplot(nrows, ncols, 7)
     ax.set_title(f"PV yield for PV ID {batch['pv_system_id'][example_i, 0].cpu()}")
     pv_actual = pd.Series(
-        batch['pv_yield'][example_i, :, 0].cpu().numpy(),
-        index=nwp_dt_index, name='actual')
+        batch["pv_yield"][example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
+    )
     pv_pred = pd.Series(
         model_output[example_i].detach().cpu().numpy(),
-        index=nwp_dt_index[history_len+1:], name='prediction')
-    pd.concat([pv_actual, pv_pred], axis='columns').plot(ax=ax)
+        index=nwp_dt_index[history_len + 1 :],
+        name="prediction",
+    )
+    pd.concat([pv_actual, pv_pred], axis="columns").plot(ax=ax)
     ax.legend()
 
     return fig
