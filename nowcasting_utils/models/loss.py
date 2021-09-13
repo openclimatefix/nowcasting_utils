@@ -129,6 +129,17 @@ class NowcastingLoss(nn.Module):
 
 
 def get_loss(loss: str = "mse", **kwargs) -> torch.nn.Module:
+    """
+
+    Function to get different losses easily
+
+    Args:
+        loss: name of the loss, or torch.nn.Module, if a Module, returns that Module
+        **kwargs: kwargs to pass to the loss function
+
+    Returns:
+        torch.nn.Module
+    """
     if isinstance(loss, torch.nn.Module):
         return loss
     assert loss in [
