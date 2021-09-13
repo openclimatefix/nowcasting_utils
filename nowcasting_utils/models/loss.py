@@ -24,20 +24,24 @@ class WeightedLosses:
         self.decay_rate = decay_rate
         self.forecast_length = forecast_length
 
-        logger.debug(f'Setting up weights with decay rate {decay_rate} and of length {forecast_length}')
+        logger.debug(
+            f"Setting up weights with decay rate {decay_rate} and of length {forecast_length}"
+        )
 
         # set default rate of ln(2) if not set
         if self.decay_rate is None:
             self.decay_rate = math.log(2)
 
         # make weights from decay rate
-        weights = torch.FloatTensor([math.exp(-self.decay_rate * i) for i in range(0, self.forecast_length)])
+        weights = torch.FloatTensor(
+            [math.exp(-self.decay_rate * i) for i in range(0, self.forecast_length)]
+        )
 
         # normalized the weights
         self.weights = weights / weights.sum()
 
         # move weights to gpu is needed
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.weights = self.weights.to(device)
 
     def get_mse_exp(self, output, target):
@@ -201,6 +205,7 @@ class NowcastingLoss(nn.Module):
     """
     Loss described in Skillful-Nowcasting GAN,  see https://arxiv.org/pdf/2104.00954.pdf
     """
+
     def __init__(self):
         super().__init__()
 
@@ -212,13 +217,13 @@ class NowcastingLoss(nn.Module):
 
 class FocalLoss(nn.Module):
     def __init__(
-            self,
-            apply_nonlin=None,
-            alpha=None,
-            gamma=2,
-            balance_index=0,
-            smooth=1e-5,
-            size_average=True,
+        self,
+        apply_nonlin=None,
+        alpha=None,
+        gamma=2,
+        balance_index=0,
+        smooth=1e-5,
+        size_average=True,
     ):
         """
         Copied from: https://github.com/Hsuxu/Loss_ToolBox-PyTorch/blob/master/FocalLoss/FocalLoss.py
@@ -325,7 +330,7 @@ def get_loss(loss: str = "mse", **kwargs) -> torch.nn.Module:
         "gdl",
         "gradient_difference_loss",
         "weighted_mse",
-        "weighted_mae"
+        "weighted_mae",
     ]
     if loss == "mse":
         criterion = F.mse_loss
