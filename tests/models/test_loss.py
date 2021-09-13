@@ -75,24 +75,43 @@ def test_mse_exp_rand():
     "ssim_dynamic",
     "gdl",
     "gradient_difference_loss",
-    "weighted_mse",
     "weighted_mae",
+    "weighted_mse"
 ])
 def test_get_loss(loss_name):
     loss = get_loss(loss_name)
-    assert isinstance(loss, torch.nn.Module)
+
+
+@pytest.mark.parametrize("loss_name", [
+    "mse",
+    "l1",
+    "gradient_difference_loss",
+])
+def test_video_loss(loss_name):
+    loss = get_loss(loss_name)
+    output = torch.randn((2, 24, 12, 512, 512))
+    target = torch.randn((2, 24, 12, 512, 512))
+    out = loss(output, target)
+    assert out > 0
+
+
+def test_tv_loss():
+    loss = get_loss("tv")
+    output = torch.randn((2, 12, 512, 512))
+    out = loss(output)
+    assert out > 0
 
 
 def test_missing_loss():
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         loss = get_loss("made_up_metric")
 
 
 @pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
 def test_convert_ssim_loss(loss_name):
-    loss = get_loss(loss_name, convert_range=True)
-    output = torch.randn((2, 512, 512))
-    target = torch.randn((2, 512, 512))
+    loss = get_loss(loss_name, convert_range=True, channel=12)
+    output = torch.randn((2, 12, 512, 512))
+    target = torch.randn((2, 12, 512, 512))
     # Convert to -1,1
     output = (output * 2) - 1
     target = (target * 2) - 1
@@ -102,9 +121,9 @@ def test_convert_ssim_loss(loss_name):
 
 @pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
 def test_convert_ssim_loss(loss_name):
-    loss = get_loss(loss_name, convert_range=False)
-    output = torch.randn((2, 512, 512))
-    target = torch.randn((2, 512, 512))
+    loss = get_loss(loss_name, convert_range=False, channel=12)
+    output = torch.randn((2, 12, 512, 512))
+    target = torch.randn((2, 12, 512, 512))
     out = loss(output, target)
     assert out > 0.0
 
