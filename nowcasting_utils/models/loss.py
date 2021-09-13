@@ -10,11 +10,13 @@ logger = logging.getLogger(__name__)
 class WeightedLosses:
     def __init__(self, decay_rate: Optional[int] = None, forecast_length: int = 6):
         """
-        Want to set up the MSE loss function so the weights only have to be calculated once.
+         Want to set up the MSE loss function so the weights only have to be calculated once.
 
-        The weights exponentially decay depending on the 'decay_rate'.
-        The forecast lentgh is needed to make sure the weights sum to 1
+        Args:
+            decay_rate: The weights exponentially decay depending on the 'decay_rate'.
+            forecast_length: The forecast length is needed to make sure the weights sum to 1
         """
+
         self.decay_rate = decay_rate
         self.forecast_length = forecast_length
 
