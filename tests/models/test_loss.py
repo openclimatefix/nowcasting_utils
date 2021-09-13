@@ -1,4 +1,4 @@
-from nowcasting_utils.models.loss import WeightedLosses
+from nowcasting_utils.models.loss import WeightedLosses, get_loss
 import torch
 import pytest
 
@@ -59,3 +59,53 @@ def test_mse_exp_rand():
 
     loss = w.get_mse_exp(output=output, target=target)
     assert loss > 0
+
+
+@pytest.mark.parametrize("loss_name", [
+    "mse",
+    "bce",
+    "binary_crossentropy",
+    "crossentropy",
+    "focal",
+    "ssim",
+    "ms_ssim",
+    "l1",
+    "tv",
+    "total_variation",
+    "ssim_dynamic",
+    "gdl",
+    "gradient_difference_loss",
+    "weighted_mse",
+    "weighted_mae",
+])
+def test_get_loss(loss_name):
+    loss = get_loss(loss_name)
+    assert isinstance(loss, torch.nn.Module)
+
+
+def test_missing_loss():
+    with pytest.raises(ValueError):
+        loss = get_loss("made_up_metric")
+
+
+@pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
+def test_convert_ssim_loss(loss_name):
+    loss = get_loss(loss_name, convert_range=True)
+    output = torch.randn((2, 512, 512))
+    target = torch.randn((2, 512, 512))
+    # Convert to -1,1
+    output = (output * 2) - 1
+    target = (target * 2) - 1
+    out = loss(output, target)
+    assert out > 0.0
+
+
+@pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
+def test_convert_ssim_loss(loss_name):
+    loss = get_loss(loss_name, convert_range=False)
+    output = torch.randn((2, 512, 512))
+    target = torch.randn((2, 512, 512))
+    out = loss(output, target)
+    assert out > 0.0
+
+
