@@ -5,3 +5,4 @@ numpy
 tilemapbase
 plotly
 nowcasting-dataset
+pytorch_msssim
