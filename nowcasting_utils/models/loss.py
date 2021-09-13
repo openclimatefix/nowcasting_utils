@@ -124,7 +124,7 @@ def tv_loss(img, tv_weight):
     Taken from https://github.com/chongyangma/cs231n/blob/master/assignments/assignment3/style_transfer_pytorch.py
     Compute total variation loss.
     Inputs:
-    - img: PyTorch Variable of shape (1, 3, H, W) holding an input image.
+    - img: PyTorch Variable of shape (1, C, H, W) holding an input image.
     - tv_weight: Scalar giving the weight w_t to use for the TV loss.
     Returns:
     - loss: PyTorch Variable holding a scalar giving the total variation loss
@@ -169,8 +169,11 @@ class GradientDifferenceLoss(nn.Module):
             ),
             self.alpha,
         )
+        # Pad out the last dim in each direction so shapes match
+        t1 = F.pad(input=t1, pad=(0, 0, 1, 0), mode='constant', value=0)
+        t2 = F.pad(input=t2, pad=(0, 1, 0, 0), mode='constant', value=0)
         loss = t1 + t2
-        return loss
+        return loss.mean()
 
 
 class GridCellLoss(nn.Module):
