@@ -2,6 +2,13 @@ import torch
 from pytorch_msssim import SSIM, MS_SSIM
 from torch import nn as nn
 
+"""
+
+This file contains various versions of losses using the Structural Similarity Index Measure described more here:
+https://en.wikipedia.org/wiki/Structural_similarity
+
+"""
+
 
 class SSIMLoss(nn.Module):
     def __init__(self, convert_range: bool = False, **kwargs):

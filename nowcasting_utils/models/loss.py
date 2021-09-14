@@ -8,7 +8,7 @@ from typing import Optional
 
 from nowcasting_utils.models.losses.FocalLoss import FocalLoss
 from nowcasting_utils.models.losses.StructuralSimilarity import SSIMLoss, MS_SSIMLoss, SSIMLossDynamic
-from nowcasting_utils.models.losses.TotalVariationLoss import TotalVariationLoss
+from nowcasting_utils.models.losses.TotalVariationLoss import TVLoss
 
 logger = logging.getLogger(__name__)
 
@@ -174,7 +174,7 @@ def get_loss(loss: str = "mse", **kwargs) -> torch.nn.Module:
     elif loss in ["l1"]:
         criterion = torch.nn.L1Loss()
     elif loss in ["tv", "total_variation"]:
-        criterion = TotalVariationLoss(tv_weight=kwargs.get("tv_weight", 1))
+        criterion = TVLoss(tv_type=kwargs.get("tv_type", "tv"), p=kwargs.get("p", 1), reduction=kwargs.get("reduction", "mean"))
     elif loss in ["gdl", "gradient_difference_loss"]:
         criterion = GradientDifferenceLoss(alpha=kwargs.get("alpha", 2))
     elif loss in ["weighted_mse", "weighted_mae"]:

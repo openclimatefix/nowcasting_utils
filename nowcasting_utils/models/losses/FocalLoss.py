@@ -1,100 +1,58 @@
-import numpy as np
 import torch
+from typing import Union, Optional, List
 from torch import nn as nn
+import torch.nn.functional as F
+from torch.autograd import Variable
 
 
 class FocalLoss(nn.Module):
     def __init__(
         self,
-        apply_nonlin=None,
-        alpha=None,
-        gamma=2,
-        balance_index=0,
-        smooth=1e-5,
-        size_average=True,
+        gamma: Union[int, float, List] = 0,
+        alpha: Optional[Union[int, float, List]] = None,
+        size_average: bool = True,
     ):
         """
-        Copied from: https://github.com/Hsuxu/Loss_ToolBox-PyTorch/blob/master/FocalLoss/FocalLoss.py
+        Copied from: https://github.com/clcarwin/focal_loss_pytorch/blob/master/focalloss.py
+        Courtesy of carwin, MIT License
 
-        This is a implementation of Focal Loss with smooth label cross entropy supported which is proposed in
-        'Focal Loss for Dense Object Detection. (https://arxiv.org/abs/1708.02002)'
-        Focal_Loss= -1*alpha*(1-pt)*log(pt)
+        Focal loss is described in https://arxiv.org/abs/1708.02002
 
         Args:
-            apply_nonlin: nn.Module, a non-linearity to apply to the logits
-            alpha: (tensor) 3D or 4D the scalar factor for this criterion
+            alpha: (tensor, float, or list of floats) The scalar factor for this criterion
             gamma: (float,double) gamma > 0 reduces the relative loss for well-classified examples (p>0.5) putting more
                     focus on hard misclassified example
-            balance_index: balance class index, should be specific when alpha is float
-            smooth: (float,double) smooth value when cross entropy
             size_average: (bool, optional) By default, the losses are averaged over each loss element in the batch.
         """
         super(FocalLoss, self).__init__()
-        self.apply_nonlin = apply_nonlin
-        self.alpha = alpha
         self.gamma = gamma
-        self.balance_index = balance_index
-        self.smooth = smooth
+        self.alpha = alpha
+        if isinstance(alpha, (float, int)):
+            self.alpha = torch.Tensor([alpha, 1 - alpha])
+        if isinstance(alpha, list):
+            self.alpha = torch.Tensor(alpha)
         self.size_average = size_average
 
-        if self.smooth is not None:
-            if self.smooth < 0 or self.smooth > 1.0:
-                raise ValueError("smooth value should be in [0,1]")
-
-    def forward(self, logit, target):
-        if self.apply_nonlin is not None:
-            logit = self.apply_nonlin(logit)
-        num_class = logit.shape[1]
-
-        if logit.dim() > 2:
-            # N,C,d1,d2 -> N,C,m (m=d1*d2*...)
-            logit = logit.view(logit.size(0), logit.size(1), -1)
-            logit = logit.permute(0, 2, 1).contiguous()
-            logit = logit.view(-1, logit.size(-1))
-        target = torch.squeeze(target, 1)
+    def forward(self, x: torch.Tensor, target: torch.Tensor):
+        if x.dim() > 2:
+            x = x.view(x.size(0), x.size(1), -1)  # N,C,H,W => N,C,H*W
+            x = x.transpose(1, 2)  # N,C,H*W => N,H*W,C
+            x = x.contiguous().view(-1, x.size(2))  # N,H*W,C => N*H*W,C
         target = target.view(-1, 1)
-        #
-        alpha = self.alpha
 
-        if alpha is None:
-            alpha = torch.ones(num_class, 1)
-        elif isinstance(alpha, (list, np.ndarray)):
-            assert len(alpha) == num_class
-            alpha = torch.FloatTensor(alpha).view(num_class, 1)
-            alpha = alpha / alpha.sum()
-        elif isinstance(alpha, float):
-            alpha = torch.ones(num_class, 1)
-            alpha = alpha * (1 - self.alpha)
-            alpha[self.balance_index] = self.alpha
+        logpt = F.log_softmax(x)
+        logpt = logpt.gather(1, target)
+        logpt = logpt.view(-1)
+        pt = Variable(logpt.data.exp())
 
-        else:
-            raise TypeError("Not support alpha type")
+        if self.alpha is not None:
+            if self.alpha.type() != x.data.type():
+                self.alpha = self.alpha.data.type_as(x)
+            at = self.alpha.gather(0, target.data.view(-1))
+            logpt = logpt * Variable(at)
 
-        if alpha.device != logit.device:
-            alpha = alpha.to(logit.device)
-
-        idx = target.cpu().long()
-
-        one_hot_key = torch.FloatTensor(target.size(0), num_class).zero_()
-        one_hot_key = one_hot_key.scatter_(1, idx, 1)
-        if one_hot_key.device != logit.device:
-            one_hot_key = one_hot_key.to(logit.device)
-
-        if self.smooth:
-            one_hot_key = torch.clamp(
-                one_hot_key, self.smooth / (num_class - 1), 1.0 - self.smooth
-            )
-        pt = (one_hot_key * logit).sum(1) + self.smooth
-        logpt = pt.log()
-
-        gamma = self.gamma
-
-        alpha = alpha[idx]
-        alpha = torch.squeeze(alpha)
-        loss = -1 * alpha * torch.pow((1 - pt), gamma) * logpt
-
+        loss = -1 * (1 - pt) ** self.gamma * logpt
         if self.size_average:
-            loss = loss.mean()
+            return loss.mean()
         else:
-            loss = loss.sum()
-        return loss
+            return loss.sum()
