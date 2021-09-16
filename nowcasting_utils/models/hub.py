@@ -6,7 +6,7 @@ import json
 import logging
 import os
 from functools import partial
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 
 import pytorch_lightning
 import torch
@@ -83,7 +83,16 @@ def get_cache_dir(child_dir=""):
     return model_dir
 
 
-def has_hf_hub(necessary=False):
+def has_hf_hub(necessary: bool=False) -> bool:
+    """
+    Determines if HuggingFace hub is available
+
+    Args:
+        necessary: Whether having HuggingFace access is required
+
+    Returns:
+        Whether HuggingFace is available
+    """
     if hf_hub_url is None and necessary:
         # if no HF Hub module installed and it is necessary to continue, raise error
         raise RuntimeError(
@@ -92,7 +101,16 @@ def has_hf_hub(necessary=False):
     return hf_hub_url is not None
 
 
-def hf_split(hf_id):
+def hf_split(hf_id: str) -> Tuple[str, str]:
+    """
+    Splits the string of the HuggingFace ID to give the model ID and revision
+
+    Args:
+        hf_id: ID for HuggingFace
+
+    Returns:
+        Tuple consisting of the HuggingFace model ID and the revision
+    """
     rev_split = hf_id.split("@")
     assert (
         0 < len(rev_split) <= 2
@@ -102,7 +120,16 @@ def hf_split(hf_id):
     return hf_model_id, hf_revision
 
 
-def load_cfg_from_json(json_file: Union[str, os.PathLike]):
+def load_cfg_from_json(json_file: Union[str, os.PathLike]) -> dict:
+    """
+    Load the configuration from a JSON file
+
+    Args:
+        json_file: The JSON file which contains the configuration file
+
+    Returns:
+        Dictionary containing the model configuration
+    """
     with open(json_file, "r", encoding="utf-8") as reader:
         text = reader.read()
     return json.loads(text)
@@ -114,7 +141,16 @@ def _download_from_hf(model_id: str, filename: str):
     return cached_download(url, cache_dir=get_cache_dir("hf"))
 
 
-def load_model_config_from_hf(model_id: str):
+def load_model_config_from_hf(model_id: str) -> Tuple[dict, str]:
+    """
+    Downloads and loads the model configuration from HuggingFace
+
+    Args:
+        model_id: The HuggingFace model ID
+
+    Returns:
+        A tuple consisting of the default configuration for the model as well as the model name
+    """
     assert has_hf_hub(True)
     cached_file = _download_from_hf(model_id, "config.json")
     default_cfg = load_cfg_from_json(cached_file)
@@ -125,14 +161,32 @@ def load_model_config_from_hf(model_id: str):
     return default_cfg, model_name
 
 
-def load_state_dict_from_hf(model_id: str):
+def load_state_dict_from_hf(model_id: str) -> dict:
+    """
+    Load the state dict of the model from HuggingFace.
+
+    Args:
+        model_id: The HuggingFace model ID
+
+    Returns:
+        The model's state_dict
+    """
     assert has_hf_hub(True)
     cached_file = _download_from_hf(model_id, "pytorch_model.pth")
     state_dict = torch.load(cached_file, map_location="cpu")
     return state_dict
 
 
-def cache_file_from_hf(model_id: str):
+def cache_file_from_hf(model_id: str) -> Union[str, os.PathLike]:
+    """
+    Caches the model from HuggingFace and returns the path
+
+    Args:
+        model_id: HuggingFace model ID
+
+    Returns:
+        The path to the cached file
+    """
     assert has_hf_hub(True)
     cached_file = _download_from_hf(model_id, "pytorch_model.pth")
     return cached_file
@@ -187,15 +241,19 @@ def load_pretrained(
 
 
 class NowcastingModelHubMixin(ModelHubMixin):
+    """
+    HuggingFace ModelHubMixin containing specific adaptions for Nowcasting models
+    """
+
     def __init__(self, *args, **kwargs):
         """
         Mix this class with your pl.LightningModule class to easily push / download the model via the Hugging Face Hub
 
         Example::
 
-            >>> from satflow.models.hub import SatFlowModelHubMixin
+            >>> from nowcasting_utils.models.hub import NowcastingModelHubMixin
 
-            >>> class MyModel(nn.Module, SatFlowModelHubMixin):
+            >>> class MyModel(nn.Module, NowcastingModelHubMixin):
             ...    def __init__(self, **kwargs):
             ...        super().__init__()
             ...        self.layer = ...
