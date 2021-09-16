@@ -1,3 +1,8 @@
+"""
+Matplotlib functions to plot a example dataset and model outputs.
+Author: Jack Kelly
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,7 +22,8 @@ def plot_example(
     epoch: Optional[int] = None,
 ) -> plt.Figure:
     """
-    Plots an example with the satellite imagery, timeseries and PV yield
+    Plots an example with the satellite imagery, timeseries and PV yield.
+
     Args:
         batch: The batch to plot
         model_output: The output from the model
@@ -30,7 +36,6 @@ def plot_example(
     Returns:
         Matplotlib Figure containing the plotted graphs and images
     """
-
     fig = plt.figure(figsize=(20, 20))
     ncols = 4
     nrows = 2
