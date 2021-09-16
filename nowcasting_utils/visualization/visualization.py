@@ -1,5 +1,6 @@
 """
 Matplotlib functions to plot a example dataset and model outputs.
+
 Author: Jack Kelly
 """
 
