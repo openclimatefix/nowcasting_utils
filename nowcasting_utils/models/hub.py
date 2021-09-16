@@ -16,7 +16,7 @@ try:
 except ImportError:
     from torch.hub import _get_torch_home as get_dir
 
-from satflow import __version__
+from nowcasting_utils import __version__
 
 try:
     from huggingface_hub import cached_download, hf_hub_url
