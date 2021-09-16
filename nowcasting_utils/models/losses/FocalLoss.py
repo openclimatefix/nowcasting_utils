@@ -1,3 +1,4 @@
+""" Focal Loss - https://arxiv.org/abs/1708.02002 """
 import torch
 from typing import Union, Optional, List
 from torch import nn as nn
@@ -6,6 +7,7 @@ from torch.autograd import Variable
 
 
 class FocalLoss(nn.Module):
+    """ Focal Loss """
     def __init__(
         self,
         gamma: Union[int, float, List] = 0,
@@ -13,10 +15,11 @@ class FocalLoss(nn.Module):
         size_average: bool = True,
     ):
         """
-        Copied from: https://github.com/clcarwin/focal_loss_pytorch/blob/master/focalloss.py
-        Courtesy of carwin, MIT License
-
         Focal loss is described in https://arxiv.org/abs/1708.02002
+
+        Copied from: https://github.com/clcarwin/focal_loss_pytorch/blob/master/focalloss.py
+
+        Courtesy of carwin, MIT License
 
         Args:
             alpha: (tensor, float, or list of floats) The scalar factor for this criterion
@@ -34,6 +37,16 @@ class FocalLoss(nn.Module):
         self.size_average = size_average
 
     def forward(self, x: torch.Tensor, target: torch.Tensor):
+        """
+        Forward model
+
+        Args:
+            x: prediction
+            target: truth
+
+        Returns: loss value
+
+        """
         if x.dim() > 2:
             x = x.view(x.size(0), x.size(1), -1)  # N,C,H,W => N,C,H*W
             x = x.transpose(1, 2)  # N,C,H*W => N,H*W,C

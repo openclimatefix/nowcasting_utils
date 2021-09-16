@@ -1,3 +1,4 @@
+"""Metrics Used for different forecast horizons"""
 import torch
 
 
@@ -12,7 +13,6 @@ def mse_each_forecast_horizon(output: torch.Tensor, target: torch.Tensor) -> tor
     Returns: A tensor of size (forecast_length)
 
     """
-
     return torch.mean((output - target) ** 2, dim=0)
 
 
@@ -27,5 +27,4 @@ def mae_each_forecast_horizon(output: torch.Tensor, target: torch.Tensor) -> tor
     Returns: A tensor of size (forecast_length)
 
     """
-
     return torch.mean(torch.abs(output - target), dim=0)

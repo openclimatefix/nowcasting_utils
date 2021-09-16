@@ -25,3 +25,10 @@ repos:
     hooks:
       - id: prettier
         types: [yaml]
+
+  # Google docstring
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.1.1
+    hooks:
+      - id: pydocstyle
+        args: [--convention, "google"]

@@ -1,19 +1,23 @@
+"""Several line plots of predictions and truths."""
+
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 from typing import Union, List
 
-
 def make_trace(x, y, truth: bool, show_legend: bool = True):
     """
     Make a plotly trace data (x,y).
-    x: time series of data
-    y: values of data
-    truth: if y is the truth or predictions. The colour of the line changed depending on this
-    show_legend: option to show the legend for this trace or not.
-    return: plotly trace
-    """
 
+    Args:
+        x: time series of data
+        y: values of data
+        truth: if y is the truth or predictions. The colour of the line changed depending on this
+        show_legend: option to show the legend for this trace or not.
+
+    Returns:plotly trace
+
+    """
     color = "Blue" if truth else "Red"
     name = "truth" if truth else "predict"
 
@@ -29,15 +33,16 @@ def make_trace(x, y, truth: bool, show_legend: bool = True):
 
 def plot_one_result(x, y, y_hat):
     """
-    Plot one result
+    Plot one result.
 
-    x: time series for the forecast predictions, should be size [forecast length]
-    y: the truth values of pv yield, should be size [forecast length]
-    y_hat: the predicted values of pv yield, should be size [forecast length]
+    Args:
+        x: time series for the forecast predictions, should be size [forecast length]
+        y: the truth values of pv yield, should be size [forecast length]
+        y_hat: the predicted values of pv yield, should be size [forecast length]
 
-    return: a plotly figure
+    Returns:a plotly figure
+
     """
-
     fig = go.Figure()
     fig.add_trace(make_trace(x=x, y=y, truth=True))
     fig.add_trace(make_trace(x=x, y=y_hat, truth=False))
@@ -54,16 +59,18 @@ def plot_batch_results(
     x_hat: Union[np.array, List] = None,
 ):
     """
-    Plot batch results
+    Plot batch results.
 
-    x: is a list of time series for the different predictions in the batch, should be size [batch_size, forecast length]
-    y: the truth values of pv yield, should be size [batch_size, forecast length]
-    y_hat: the predicted values of pv yield, should be size [batch_size, forecast length]
-    x_hat: the x values for the predictions (y_hat), note that if none is supplied then x is used instead
+    Args:
+        x: is a list of time series for the different predictions in the batch,
+            should be size [batch_size, forecast length]
+        y: the truth values of pv yield, should be size [batch_size, forecast length]
+        y_hat: the predicted values of pv yield, should be size [batch_size, forecast length]
+        model_name: the name of the model
+        x_hat: the x values for the predictions (y_hat), note that if none is supplied then x is used instead
 
-    return: a plotly figure
+    Returns: a plotly figure
     """
-
     if x_hat is None:
         x_hat = x
 
