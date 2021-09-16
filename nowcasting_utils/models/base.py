@@ -3,7 +3,7 @@ import torch.nn
 import pytorch_lightning as pl
 import torchvision
 from neptune.new.types import File
-from satflow.models.hub import load_model_config_from_hf, load_pretrained, NowcastingModelHubMixin
+from nowcasting_utils.models.hub import load_model_config_from_hf, load_pretrained, NowcastingModelHubMixin
 
 
 REGISTERED_MODELS = {}
