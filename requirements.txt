@@ -6,3 +6,4 @@ tilemapbase
 plotly
 nowcasting-dataset
 pytorch_msssim
+torchvision
