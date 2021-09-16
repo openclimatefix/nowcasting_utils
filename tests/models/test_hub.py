@@ -7,7 +7,7 @@ from nowcasting_utils.models.base import BaseModel
 from nowcasting_utils.models.hub import NowcastingModelHubMixin
 
 
-class DummyModel(BaseModel, SatFlowModelHubMixin):
+class DummyModel(BaseModel, NowcastingModelHubMixin):
     # Define hyperparameters of various types to test serialisation / deserialisation
     # This follows the pattern adopted in LitMetNet and Perceiver
     def __init__(
