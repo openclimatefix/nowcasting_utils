@@ -1,3 +1,10 @@
+"""
+Base model class for all ML models.
+
+Useful things like
+- Same validation set
+- Interface with HuggingFace
+"""
 from typing import Any, Dict, Type
 import torch.nn
 import pytorch_lightning as pl
@@ -10,6 +17,15 @@ REGISTERED_MODELS = {}
 
 
 def register_model(cls: Type[pl.LightningModule]):
+    """
+    Register model
+
+    Args:
+        cls: the model to be registered
+
+    Returns: the registered model
+
+    """
     global REGISTERED_MODELS
     name = cls.__name__
     assert name not in REGISTERED_MODELS, f"exists class: {REGISTERED_MODELS}"
@@ -18,17 +34,28 @@ def register_model(cls: Type[pl.LightningModule]):
 
 
 def get_model(name: str) -> Type[pl.LightningModule]:
+    """ Get model from registered models """
     global REGISTERED_MODELS
     assert name in REGISTERED_MODELS, f"available class: {REGISTERED_MODELS}"
     return REGISTERED_MODELS[name]
 
 
 def list_models():
+    """ List of the registered models """
     global REGISTERED_MODELS
     return REGISTERED_MODELS.keys()
 
 
 def split_model_name(model_name):
+    """
+    Split model name with ':'
+
+    Args:
+        model_name: the original model name
+
+    Returns: source name, and the model name
+
+    """
     model_split = model_name.split(":", 1)
     if len(model_split) == 1:
         return "", model_split[0]
@@ -39,6 +66,16 @@ def split_model_name(model_name):
 
 
 def safe_model_name(model_name, remove_source=True):
+    """
+    Make a safe model name
+
+    Args:
+        model_name: the original model name
+        remove_source: flag if to remove the source or not
+
+    Returns: the new model name
+
+    """
     def make_safe(name):
         return "".join(c if c.isalnum() else "_" for c in name).rstrip("_")
 
@@ -100,6 +137,7 @@ def create_model(model_name, pretrained=False, checkpoint_path=None, **kwargs):
 
 
 class BaseModel(pl.LightningModule, NowcastingModelHubMixin):
+    """Base Model for ML models"""
     def __init__(
         self,
         pretrained: bool = False,
@@ -109,6 +147,17 @@ class BaseModel(pl.LightningModule, NowcastingModelHubMixin):
         lr: float = 0.001,
         visualize: bool = False,
     ):
+        """
+        Setup the base model class.
+
+        Args:
+            pretrained: flag is thie model is pretrained or not
+            forecast_steps: the number of forecasts steps
+            input_channels: the number of input channels
+            output_channels: the number of output channels
+            lr: the learning rate
+            visualize: if to visualize the resutls or not
+        """
         super(BaseModel, self).__init__()
         self.forecast_steps = forecast_steps
         self.input_channels = input_channels
@@ -119,23 +168,86 @@ class BaseModel(pl.LightningModule, NowcastingModelHubMixin):
 
     @classmethod
     def from_config(cls, config):
+        """
+        Get the model from a config file.
+
+        Args:
+            config: config file
+
+        Returns: Error, as the model needs to implement this method
+
+        """
         raise NotImplementedError
 
     def _train_or_validate_step(self, batch, batch_idx, is_training: bool = True):
+        """
+        The train or validation step.
+
+        This need to be made for each specific model
+
+        Args:
+            batch: the batched data
+            batch_idx: the batch index
+            is_training: a flag if this is a training step or not
+
+        Returns: The model outputs
+
+        """
         pass
 
     def training_step(self, batch, batch_idx):
+        """
+        The training step.
+
+        Args:
+            batch: the batch data
+            batch_idx: the batch index
+
+        Returns: The model outputs
+
+        """
         return self._train_or_validate_step(batch, batch_idx, is_training=True)
 
     def validation_step(self, batch, batch_idx):
+        """
+        Validation step
+
+        Args:
+            batch: the batch data
+            batch_idx: the batch index
+
+        Returns: The model outputs
+
+        """
         return self._train_or_validate_step(batch, batch_idx, is_training=False)
 
     def forward(self, x, **kwargs) -> Any:
+        """
+        Forward method for the model.
+
+        Args:
+            x: the input data
+            **kwargs: other input needed
+
+        Returns: the model outputs
+
+        """
         return self.model.forward(x, **kwargs)
 
     def visualize_step(
         self, x: torch.Tensor, y: torch.Tensor, y_hat: torch.Tensor, batch_idx: int, step: str
     ) -> None:
+        """
+        Visualization Step
+
+        Args:
+            x: input data
+            y: the truth
+            y_hat: the predictions
+            batch_idx: what batch index this is
+            step: what step number this is
+
+        """
         # the logger you used (in this case tensorboard)
         tensorboard = self.logger.experiment[0]
         # Timesteps per channel
