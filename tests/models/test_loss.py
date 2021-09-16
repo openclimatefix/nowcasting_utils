@@ -61,32 +61,38 @@ def test_mse_exp_rand():
     assert loss > 0
 
 
-@pytest.mark.parametrize("loss_name", [
-    "mse",
-    "bce",
-    "binary_crossentropy",
-    "crossentropy",
-    "focal",
-    "ssim",
-    "ms_ssim",
-    "l1",
-    "tv",
-    "total_variation",
-    "ssim_dynamic",
-    "gdl",
-    "gradient_difference_loss",
-    "weighted_mae",
-    "weighted_mse"
-])
+@pytest.mark.parametrize(
+    "loss_name",
+    [
+        "mse",
+        "bce",
+        "binary_crossentropy",
+        "crossentropy",
+        "focal",
+        "ssim",
+        "ms_ssim",
+        "l1",
+        "tv",
+        "total_variation",
+        "ssim_dynamic",
+        "gdl",
+        "gradient_difference_loss",
+        "weighted_mae",
+        "weighted_mse",
+    ],
+)
 def test_get_loss(loss_name):
     loss = get_loss(loss_name)
 
 
-@pytest.mark.parametrize("loss_name", [
-    "mse",
-    "l1",
-    "gradient_difference_loss",
-])
+@pytest.mark.parametrize(
+    "loss_name",
+    [
+        "mse",
+        "l1",
+        "gradient_difference_loss",
+    ],
+)
 def test_video_loss(loss_name):
     loss = get_loss(loss_name)
     output = torch.randn((2, 24, 12, 512, 512))
@@ -126,5 +132,3 @@ def test_convert_ssim_loss(loss_name):
     target = torch.randn((2, 12, 512, 512))
     out = loss(output, target)
     assert out > 0.0
-
-

@@ -25,7 +25,6 @@ from torch import nn as nn
 from torch.nn import functional as F
 
 
-
 def get_outnorm(x: torch.Tensor, out_norm: str = "") -> torch.Tensor:
     """
     Common function to get a loss normalization value.
@@ -195,8 +194,7 @@ class TVLoss(nn.Module):
             batch_size = x.size()[0]
         else:
             raise ValueError(
-                "Expected input tensor to be of ndim "
-                f"3 or 4, but got {len(img_shape)}"
+                "Expected input tensor to be of ndim " f"3 or 4, but got {len(img_shape)}"
             )
 
         if self.tv_type in ("dtv", "4d"):

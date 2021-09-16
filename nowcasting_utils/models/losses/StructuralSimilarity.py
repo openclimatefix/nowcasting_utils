@@ -10,9 +10,9 @@ from pytorch_msssim import SSIM, MS_SSIM
 from torch import nn as nn
 
 
-
 class SSIMLoss(nn.Module):
-    """ SSIM Loss, optionally converting input range from [-1,1] to [0,1] """
+    """SSIM Loss, optionally converting input range from [-1,1] to [0,1]"""
+
     def __init__(self, convert_range: bool = False, **kwargs):
         """
         Init
@@ -43,7 +43,8 @@ class SSIMLoss(nn.Module):
 
 
 class MS_SSIMLoss(nn.Module):
-    """ Multi-Scale SSIM Loss, optionally converting input range from [-1,1] to [0,1] """
+    """Multi-Scale SSIM Loss, optionally converting input range from [-1,1] to [0,1]"""
+
     def __init__(self, convert_range: bool = False, **kwargs):
         """
         Initialize

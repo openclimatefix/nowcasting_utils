@@ -7,7 +7,8 @@ from torch.autograd import Variable
 
 
 class FocalLoss(nn.Module):
-    """ Focal Loss """
+    """Focal Loss"""
+
     def __init__(
         self,
         gamma: Union[int, float, List] = 0,

@@ -83,7 +83,7 @@ def get_cache_dir(child_dir=""):
     return model_dir
 
 
-def has_hf_hub(necessary: bool=False) -> bool:
+def has_hf_hub(necessary: bool = False) -> bool:
     """
     Determines if HuggingFace hub is available
 

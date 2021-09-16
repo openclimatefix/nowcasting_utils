@@ -10,7 +10,11 @@ import torch.nn
 import pytorch_lightning as pl
 import torchvision
 from neptune.new.types import File
-from nowcasting_utils.models.hub import load_model_config_from_hf, load_pretrained, NowcastingModelHubMixin
+from nowcasting_utils.models.hub import (
+    load_model_config_from_hf,
+    load_pretrained,
+    NowcastingModelHubMixin,
+)
 
 
 REGISTERED_MODELS = {}
@@ -34,14 +38,14 @@ def register_model(cls: Type[pl.LightningModule]):
 
 
 def get_model(name: str) -> Type[pl.LightningModule]:
-    """ Get model from registered models """
+    """Get model from registered models"""
     global REGISTERED_MODELS
     assert name in REGISTERED_MODELS, f"available class: {REGISTERED_MODELS}"
     return REGISTERED_MODELS[name]
 
 
 def list_models():
-    """ List of the registered models """
+    """List of the registered models"""
     global REGISTERED_MODELS
     return REGISTERED_MODELS.keys()
 
@@ -76,6 +80,7 @@ def safe_model_name(model_name, remove_source=True):
     Returns: the new model name
 
     """
+
     def make_safe(name):
         return "".join(c if c.isalnum() else "_" for c in name).rstrip("_")
 
@@ -138,6 +143,7 @@ def create_model(model_name, pretrained=False, checkpoint_path=None, **kwargs):
 
 class BaseModel(pl.LightningModule, NowcastingModelHubMixin):
     """Base Model for ML models"""
+
     def __init__(
         self,
         pretrained: bool = False,

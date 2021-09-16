@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 class WeightedLosses:
     """Class: Weighted loss depending on the forecast horizon."""
+
     def __init__(self, decay_rate: Optional[int] = None, forecast_length: int = 6):
         """
         Want to set up the MSE loss function so the weights only have to be calculated once.
@@ -108,7 +109,7 @@ class GradientDifferenceLoss(nn.Module):
 
 
 class GridCellLoss(nn.Module):
-    """ Grid Cell Regularizer loss from Skillful Nowcasting, see https://arxiv.org/pdf/2104.00954.pdf. """
+    """Grid Cell Regularizer loss from Skillful Nowcasting, see https://arxiv.org/pdf/2104.00954.pdf."""
 
     def __init__(self, weight_fn=None):
         """
