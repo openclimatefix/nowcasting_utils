@@ -2,6 +2,11 @@ from nowcasting_utils.visualization.visualization import plot_example
 from nowcasting_dataset.data_sources.nwp_data_source import NWP_VARIABLE_NAMES
 import torch
 
+import tilemapbase
+
+# for Github actions need to create this
+tilemapbase.init(create=True)
+
 
 def get_batch(
     batch_size=8,
