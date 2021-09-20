@@ -22,7 +22,7 @@ def plot_example(
     nwp_channels: Iterable[str],
     example_i: int = 0,
     epoch: Optional[int] = None,
-    output_variable: str = 'pv_yield',
+    output_variable: str = "pv_yield",
 ) -> plt.Figure:
     """
     Plots an example with the satellite imagery, timeseries and PV yield.
@@ -35,6 +35,7 @@ def plot_example(
         nwp_channels: The names of nwp channels
         example_i: Which example to plot from the batch
         epoch: The optional epoch number
+        output_variable: this can be 'pv_yield' of 'gsp_yield'
 
     Returns:
         Matplotlib Figure containing the plotted graphs and images
@@ -125,7 +126,7 @@ def plot_example(
     ax.set_xlabel(nwp_dt_index[0].date())
 
     # ************************ PV YIELD ***************************************
-    if output_variable == 'pv_yield':
+    if output_variable == "pv_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
         ax.set_title(f"PV yield for PV ID {batch['pv_system_id'][example_i, 0].cpu()}")
         pv_actual = pd.Series(
@@ -139,10 +140,12 @@ def plot_example(
         pd.concat([pv_actual, pv_pred], axis="columns").plot(ax=ax)
         ax.legend()
 
-    if output_variable == 'gsp_yield':
+    if output_variable == "gsp_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
         ax.set_title(f"GSP yield for GSP ID {batch[GSP_ID][example_i, 0].cpu()}")
-        gsp_dt_index = pd.to_datetime(batch["gsp_datetime_index"][example_i].cpu().numpy(), unit="s")
+        gsp_dt_index = pd.to_datetime(
+            batch["gsp_datetime_index"][example_i].cpu().numpy(), unit="s"
+        )
         gsp_actual = pd.Series(
             batch[GSP_YIELD][example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
         )
