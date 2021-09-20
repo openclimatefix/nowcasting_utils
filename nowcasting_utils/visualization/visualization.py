@@ -11,16 +11,18 @@ from typing import Iterable, Optional
 import tilemapbase
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from nowcasting_dataset.dataset.example import DATETIME_FEATURE_NAMES
+from nowcasting_dataset.consts import GSP_ID, GSP_YIELD
 
 
 def plot_example(
     batch,
     model_output,
-    history_len: int,
-    forecast_len: int,
+    history_minutes: int,
+    forecast_minutes: int,
     nwp_channels: Iterable[str],
     example_i: int = 0,
     epoch: Optional[int] = None,
+    output_variable: str = 'pv_yield',
 ) -> plt.Figure:
     """
     Plots an example with the satellite imagery, timeseries and PV yield.
@@ -28,8 +30,8 @@ def plot_example(
     Args:
         batch: The batch to plot
         model_output: The output from the model
-        history_len: The length of the input history
-        forecast_len: The number of forecast steps
+        history_minutes: The number of minutes of the input history
+        forecast_minutes: The number minutes of forecast
         nwp_channels: The names of nwp channels
         example_i: Which example to plot from the batch
         epoch: The optional epoch number
@@ -40,6 +42,12 @@ def plot_example(
     fig = plt.figure(figsize=(20, 20))
     ncols = 4
     nrows = 2
+
+    history_len = history_minutes // 5
+    forecast_len = forecast_minutes // 5
+
+    history_len_30 = history_minutes // 30
+    forecast_len_30 = forecast_minutes // 30
 
     # ******************* SATELLITE IMAGERY ***********************************
     extent = (  # left, right, bottom, top
@@ -117,17 +125,33 @@ def plot_example(
     ax.set_xlabel(nwp_dt_index[0].date())
 
     # ************************ PV YIELD ***************************************
-    ax = fig.add_subplot(nrows, ncols, 7)
-    ax.set_title(f"PV yield for PV ID {batch['pv_system_id'][example_i, 0].cpu()}")
-    pv_actual = pd.Series(
-        batch["pv_yield"][example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
-    )
-    pv_pred = pd.Series(
-        model_output[example_i].detach().cpu().numpy(),
-        index=nwp_dt_index[history_len + 1 :],
-        name="prediction",
-    )
-    pd.concat([pv_actual, pv_pred], axis="columns").plot(ax=ax)
-    ax.legend()
+    if output_variable == 'pv_yield':
+        ax = fig.add_subplot(nrows, ncols, 7)
+        ax.set_title(f"PV yield for PV ID {batch['pv_system_id'][example_i, 0].cpu()}")
+        pv_actual = pd.Series(
+            batch["pv_yield"][example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
+        )
+        pv_pred = pd.Series(
+            model_output[example_i].detach().cpu().numpy(),
+            index=nwp_dt_index[history_len + 1 :],
+            name="prediction",
+        )
+        pd.concat([pv_actual, pv_pred], axis="columns").plot(ax=ax)
+        ax.legend()
+
+    if output_variable == 'gsp_yield':
+        ax = fig.add_subplot(nrows, ncols, 7)
+        ax.set_title(f"GSP yield for GSP ID {batch[GSP_ID][example_i, 0].cpu()}")
+        gsp_dt_index = pd.to_datetime(batch["gsp_datetime_index"][example_i].cpu().numpy(), unit="s")
+        gsp_actual = pd.Series(
+            batch[GSP_YIELD][example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
+        )
+        gsp_pred = pd.Series(
+            model_output[example_i].detach().cpu().numpy(),
+            index=nwp_dt_index[history_len_30 + 1 :],
+            name="prediction",
+        )
+        pd.concat([gsp_actual, gsp_pred], axis="columns").plot(ax=ax)
+        ax.legend()
 
     return fig
