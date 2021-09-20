@@ -148,7 +148,7 @@ def plot_example(
         )
         gsp_pred = pd.Series(
             model_output[example_i].detach().cpu().numpy(),
-            index=nwp_dt_index[history_len_30 + 1 :],
+            index=gsp_dt_index[history_len_30 + 1 :],
             name="prediction",
         )
         pd.concat([gsp_actual, gsp_pred], axis="columns").plot(ax=ax)
