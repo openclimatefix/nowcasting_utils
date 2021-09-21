@@ -35,7 +35,7 @@ def plot_example(
         nwp_channels: The names of nwp channels
         example_i: Which example to plot from the batch
         epoch: The optional epoch number
-        output_variable: this can be 'pv_yield' of 'gsp_yield'
+        output_variable: this can be 'pv_yield' or 'gsp_yield'
 
     Returns:
         Matplotlib Figure containing the plotted graphs and images
