@@ -15,6 +15,7 @@ from nowcasting_utils.models.hub import (
     load_pretrained,
     NowcastingModelHubMixin,
 )
+from nowcasting_dataset.consts import SATELLITE_DATA, NWP_DATA
 
 
 REGISTERED_MODELS = {}
@@ -257,8 +258,8 @@ class BaseModel(pl.LightningModule, NowcastingModelHubMixin):
         # the logger you used (in this case tensorboard)
         tensorboard = self.logger.experiment[0]
         # Timesteps per channel
-        images = x[0].cpu().detach().float()  # T, C, H, W
-        future_images = y[0].cpu().detach().float()
+        images = x[0][SATELLITE_DATA].cpu().detach().float()  # T, C, H, W
+        future_images = y[0][SATELLITE_DATA].cpu().detach().float()
         generated_images = y_hat[0].cpu().detach().float()
         for i, t in enumerate(images):  # Now would be (C, H, W)
             t = [torch.unsqueeze(img, dim=0) for img in t]
