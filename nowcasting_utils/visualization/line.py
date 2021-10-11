@@ -78,7 +78,17 @@ def plot_batch_results(
     batchsize = y.shape[0]
     N = int(np.ceil(batchsize ** 0.5))
 
-    fig = make_subplots(rows=N, cols=N, subplot_titles=range(0,batchsize))
+    subplot_titles = [str(i) for i in range(batchsize)]
+
+    fig = make_subplots(rows=N,
+                        cols=N,
+                        subplot_titles=subplot_titles,
+                        x_title=f"Batch Plot of PV Predict: {model_name}")
+
+    # move the x_title to the top
+    fig.layout.annotations[-1]['y'] = 1
+    fig.layout.annotations[-1]['yshift'] = 30
+    fig.layout.annotations[-1]['yanchor'] = 'bottom'
 
     for i in range(0, batchsize):
 
@@ -96,7 +106,6 @@ def plot_batch_results(
             col=col,
         )
     fig.update_layout(
-        title=f"Batch Plot of PV Predict: {model_name}",
         width=1500,
         height=1500,
     )
