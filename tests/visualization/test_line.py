@@ -14,13 +14,14 @@ def test_make_trace():
 
 def test_plot_batch_results():
 
-    size = (2, 7)
+    size = (32, 7)
 
     x = np.random.random(size)
     y = np.random.random(size)
     y_hat = np.random.random(size)
 
-    _ = plot_batch_results(x=x, y=y, y_hat=y_hat, model_name="test_model")
+    fig = plot_batch_results(x=x, y=y, y_hat=y_hat, model_name="test_model")
+    # fig.show(renderer='browser')
 
 
 def test_plot_one_result():
