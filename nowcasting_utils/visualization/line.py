@@ -86,6 +86,7 @@ def plot_batch_results(
                         x_title=f"Batch Plot of PV Predict: {model_name}")
 
     # move the x_title to the top
+    # Could perhaps do this in a neater way, just happens that the last annotation is the x_title object
     fig.layout.annotations[-1]['y'] = 1
     fig.layout.annotations[-1]['yshift'] = 30
     fig.layout.annotations[-1]['yanchor'] = 'bottom'
