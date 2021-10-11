@@ -78,7 +78,7 @@ def plot_batch_results(
     batchsize = y.shape[0]
     N = int(np.ceil(batchsize ** 0.5))
 
-    fig = make_subplots(rows=N, cols=N)
+    fig = make_subplots(rows=N, cols=N, subplot_titles=range(0,batchsize))
 
     for i in range(0, batchsize):
 
