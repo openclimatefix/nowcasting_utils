@@ -7,14 +7,42 @@ These encodings can be:
 
 These encodings can also be performed with:
 - Fourier Features, based off what is done in PerceiverIO
-- Coordinates, based off the idea of Coordinate Convolutions
+- Coordinates, based off the idea from Coordinate Convolutions
 """
 import torch
 import einops
 from math import pi
+from typing import Union, Optional, Dict, List, Tuple
 
 
-def encode_position(batch_size: int, axis: list, method: str, positioning: str, ):
+def encode_position(shape: List[..., int],
+                    geospatial_coordinates: Optional[Tuple[List[int, ...], List[int, ...]]],
+                    time_of_day: Optional[List[float]],
+                    day_of_year: Optional[List[float]],
+                    method: str,
+                    positioning: str):
+    """
+    This function wraps a variety of different methods for generating position features for given inputs
+
+    This function returns the position encodings, but does not append the encodings to the batch, that has to be performed
+    in a separate step outside of the function
+
+    Args:
+        shape: The shape of the input to be encoded, should be the largest or finest-grained input
+            For example, if the inputs are shapes (12, 6, 128, 128) and (1, 6), (12, 6, 128, 128) should be passed in as
+            shape, as it has the most elements and the input (1, 6) can just subselect the position encoding
+        geospatial_coordinates: The latitude/longitude of the inputs for shape, unused if using relative positioning only
+        time_of_day: time of day for each of the timesteps in the shape, unused if using relative positioning only
+        day_of_year: Day of year for each of the timesteps in the shape, unused if using relative positioning only
+        method: Method of the encoding, either 'fourier' for Fourier Features, or 'coord' for Coordinates, or 'both'
+        positioning: The type of positioning used, either 'relative' for relative positioning, or 'absolute', or 'both'
+
+    Returns:
+        The position encodings for all items in the batch
+    """
+    assert method in ["fourier", "coord", "both"]
+    assert positioning in ["relative", "absolute", "both"]
+
     pass
 
 def encode_fouier_position(
