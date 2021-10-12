@@ -1,3 +1,12 @@
+"""
+This file contains various ways of performing positional encoding, primarily:
+- Relative positioning (i.e. this pixel is this far from the top left, and this many timesteps in the future)
+- Absolute positioning (i.e. this pixel is at this latitude/longitude, and is at 16:00)
+
+These encodings can also be performed with:
+- Fourier Features, based off what is done in PerceiverIO
+- Coordinates, based off the idea of Coordinate Convolutions
+"""
 import torch
 import einops
 from math import pi
