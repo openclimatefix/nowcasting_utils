@@ -103,12 +103,21 @@ def encode_absolute_position(
         datetimes
     )
 
+    # Fourier Features of absolute position
+    encoded_latlon = normalize_geospatial_coordinates(
+        geospatial_coordinates, geospatial_bounds, **kwargs
+    )
+
+    # Combine time and space features
+
     pass
 
 
-def normalize_geospatial_coordinates(geospatial_coordinates, geospatial_bounds) -> np.ndarray:
+def normalize_geospatial_coordinates(
+    geospatial_coordinates, geospatial_bounds, **kwargs
+) -> torch.Tensor:
     """
-    Normalize the geospatial coordinates by the max extant to keep everything between -1 and 1
+    Normalize the geospatial coordinates by the max extant to keep everything between -1 and 1, in sin and cos
 
     Args:
         geospatial_coordinates: The coordinates for the pixels in the image
@@ -118,7 +127,25 @@ def normalize_geospatial_coordinates(geospatial_coordinates, geospatial_bounds) 
         The normalized geospatial coordinates, rescaled to between -1 and 1
 
     """
-    pass
+    # Normalize the X first
+    geospatial_coordinates[0] = (geospatial_coordinates[0] - geospatial_bounds[0]) / (
+        geospatial_bounds[2] - geospatial_bounds[0]
+    )
+    # Normalize the Y second
+    geospatial_coordinates[1] = (geospatial_coordinates[1] - geospatial_bounds[1]) / (
+        geospatial_bounds[3] - geospatial_bounds[1]
+    )
+
+    # Now those are between 0 and 1, want between -1 and 1
+    geospatial_coordinates[0] = geospatial_coordinates[0] * 2 - 1
+    geospatial_coordinates[1] = geospatial_coordinates[1] * 2 - 1
+
+    # Now create a grid of the coordinates
+    pos = torch.stack(torch.meshgrid(*geospatial_coordinates), dim=-1)
+
+    # And now convert to Fourier features, based off the absolute positions of the coordinates
+    encoded_position = fourier_encode(pos, **kwargs)
+    return encoded_position
 
 
 def create_datetime_features(
