@@ -109,8 +109,22 @@ def encode_absolute_position(
     )
 
     # Combine time and space features
+    # Time features should be in shape [Channels,Timestep]
+    # Space features should be in [Channels, Height, Width]
+    # So can just concat along channels, after expanding time features tto Height, Width, and Space along Time
+    hour_of_day_sin = einops.repeat(hour_of_day_sin, "b c t -> b c t h w", h=shape[-2], w=shape[-1])
+    hour_of_day_cos = einops.repeat(hour_of_day_cos, "b c t -> b c t h w", h=shape[-2], w=shape[-1])
+    day_of_year_sin = einops.repeat(day_of_year_sin, "b c t -> b c t h w", h=shape[-2], w=shape[-1])
+    day_of_year_cos = einops.repeat(day_of_year_cos, "b c t -> b c t h w", h=shape[-2], w=shape[-1])
+    # Now do for latlon encoding
+    encoded_latlon = einops.repeat(encoded_latlon, "b c h w -> b c t h w", t=shape[1])
 
-    pass
+    # Now combined into one large encoding
+    absolute_position_encoding = torch.cat(
+        [encoded_latlon, hour_of_day_sin, hour_of_day_cos, day_of_year_sin, day_of_year_cos], dim=1
+    )
+
+    return absolute_position_encoding
 
 
 def normalize_geospatial_coordinates(
@@ -150,7 +164,7 @@ def normalize_geospatial_coordinates(
 
 def create_datetime_features(
     datetimes: List[datetime.datetime],
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
     Converts a list of datetimes to day of year, hour of day sin and cos representation
 
@@ -158,21 +172,21 @@ def create_datetime_features(
         datetimes: List of datetimes
 
     Returns:
-        Tuple of numpy arrays containing the hour of day sin,cos, and day of year sin,cos
+        Tuple of torch Tensors containing the hour of day sin,cos, and day of year sin,cos
     """
     hour_of_day = []
     day_of_year = []
     for index in datetimes:
         hour_of_day.append((index.hour + (index.minute / 60) / 24))
         day_of_year.append((index.timetuple().tm_yday / 365))  # Get the day of the year
-    hour_of_day = np.asarray(hour_of_day)
-    day_of_year = np.asarray(day_of_year)
+    hour_of_day = torch.as_tensor(hour_of_day)
+    day_of_year = torch.as_tensor(day_of_year)
     hour_radians = hour_of_day * 2 * np.pi
     day_radians = day_of_year * 2 * np.pi
-    hour_of_day_sin = np.sin(hour_radians)
-    hour_of_day_cos = np.cos(hour_radians)
-    day_of_year_sin = np.sin(day_radians)
-    day_of_year_cos = np.cos(day_radians)
+    hour_of_day_sin = torch.sin(hour_radians)
+    hour_of_day_cos = torch.cos(hour_radians)
+    day_of_year_sin = torch.sin(day_radians)
+    day_of_year_cos = torch.cos(day_radians)
 
     return hour_of_day_sin, hour_of_day_cos, day_of_year_sin, day_of_year_cos
 
