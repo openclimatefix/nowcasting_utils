@@ -1,5 +1,5 @@
 """
-This file contains various ways of performing positional encoding
+This file contains various ways of performing positional encoding.
 
 These encodings can be:
 - Relative positioning (i.e. this pixel is this far from the top left, and this many timesteps in the future)
@@ -15,17 +15,16 @@ from math import pi
 from typing import Union, Optional, Dict, List, Tuple
 
 
-def encode_position(shape: List[..., int],
-                    geospatial_coordinates: Optional[Tuple[List[int, ...], List[int, ...]]],
-                    time_of_day: Optional[List[float]],
-                    day_of_year: Optional[List[float]],
-                    method: str,
-                    positioning: str):
+def encode_position(
+    shape: List[..., int],
+    geospatial_coordinates: Optional[Tuple[List[int, ...], List[int, ...]]],
+    time_of_day: Optional[List[float]],
+    day_of_year: Optional[List[float]],
+    method: str,
+    positioning: str,
+):
     """
-    This function wraps a variety of different methods for generating position features for given inputs
-
-    This function returns the position encodings, but does not append the encodings to the batch, that has to be performed
-    in a separate step outside of the function
+    This function wraps a variety of different methods for generating position features for given inputs.
 
     Args:
         shape: The shape of the input to be encoded, should be the largest or finest-grained input
@@ -40,17 +39,22 @@ def encode_position(shape: List[..., int],
     Returns:
         The position encodings for all items in the batch
     """
-    assert method in ["fourier", "coord", "both"]
-    assert positioning in ["relative", "absolute", "both"]
+    assert method in ["fourier", "coord", "both"], ValueError(
+        f"method must be one of 'fourier', 'coord', or 'both', not {method}"
+    )
+    assert positioning in ["relative", "absolute", "both"], ValueError(
+        f"positioning must be one of 'relative', 'absolute'm or 'both', not {positioning}"
+    )
 
     pass
 
+
 def encode_fouier_position(
-        batch_size: int,
-        axis: list,
-        max_frequency: float,
-        num_frequency_bands: int,
-        sine_only: bool = False,
+    batch_size: int,
+    axis: list,
+    max_frequency: float,
+    num_frequency_bands: int,
+    sine_only: bool = False,
 ) -> torch.Tensor:
     """
     Encode the Fourier Features and return them
@@ -84,10 +88,10 @@ def encode_fouier_position(
 
 
 def fourier_encode(
-        x: torch.Tensor,
-        max_freq: float,
-        num_bands: int = 4,
-        sine_only: bool = False,
+    x: torch.Tensor,
+    max_freq: float,
+    num_bands: int = 4,
+    sine_only: bool = False,
 ) -> torch.Tensor:
     """
     Create Fourier Encoding
@@ -110,7 +114,7 @@ def fourier_encode(
         num_bands,
         device=device,
         dtype=dtype,
-        )
+    )
     scales = scales[(*((None,) * (len(x.shape) - 1)), Ellipsis)]
 
     x = x * scales * pi
