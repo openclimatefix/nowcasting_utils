@@ -1,5 +1,7 @@
 """
-This file contains various ways of performing positional encoding, primarily:
+This file contains various ways of performing positional encoding
+
+These encodings can be:
 - Relative positioning (i.e. this pixel is this far from the top left, and this many timesteps in the future)
 - Absolute positioning (i.e. this pixel is at this latitude/longitude, and is at 16:00)
 
@@ -12,9 +14,10 @@ import einops
 from math import pi
 
 
+def encode_position(batch_size: int, axis: list, method: str, positioning: str, ):
+    pass
 
-
-def encode_position(
+def encode_fouier_position(
         batch_size: int,
         axis: list,
         max_frequency: float,
