@@ -1,26 +1,28 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# This script converts the multiple CSV files from ESO into a single NetCDF file.
-#
-# The output NetCDF file has two DataArrays: 'ASL' and 'ML'.
-#
-# ESO uses two PV forecasting algorithms in the Platform for Energy Forecasting (PEF):
-#
-# * ASL: "Advanced Statistical Learning": These are hand-crafted models written in `R` by the
-#        ESO forecasting team.
-# * ML: "Maching Learning": ML models, trained from historical data, created by the ESO Labs team.
-#
-# Each DataArray has three dimensions:
-#
-# 1. `gsp_id`: A string identifying the Grid Supply Point region.
-# 2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.  Not exactly the
-#     same as the NWP init time.  This script takes the floor('30T') of the
-#     original forecast_date_time from ESO.
-# 3. `step`: The Timedelta between the forecast_date_time and the target_date_time.
-#
-# It's not possible to append to NetCDF files, so this script loads everything into memory,
-# and strip away stuff we don't need, and maintain a list of xr.DataSets to be concatenated.
+"""
+This script converts the multiple CSV files from ESO into a single NetCDF file.
+
+The output NetCDF file has two DataArrays: 'ASL' and 'ML'.
+
+ESO uses two PV forecasting algorithms in the Platform for Energy Forecasting (PEF):
+
+* ASL: "Advanced Statistical Learning": These are hand-crafted models written in `R` by the
+       ESO forecasting team.
+* ML: "Maching Learning": ML models, trained from historical data, created by the ESO Labs team.
+
+Each DataArray has three dimensions:
+
+1. `gsp_id`: A string identifying the Grid Supply Point region.
+2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.  Not exactly the
+    same as the NWP init time.  This script takes the floor('30T') of the
+    original forecast_date_time from ESO.
+3. `step`: The Timedelta between the forecast_date_time and the target_date_time.
+
+It's not possible to append to NetCDF files, so this script loads everything into memory,
+and strip away stuff we don't need, and maintain a list of xr.DataSets to be concatenated.
+"""
 
 from pathlib import Path
 import pandas as pd
@@ -41,7 +43,9 @@ ESO_ALGO_NAMES = ('ASL', 'ML')
 
 
 def filenames_and_datetime_periods(path: Path) -> pd.Series:
-    """Returns a Series where the Index is a pd.PeriodIndex at monthly frequency,
+    """Gets all CSV filenames in `path`.
+
+    Returns a Series where the Index is a pd.PeriodIndex at monthly frequency,
     and the values at the full Path to the CSV file.  The index is sorted.
     """
     csv_filenames = list(path.glob('*.csv'))
@@ -55,6 +59,7 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
 
 
 def load_csv(csv_filename: Path) -> pd.DataFrame:
+    """Load ESO CSV files.  Returns a pd.DataFrame."""
     eso_forecasts_df = pd.read_csv(
         csv_filename,
         usecols=DATETIME_COLS + ['FORECAST_HORIZON', 'SITE_ID', 'MW', 'SCRIPT_NAME'],
@@ -86,8 +91,11 @@ def keep_only_2_day_forecasts(eso_forecasts_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def split_asl_and_ml_forecasts(eso_forecasts_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Returns a dict where the keys are the ESO forecasting algorithm name 'ASL' or 'ML',
-    and the values are the pd.DataFrame of forecast data."""
+    """Split the forecasts into ASL forecasts, and ML forecasts.
+
+    Returns a dict where the keys are the ESO forecasting algorithm name 'ASL' or 'ML',
+    and the values are the pd.DataFrame of forecast data.
+    """
     eso_forecasts_df.SCRIPT_NAME = eso_forecasts_df.SCRIPT_NAME.str.upper()
 
     eso_forecasts = {}
@@ -138,7 +146,7 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
 
 
 def main():
-    # Loop round all the files
+    """Loop round all the files."""
     filenames = filenames_and_datetime_periods(ESO_CSV_PATH)
     n = len(filenames)
     datasets = []
