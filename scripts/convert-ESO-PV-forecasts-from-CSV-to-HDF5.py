@@ -73,7 +73,11 @@ def load_csv(csv_filename: Path) -> pd.DataFrame:
 
 
 def keep_only_2_day_forecasts(eso_forecasts_df: pd.DataFrame) -> pd.DataFrame:
-    """Throw away any rows where FORECAST_HORIZON != '2D'."""
+    """Throw away any rows where FORECAST_HORIZON != '2D'.
+
+    ESO run two forecasts:  2D (2-day ahead) and 14D (14-day ahead).
+    We only want the 2D forecasts because we're comparing against OCF's nowcasts.
+    """
     eso_forecasts_df.FORECAST_HORIZON = eso_forecasts_df.FORECAST_HORIZON.str.upper()
     rows_2D_horizon = eso_forecasts_df.FORECAST_HORIZON == "2D"
     eso_forecasts_df = eso_forecasts_df[rows_2D_horizon]
@@ -116,6 +120,7 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
     df = df.drop(columns='TARGET_DATE_TIME')
 
     # Make sure "step" is positive:
+    # (step can be negative for ASL forecasts, for some reasons).
     df = df[df.step >= pd.Timedelta(0)]
 
     # Rename to more column names more like the ones we're used to.
