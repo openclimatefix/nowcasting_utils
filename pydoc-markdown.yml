@@ -1,0 +1,25 @@
+loaders:
+  - type: python
+    search_path: [nowcasting_utils/]
+processors:
+  - type: filter
+  - type: smart
+  # - type: crossref
+renderer:
+  type: mkdocs
+  pages:
+    - title: Home
+      name: index
+      source: README.md
+    - title: API Documentation
+      children:
+        - title: visualization
+          contents: [visualization, visualization.*]
+        - title: models
+          contents: [models, models.*]
+        - title: training
+          contents: [training, training.*]
+  mkdocs_config:
+    site_name: Nowcasting Utils
+    theme: readthedocs
+    repo_url: https://github.com/openclimatefix/nowcasting-utils
