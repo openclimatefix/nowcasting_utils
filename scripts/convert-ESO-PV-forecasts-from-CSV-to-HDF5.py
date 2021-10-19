@@ -14,7 +14,7 @@ ESO uses two PV forecasting algorithms in the Platform for Energy Forecasting (P
 
 Each DataArray has three dimensions:
 
-1. `gsp_id`: A string identifying the Grid Supply Point region.
+1. `gsp_name`: A string identifying the Grid Supply Point region.
 2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.  Not exactly the
     same as the NWP init time.  This script takes the floor('30T') of the
     original forecast_date_time from ESO.
@@ -61,7 +61,7 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
         the top of the hour, and 30 minutes past the hour.
     FORECAST_HORIZON: '2D', '2d', '14D' or '14d':  ESO run a "2 day ahead" forecast and a
         "14 day ahead" forecast.
-    SITE_ID: The Grid Supply Point (GSP) ID.
+    SITE_ID: The Grid Supply Point (GSP) name.  Called the `gsp_name` in ESO's metadata.
     MW: Amount of power forecast to be produced by the SITE_ID at TARGET_DATE_TIME.
     SCRIPT_NAME: The name of the script. Includes 'ASL' or 'ML' to indicate which ESO forecasting
         algorithm was used (see the comments at the top of this script for more info),
@@ -151,7 +151,7 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
     df = df[df.step >= pd.Timedelta(0)]
 
     # Rename to more column names more like the ones we're used to.
-    df = df.rename(columns={'SITE_ID': 'gsp_id'})
+    df = df.rename(columns={'SITE_ID': 'gsp_name'})
 
     # Set index
     df = df.set_index(['gsp_id', 'forecast_date_time', 'step'])
