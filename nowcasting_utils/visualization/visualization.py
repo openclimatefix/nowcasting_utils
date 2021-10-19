@@ -10,8 +10,7 @@ import matplotlib.pyplot as plt
 from typing import Iterable, Optional
 import tilemapbase
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.dataset.example import DATETIME_FEATURE_NAMES
-from nowcasting_dataset.consts import GSP_ID, GSP_YIELD
+from nowcasting_dataset.consts import GSP_ID, GSP_YIELD, DATETIME_FEATURE_NAMES
 
 
 def plot_example(

@@ -1,5 +1,5 @@
 from nowcasting_utils.visualization.visualization import plot_example
-from nowcasting_dataset.data_sources.nwp_data_source import NWP_VARIABLE_NAMES
+from nowcasting_dataset.consts import NWP_VARIABLE_NAMES
 import torch
 
 import tilemapbase
