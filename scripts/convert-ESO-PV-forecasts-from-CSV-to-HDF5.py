@@ -47,6 +47,25 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
 
     Returns a Series where the Index is a pd.PeriodIndex at monthly frequency,
     and the values at the full Path to the CSV file.  The index is sorted.
+
+    This is the header and first line of an ESO CSVs:
+
+    ,TALENDID,WEATHER_FORECAST_DATE_TIME,FORECAST_DATE_TIME,TARGET_DATE_TIME,FORECAST_HORIZON,SITE_ID,MW,SCRIPT_NAME
+    0,PV_GSP_ASL_20210401014517,2021-03-31 22:40:00+00:00,2021-04-01 00:46:36+00:00,2021-04-01 01:00:00+00:00,2D,BICF_1,0.0,GSP_PV_ASL_00.00
+
+    TALENDID: The ID of the forecasting job running on ESO's PEF system.
+    WEATHER_FORECAST_DATE_TIME: The datetime when ESO received numerical weather predictions.
+        This is not exactly the same as the NWP init time.
+    FORECAST_DATE_TIME: The datetime when ESO ran their PV forecasting script.
+    TARGET_DATE_TIME: The time that the forecast is about.  In half hourly intervals, aligned to
+        the top of the hour, and 30 minutes past the hour.
+    FORECAST_HORIZON: '2D', '2d', '14D' or '14d':  ESO run a "2 day ahead" forecast and a
+        "14 day ahead" forecast.
+    SITE_ID: The Grid Supply Point (GSP) ID.
+    MW: Amount of power forecast to be produced by the SITE_ID at TARGET_DATE_TIME.
+    SCRIPT_NAME: The name of the script. Includes 'ASL' or 'ML' to indicate which ESO forecasting
+        algorithm was used (see the comments at the top of this script for more info),
+        and includes the version of the script.
     """
     csv_filenames = list(path.glob('*.csv'))
 
