@@ -15,9 +15,16 @@ ESO uses two PV forecasting algorithms in the Platform for Energy Forecasting (P
 Each DataArray has three dimensions:
 
 1. `gsp_name`: A string identifying the Grid Supply Point region.
-2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.  Not exactly the
-    same as the NWP init time.  This script takes the floor('30T') of the
-    original forecast_date_time from ESO.
+2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.
+    The `forecast_date_time` will be a little time (about an hour or two?)
+    after the initialisation time of the numerical weather predictions
+    fed into ESO's forecasting algorithm.  This script takes the floor('30T') of the
+    original forecast_date_time from ESO.  `forecast_date_time` tells us when ESO
+    ran their PV forecast. The `target_date_time` (the time that each forecast is
+    _about_) can be calculated as the sum of `forecast_date_time` and `step`.
+    To give a little more background:  For most forecasts, any given row is identified
+    by _two_ datetimes:  The datetime that the forecast was run (the `forecast_date_time`);
+    and the datetime that the forecast is _about_ (the `target_date_time`).
 3. `step`: The Timedelta between the forecast_date_time and the target_date_time.
 
 It's not possible to append to NetCDF files, so this script loads everything into memory,
@@ -63,9 +70,9 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
         "14 day ahead" forecast.
     SITE_ID: The Grid Supply Point (GSP) name.  Called the `gsp_name` in ESO's metadata.
     MW: Amount of power forecast to be produced by the SITE_ID at TARGET_DATE_TIME.
-    SCRIPT_NAME: The name of the script. Includes 'ASL' or 'ML' to indicate which ESO forecasting
-        algorithm was used (see the comments at the top of this script for more info),
-        and includes the version of the script.
+    SCRIPT_NAME: The name of ESO's forecasting script. Includes 'ASL' or 'ML'
+        to indicate which ESO forecasting algorithm was used (see the comments
+        at the top of this script for more info), and includes the version of the script.
     """
     csv_filenames = list(path.glob('*.csv'))
 
@@ -115,6 +122,11 @@ def split_asl_and_ml_forecasts(eso_forecasts_df: pd.DataFrame) -> dict[str, pd.D
     Returns a dict where the keys are the ESO forecasting algorithm name 'ASL' or 'ML',
     and the values are the pd.DataFrame of forecast data.
     """
+    # The SCRIPT_NAME is the name of the ESO's PV forecasting script.
+    # Includes 'ASL' or 'ML' to indicate which ESO forecasting
+    # algorithm was used (see the comments at the top of this script for more info),
+    # and includes the version of the script.
+    # An example SCRIPT_NAME is `GSP_PV_ASL_00.00`.
     eso_forecasts_df.SCRIPT_NAME = eso_forecasts_df.SCRIPT_NAME.str.upper()
 
     eso_forecasts = {}
@@ -129,7 +141,7 @@ def split_asl_and_ml_forecasts(eso_forecasts_df: pd.DataFrame) -> dict[str, pd.D
 def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
     """Convert forecast data to a 3-dimensional DataArray, with these dimensions:
 
-    1. `gsp_id`: A string identifying the Grid Supply Point region.
+    1. `gsp_name`: A string identifying the Grid Supply Point region.
     2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.  Not exactly the
         same as the NWP init time.  This script takes the floor('30T') of the
         original forecast_date_time from ESO.
@@ -154,7 +166,7 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
     df = df.rename(columns={'SITE_ID': 'gsp_name'})
 
     # Set index
-    df = df.set_index(['gsp_id', 'forecast_date_time', 'step'])
+    df = df.set_index(['gsp_name', 'forecast_date_time', 'step'])
     series = df.squeeze()
     del df
 
@@ -188,6 +200,7 @@ def main():
 
     dataset = xr.concat(datasets, dim='forecast_date_time')
 
+    # The resulting NetCDF file is about 2.3 GBytes.
     dataset.to_netcdf(DST_NETCDF)
 
 
