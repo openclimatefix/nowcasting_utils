@@ -68,7 +68,8 @@ def plot_batch_results(
         y: the truth values of pv yield, should be size [batch_size, forecast length]
         y_hat: the predicted values of pv yield, should be size [batch_size, forecast length]
         model_name: the name of the model
-        x_hat: the x values for the predictions (y_hat), note that if none is supplied then x is used instead
+        x_hat: the x values for the predictions (y_hat),
+            note that if none is supplied then x is used instead
 
     Returns: a plotly figure
     """
@@ -80,16 +81,19 @@ def plot_batch_results(
 
     subplot_titles = [str(i) for i in range(batchsize)]
 
-    fig = make_subplots(rows=N,
-                        cols=N,
-                        subplot_titles=subplot_titles,
-                        x_title=f"Batch Plot of PV Predict: {model_name}")
+    fig = make_subplots(
+        rows=N,
+        cols=N,
+        subplot_titles=subplot_titles,
+        x_title=f"Batch Plot of PV Predict: {model_name}",
+    )
 
     # move the x_title to the top
-    # Could perhaps do this in a neater way, just happens that the last annotation is the x_title object
-    fig.layout.annotations[-1]['y'] = 1
-    fig.layout.annotations[-1]['yshift'] = 30
-    fig.layout.annotations[-1]['yanchor'] = 'bottom'
+    # Could perhaps do this in a neater way,
+    # just happens that the last annotation is the x_title object
+    fig.layout.annotations[-1]["y"] = 1
+    fig.layout.annotations[-1]["yshift"] = 30
+    fig.layout.annotations[-1]["yanchor"] = "bottom"
 
     for i in range(0, batchsize):
 

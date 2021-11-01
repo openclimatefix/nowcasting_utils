@@ -1,5 +1,6 @@
 """
-Originally Taken from https://github.com/rwightman/pytorch-image-models/blob/acd6c687fd1c0507128f0ce091829b233c8560b9/timm/models/hub.py
+Originally Taken from https://github.com/rwightman/pytorch-image-models/
+blob/acd6c687fd1c0507128f0ce091829b233c8560b9/timm/models/hub.py
 """
 
 import json
@@ -96,7 +97,8 @@ def has_hf_hub(necessary: bool = False) -> bool:
     if hf_hub_url is None and necessary:
         # if no HF Hub module installed and it is necessary to continue, raise error
         raise RuntimeError(
-            "Hugging Face hub model specified but package not installed. Run `pip install huggingface_hub`."
+            "Hugging Face hub model specified but package not installed. "
+            "Run `pip install huggingface_hub`."
         )
     return hf_hub_url is not None
 
@@ -200,7 +202,8 @@ def load_pretrained(
 ) -> Union[torch.nn.Module, pytorch_lightning.LightningModule]:
     """Load pretrained checkpoint
 
-    Taken from https://github.com/rwightman/pytorch-image-models/blob/acd6c687fd1c0507128f0ce091829b233c8560b9/timm/models/helpers.py
+    Taken from https://github.com/rwightman/pytorch-image-models/
+    blob/acd6c687fd1c0507128f0ce091829b233c8560b9/timm/models/helpers.py
 
     Args:
         model (nn.Module) : PyTorch model module, or LightningModule
@@ -215,10 +218,12 @@ def load_pretrained(
     if in_chans != default_cfg.get("input_channels", None):
         strict = False
         _logger.warning(
-            f"Unable to convert pretrained weights because of mismatch in input channels, using random init for first layer."
+            "Unable to convert pretrained weights because of mismatch in input channels, "
+            "using random init for first layer."
         )
     if not is_lightning_module:
-        # The model is passed uninitialized, so if not having to do the PL thing, should initialize here
+        # The model is passed uninitialized, so if not having to do the PL thing,
+        # should initialize here
         model = model(**default_cfg)
     if not pretrained_path and not hf_hub_id:
         _logger.warning("No pretrained weights exist for this model. Using random initialization.")
@@ -247,7 +252,8 @@ class NowcastingModelHubMixin(ModelHubMixin):
 
     def __init__(self, *args, **kwargs):
         """
-        Mix this class with your pl.LightningModule class to easily push / download the model via the Hugging Face Hub
+        Mix this class with your pl.LightningModule class to easily push / download
+        the model via the Hugging Face Hub
 
         Example::
 

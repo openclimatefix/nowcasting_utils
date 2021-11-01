@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from typing import Iterable, Optional
 import tilemapbase
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.consts import GSP_ID, GSP_YIELD, DATETIME_FEATURE_NAMES
+from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
 from nowcasting_dataloader.batch import BatchML
 
 
@@ -48,7 +48,7 @@ def plot_example(
     forecast_len = forecast_minutes // 5
 
     history_len_30 = history_minutes // 30
-    forecast_len_30 = forecast_minutes // 30
+    _ = forecast_minutes // 30
 
     # ******************* SATELLITE IMAGERY ***********************************
     extent = (  # left, right, bottom, top
@@ -142,8 +142,7 @@ def plot_example(
 
     if output_variable == "gsp_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
-        ax.set_title(f"GSP yield for G"
-                     f"SP ID {batch.gsp.gsp_id[example_i, 0].cpu()}")
+        ax.set_title(f"GSP yield for G" f"SP ID {batch.gsp.gsp_id[example_i, 0].cpu()}")
         gsp_dt_index = pd.to_datetime(
             batch.gsp.gsp_datetime_index[example_i].cpu().numpy(), unit="s"
         )

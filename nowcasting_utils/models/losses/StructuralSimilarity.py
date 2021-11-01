@@ -76,11 +76,12 @@ class MS_SSIMLoss(nn.Module):
 
 class SSIMLossDynamic(nn.Module):
     """
-    SSIM Loss on only dynamic part of the images, optionally converting input range from [-1,1] to [0,1]
+    SSIM Loss on only dynamic part of the images,
+    optionally converting input range from [-1,1] to [0,1]
 
-    In Mathieu et al. to stop SSIM regressing towards the mean and predicting only the background, they only
-    run SSIM on the dynamic parts of the image. We can accomplish that by subtracting the current
-    image from the future ones
+    In Mathieu et al. to stop SSIM regressing towards the mean and predicting
+    only the background, they only run SSIM on the dynamic parts of the image.
+    We can accomplish that by subtracting the current image from the future ones
     """
 
     def __init__(self, convert_range: bool = False, **kwargs):
