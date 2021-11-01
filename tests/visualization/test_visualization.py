@@ -1,7 +1,7 @@
 from nowcasting_utils.visualization.visualization import plot_example
 from nowcasting_dataset.consts import NWP_VARIABLE_NAMES
 from nowcasting_dataset.config.model import Configuration
-from predict_pv_yield.data.dataloader import FakeDataset
+from nowcasting_dataloader.fake import FakeDataset
 import torch
 
 import tilemapbase
