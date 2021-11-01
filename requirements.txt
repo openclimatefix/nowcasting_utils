@@ -5,6 +5,7 @@ numpy
 tilemapbase
 plotly
 nowcasting-dataset
+nowcasting-dataloader
 pytorch_msssim
 torchvision
 pytorch_lightning
