@@ -7,7 +7,10 @@ import torch
 import tilemapbase
 
 # for Github actions need to create this
-tilemapbase.init(create=True)
+try:
+    tilemapbase.init(create=True)
+finally:
+    pass
 
 from nowcasting_dataloader.batch import BatchML
 
