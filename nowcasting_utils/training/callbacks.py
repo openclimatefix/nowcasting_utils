@@ -8,6 +8,7 @@ import os
 class NeptuneModelLogger(Callback):
     """
     Saves out the last and best models after each validation epoch.
+
     If the files don't exists, does nothing.
 
     Example::

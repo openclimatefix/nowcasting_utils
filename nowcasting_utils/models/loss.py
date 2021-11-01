@@ -109,8 +109,11 @@ class GradientDifferenceLoss(nn.Module):
 
 
 class GridCellLoss(nn.Module):
-    """Grid Cell Regularizer loss from Skillful Nowcasting,
-    see https://arxiv.org/pdf/2104.00954.pdf."""
+    """
+    Grid Cell Regularizer loss from Skillful Nowcasting,
+
+    see https://arxiv.org/pdf/2104.00954.pdf.
+    """
 
     def __init__(self, weight_fn=None):
         """

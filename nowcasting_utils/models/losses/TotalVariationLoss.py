@@ -68,9 +68,9 @@ def get_outnorm(x: torch.Tensor, out_norm: str = "") -> torch.Tensor:
 
 def get_4dim_image_gradients(image: torch.Tensor):
     """
-    Returns image gradients (dy, dx) for each color channel,
-    using the finite-difference approximation.
+    Returns image gradients (dy, dx) for each color channel
 
+    This uses the finite-difference approximation.
     Similar to get_image_gradients(), but additionally calculates the
     gradients in the two diagonal directions: 'dp' (the positive
     diagonal: bottom left to top right) and 'dn' (the negative
@@ -103,8 +103,8 @@ def get_4dim_image_gradients(image: torch.Tensor):
 def get_image_gradients(image: torch.Tensor, step: int = 1):
     """
     Returns image gradients (dy, dx) for each color channel,
-    using the finite-difference approximation.
 
+    This use the finite-difference approximation.
     Places the gradient [ie. I(x+1,y) - I(x,y)] on the base pixel (x, y).
     Both output tensors have the same shape as the input: [b, c, h, w].
 

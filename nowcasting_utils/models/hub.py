@@ -1,5 +1,7 @@
 """
-Originally Taken from https://github.com/rwightman/pytorch-image-models/
+Originally Taken from https://github.com/rwightman/
+
+https://github.com/rwightman/pytorch-image-models/
 blob/acd6c687fd1c0507128f0ce091829b233c8560b9/timm/models/hub.py
 """
 
@@ -252,6 +254,8 @@ class NowcastingModelHubMixin(ModelHubMixin):
 
     def __init__(self, *args, **kwargs):
         """
+        Mixin for pl.LightningModule and Hugging Face
+
         Mix this class with your pl.LightningModule class to easily push / download
         the model via the Hugging Face Hub
 
