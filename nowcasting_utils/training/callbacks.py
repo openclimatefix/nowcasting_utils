@@ -1,8 +1,9 @@
 """
 Custom callbacks used for training
 """
-from pytorch_lightning import Callback, LightningModule, Trainer
 import os
+
+from pytorch_lightning import Callback, LightningModule, Trainer
 
 
 class NeptuneModelLogger(Callback):

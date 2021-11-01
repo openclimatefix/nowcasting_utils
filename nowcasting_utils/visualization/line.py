@@ -1,9 +1,10 @@
 """Several line plots of predictions and truths."""
 
+from typing import List, Union
+
+import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import numpy as np
-from typing import Union, List
 
 
 def make_trace(x, y, truth: bool, show_legend: bool = True):

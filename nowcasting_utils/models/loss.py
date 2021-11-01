@@ -1,16 +1,16 @@
 """Sereval loss functions and high level loss function get'er."""
+import logging
 import math
+from typing import Optional
+
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-import logging
-
-from typing import Optional
 
 from nowcasting_utils.models.losses.FocalLoss import FocalLoss
 from nowcasting_utils.models.losses.StructuralSimilarity import (
-    SSIMLoss,
     MS_SSIMLoss,
+    SSIMLoss,
     SSIMLossDynamic,
 )
 from nowcasting_utils.models.losses.TotalVariationLoss import TVLoss

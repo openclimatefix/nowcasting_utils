@@ -6,7 +6,7 @@ See https://en.wikipedia.org/wiki/Structural_similarity for more details
 """
 
 import torch
-from pytorch_msssim import SSIM, MS_SSIM
+from pytorch_msssim import MS_SSIM, SSIM
 from torch import nn as nn
 
 

@@ -9,7 +9,7 @@ import json
 import logging
 import os
 from functools import partial
-from typing import Optional, Union, Tuple
+from typing import Optional, Tuple, Union
 
 import pytorch_lightning
 import torch

@@ -4,14 +4,15 @@ Matplotlib functions to plot a example dataset and model outputs.
 Author: Jack Kelly
 """
 
+from typing import Iterable, Optional
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from typing import Iterable, Optional
 import tilemapbase
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
 from nowcasting_dataloader.batch import BatchML
+from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 
 def plot_example(

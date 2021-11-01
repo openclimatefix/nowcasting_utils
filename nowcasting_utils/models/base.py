@@ -6,17 +6,18 @@ Useful things like
 - Interface with HuggingFace
 """
 from typing import Any, Type
-import torch.nn
+
 import pytorch_lightning as pl
+import torch.nn
 import torchvision
 from neptune.new.types import File
-from nowcasting_utils.models.hub import (
-    load_model_config_from_hf,
-    load_pretrained,
-    NowcastingModelHubMixin,
-)
 from nowcasting_dataset.consts import SATELLITE_DATA
 
+from nowcasting_utils.models.hub import (
+    NowcastingModelHubMixin,
+    load_model_config_from_hf,
+    load_pretrained,
+)
 
 REGISTERED_MODELS = {}
 

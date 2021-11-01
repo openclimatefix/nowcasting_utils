@@ -1,8 +1,9 @@
 """ Focal Loss - https://arxiv.org/abs/1708.02002 """
+from typing import List, Optional, Union
+
 import torch
-from typing import Union, Optional, List
-from torch import nn as nn
 import torch.nn.functional as F
+from torch import nn as nn
 from torch.autograd import Variable
 
 
