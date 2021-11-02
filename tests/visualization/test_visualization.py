@@ -20,6 +20,7 @@ def get_batch(
 ):
 
     c = Configuration()
+    c.process.batch_size = 4
     c.input_data = c.input_data.set_all_to_defaults()
 
     # set up fake data
@@ -39,7 +40,7 @@ def test_plot_example():
 
     model_output = torch.randn(8, 6)
 
-    plot_example(
+    fig = plot_example(
         batch=batch,
         model_output=model_output,
         history_minutes=60,
@@ -47,6 +48,7 @@ def test_plot_example():
         nwp_channels=NWP_VARIABLE_NAMES,
         output_variable="pv_yield",
     )
+    fig.clear()
 
 
 def test_plot_example_gsp_yield():
@@ -55,7 +57,7 @@ def test_plot_example_gsp_yield():
 
     model_output = torch.randn(8, 1)
 
-    plot_example(
+    fig = plot_example(
         batch=batch,
         model_output=model_output,
         history_minutes=60,
@@ -63,3 +65,5 @@ def test_plot_example_gsp_yield():
         nwp_channels=NWP_VARIABLE_NAMES,
         output_variable="gsp_yield",
     )
+
+    fig.clear()
