@@ -9,8 +9,9 @@ import tilemapbase
 # for Github actions need to create this
 try:
     tilemapbase.init(create=True)
-finally:
+except Exception:
     pass
+
 
 from nowcasting_dataloader.batch import BatchML
 
