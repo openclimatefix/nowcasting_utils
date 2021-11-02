@@ -5,18 +5,19 @@ Useful things like
 - Same validation set
 - Interface with HuggingFace
 """
-from typing import Any, Dict, Type
-import torch.nn
+from typing import Any, Type
+
 import pytorch_lightning as pl
+import torch.nn
 import torchvision
 from neptune.new.types import File
+from nowcasting_dataset.consts import SATELLITE_DATA
+
 from nowcasting_utils.models.hub import (
+    NowcastingModelHubMixin,
     load_model_config_from_hf,
     load_pretrained,
-    NowcastingModelHubMixin,
 )
-from nowcasting_dataset.consts import SATELLITE_DATA, NWP_DATA
-
 
 REGISTERED_MODELS = {}
 
@@ -110,8 +111,9 @@ def create_model(model_name, pretrained=False, checkpoint_path=None, **kwargs):
     """
     source_name, model_name = split_model_name(model_name)
 
-    # Parameters that aren't supported by all models or are intended to only override model defaults if set
-    # should default to None in command line args/cfg. Remove them if they are present and not set so that
+    # Parameters that aren't supported by all models or are intended to only
+    # override model defaults if set should default to None in command line args/cfg.
+    # Remove them if they are present and not set so that
     # non-supporting models don't break and default args remain in effect.
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
@@ -137,7 +139,8 @@ def create_model(model_name, pretrained=False, checkpoint_path=None, **kwargs):
             kwargs["hf_hub"] = hf_default_cfg.get("hf_hub")
         model = load_pretrained(model, default_cfg=kwargs, in_chans=kwargs["input_channels"])
     else:
-        # Initialize model here as LightingModules need a special way of loading checkpoints, this initializes randomly
+        # Initialize model here as LightingModules need a special way of loading checkpoints,
+        # this initializes randomly
         model = model(**kwargs)
     return model
 

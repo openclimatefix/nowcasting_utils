@@ -1,13 +1,16 @@
 """
 Custom callbacks used for training
 """
-from pytorch_lightning import Callback, LightningModule, Trainer
 import os
+
+from pytorch_lightning import Callback, LightningModule, Trainer
 
 
 class NeptuneModelLogger(Callback):
     """
-    Saves out the last and best models after each validation epoch. If the files don't exists, does nothing.
+    Saves out the last and best models after each validation epoch.
+
+    If the files don't exists, does nothing.
 
     Example::
         from pl_bolts.callbacks import NeptuneModelLogger
@@ -35,9 +38,11 @@ class NeptuneModelLogger(Callback):
             trainer.logger.experiment[0]["model_checkpoints/last.ckpt"].upload(
                 os.path.join(trainer.default_root_dir, "checkpoints", "last.ckpt")
             )
-        except:
+        except Exception as e:
             print(
-                f"No file to upload at {os.path.join(trainer.default_root_dir, 'checkpoints', 'last.ckpt')}"
+                f"No file to upload at "
+                f"{os.path.join(trainer.default_root_dir, 'checkpoints', 'last.ckpt')} "
+                f"{e}"
             )
             pass
 
@@ -56,8 +61,10 @@ class NeptuneModelLogger(Callback):
             trainer.logger.experiment[0]["model_checkpoints/best.ckpt"].upload(
                 os.path.join(trainer.default_root_dir, "checkpoints", "best.ckpt"),
             )
-        except:
+        except Exception as e:
             print(
-                f"No file to upload at {os.path.join(trainer.default_root_dir, 'checkpoints', 'best.ckpt')}"
+                f"No file to upload at "
+                f"{os.path.join(trainer.default_root_dir, 'checkpoints', 'best.ckpt')} "
+                f"{e}"
             )
             pass

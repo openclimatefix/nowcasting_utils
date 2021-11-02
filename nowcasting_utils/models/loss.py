@@ -1,16 +1,16 @@
 """Sereval loss functions and high level loss function get'er."""
+import logging
 import math
+from typing import Optional
+
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-import logging
-
-from typing import Optional
 
 from nowcasting_utils.models.losses.FocalLoss import FocalLoss
 from nowcasting_utils.models.losses.StructuralSimilarity import (
-    SSIMLoss,
     MS_SSIMLoss,
+    SSIMLoss,
     SSIMLossDynamic,
 )
 from nowcasting_utils.models.losses.TotalVariationLoss import TVLoss
@@ -109,7 +109,11 @@ class GradientDifferenceLoss(nn.Module):
 
 
 class GridCellLoss(nn.Module):
-    """Grid Cell Regularizer loss from Skillful Nowcasting, see https://arxiv.org/pdf/2104.00954.pdf."""
+    """
+    Grid Cell Regularizer loss from Skillful Nowcasting,
+
+    see https://arxiv.org/pdf/2104.00954.pdf.
+    """
 
     def __init__(self, weight_fn=None):
         """
@@ -126,7 +130,8 @@ class GridCellLoss(nn.Module):
         Calculates the grid cell regularizer value.
 
         This assumes generated images are the mean predictions from
-        6 calls to the generater (Monte Carlo estimation of the expectations for the latent variable)
+        6 calls to the generater
+        (Monte Carlo estimation of the expectations for the latent variable)
 
         Args:
             generated_images: Mean generated images from the generator

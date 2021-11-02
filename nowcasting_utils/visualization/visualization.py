@@ -4,17 +4,19 @@ Matplotlib functions to plot a example dataset and model outputs.
 Author: Jack Kelly
 """
 
+from typing import Iterable, Optional
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from typing import Iterable, Optional
 import tilemapbase
+from nowcasting_dataloader.batch import BatchML
+from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.consts import GSP_ID, GSP_YIELD, DATETIME_FEATURE_NAMES
 
 
 def plot_example(
-    batch,
+    batch: BatchML,
     model_output,
     history_minutes: int,
     forecast_minutes: int,
@@ -47,28 +49,28 @@ def plot_example(
     forecast_len = forecast_minutes // 5
 
     history_len_30 = history_minutes // 30
-    forecast_len_30 = forecast_minutes // 30
+    _ = forecast_minutes // 30
 
     # ******************* SATELLITE IMAGERY ***********************************
     extent = (  # left, right, bottom, top
-        float(batch["sat_x_coords"][example_i, 0].cpu().numpy()),
-        float(batch["sat_x_coords"][example_i, -1].cpu().numpy()),
-        float(batch["sat_y_coords"][example_i, -1].cpu().numpy()),
-        float(batch["sat_y_coords"][example_i, 0].cpu().numpy()),
+        float(batch.satellite.x[example_i, 0].cpu().numpy()),
+        float(batch.satellite.x[example_i, -1].cpu().numpy()),
+        float(batch.satellite.y[example_i, -1].cpu().numpy()),
+        float(batch.satellite.y[example_i, 0].cpu().numpy()),
     )
 
     def _format_ax(ax):
-        if "x_meters_center" in batch:
+        if "x_meters_center" in batch.metadata:
             ax.scatter(
-                batch["x_meters_center"][example_i].cpu(),
-                batch["y_meters_center"][example_i].cpu(),
+                batch.metadata.x_meters_center[example_i].cpu(),
+                batch.metadata.y_meters_center[example_i].cpu(),
                 s=500,
                 color="white",
                 marker="x",
             )
 
     ax = fig.add_subplot(nrows, ncols, 1)
-    sat_data = batch["sat_data"][example_i, :, :, :, 0].cpu().numpy()
+    sat_data = batch.satellite.data[example_i, :, :, :, 0].cpu().numpy()
     sat_min = np.min(sat_data)
     sat_max = np.max(sat_data)
     ax.imshow(sat_data[0], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
@@ -106,9 +108,9 @@ def plot_example(
     # ******************* TIMESERIES ******************************************
     # NWP
     ax = fig.add_subplot(nrows, ncols, 5)
-    nwp_dt_index = pd.to_datetime(batch["nwp_target_time"][example_i].cpu().numpy(), unit="s")
+    nwp_dt_index = pd.to_datetime(batch.nwp.target_time[example_i].cpu().numpy(), unit="s")
     pd.DataFrame(
-        batch["nwp"][example_i, :, :, 0, 0].T.cpu().numpy(),
+        batch.nwp.data[example_i, :, 0, 0, :].cpu().numpy(),
         index=nwp_dt_index,
         columns=nwp_channels,
     ).plot(ax=ax)
@@ -119,7 +121,7 @@ def plot_example(
     ax.set_title("datetime features")
     datetime_features_df = pd.DataFrame(index=nwp_dt_index, columns=DATETIME_FEATURE_NAMES)
     for key in DATETIME_FEATURE_NAMES:
-        datetime_features_df[key] = batch[key][example_i].cpu().numpy()
+        datetime_features_df[key] = getattr(batch.datetime, key)[example_i].cpu().numpy()
     datetime_features_df.plot(ax=ax)
     ax.legend()
     ax.set_xlabel(nwp_dt_index[0].date())
@@ -127,9 +129,9 @@ def plot_example(
     # ************************ PV YIELD ***************************************
     if output_variable == "pv_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
-        ax.set_title(f"PV yield for PV ID {batch['pv_system_id'][example_i, 0].cpu()}")
+        ax.set_title(f"PV yield for PV ID {batch.pv.pv_system_id[example_i, 0].cpu()}")
         pv_actual = pd.Series(
-            batch["pv_yield"][example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
+            batch.pv.pv_yield[example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
         )
         pv_pred = pd.Series(
             model_output[example_i].detach().cpu().numpy(),
@@ -141,12 +143,12 @@ def plot_example(
 
     if output_variable == "gsp_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
-        ax.set_title(f"GSP yield for GSP ID {batch[GSP_ID][example_i, 0].cpu()}")
+        ax.set_title(f"GSP yield for G" f"SP ID {batch.gsp.gsp_id[example_i, 0].cpu()}")
         gsp_dt_index = pd.to_datetime(
-            batch["gsp_datetime_index"][example_i].cpu().numpy(), unit="s"
+            batch.gsp.gsp_datetime_index[example_i].cpu().numpy(), unit="s"
         )
         gsp_actual = pd.Series(
-            batch[GSP_YIELD][example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
+            batch.gsp.gsp_yield[example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
         )
         gsp_pred = pd.Series(
             model_output[example_i].detach().cpu().numpy(),

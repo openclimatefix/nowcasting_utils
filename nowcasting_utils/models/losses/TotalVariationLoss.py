@@ -2,7 +2,8 @@
 Implementation of Total Variation Loss
 
 (https://en.wikipedia.org/wiki/Total_variation_denoising) copied and slightly
-modified from the original Apache License 2.0 traiNNer Authors https://github.com/victorca25/traiNNer/tree/master 
+modified from the original Apache License 2.0 traiNNer
+Authors https://github.com/victorca25/traiNNer/tree/master
 
 # Copyright 2021 traiNNer Authors
 #
@@ -67,8 +68,9 @@ def get_outnorm(x: torch.Tensor, out_norm: str = "") -> torch.Tensor:
 
 def get_4dim_image_gradients(image: torch.Tensor):
     """
-    Returns image gradients (dy, dx) for each color channel, using the finite-difference approximation.
+    Returns image gradients (dy, dx) for each color channel
 
+    This uses the finite-difference approximation.
     Similar to get_image_gradients(), but additionally calculates the
     gradients in the two diagonal directions: 'dp' (the positive
     diagonal: bottom left to top right) and 'dn' (the negative
@@ -100,8 +102,9 @@ def get_4dim_image_gradients(image: torch.Tensor):
 
 def get_image_gradients(image: torch.Tensor, step: int = 1):
     """
-    Returns image gradients (dy, dx) for each color channel, using the finite-difference approximation.
+    Returns image gradients (dy, dx) for each color channel,
 
+    This use the finite-difference approximation.
     Places the gradient [ie. I(x+1,y) - I(x,y)] on the base pixel (x, y).
     Both output tensors have the same shape as the input: [b, c, h, w].
 
@@ -162,7 +165,7 @@ class TVLoss(nn.Module):
         super(TVLoss, self).__init__()
         if isinstance(p, str):
             p = 1 if "1" in p else 2
-        if not p in [1, 2]:
+        if p not in [1, 2]:
             raise ValueError(f"Expected p value to be 1 or 2, but got {p}")
 
         self.p = p
@@ -186,12 +189,12 @@ class TVLoss(nn.Module):
         if len(img_shape) == 3:
             # reduce all axes. (None is an alias for all axes.)
             reduce_axes = None
-            batch_size = 1
+            _ = 1
         elif len(img_shape) == 4:
             # reduce for the last 3 axes.
             # results in a 1-D tensor with the tv for each image.
             reduce_axes = (-3, -2, -1)
-            batch_size = x.size()[0]
+            _ = x.size()[0]
         else:
             raise ValueError(
                 "Expected input tensor to be of ndim " f"3 or 4, but got {len(img_shape)}"

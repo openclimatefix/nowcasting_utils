@@ -1,8 +1,9 @@
 """ Focal Loss - https://arxiv.org/abs/1708.02002 """
+from typing import List, Optional, Union
+
 import torch
-from typing import Union, Optional, List
-from torch import nn as nn
 import torch.nn.functional as F
+from torch import nn as nn
 from torch.autograd import Variable
 
 
@@ -24,9 +25,10 @@ class FocalLoss(nn.Module):
 
         Args:
             alpha: (tensor, float, or list of floats) The scalar factor for this criterion
-            gamma: (float,double) gamma > 0 reduces the relative loss for well-classified examples (p>0.5) putting more
-                    focus on hard misclassified example
-            size_average: (bool, optional) By default, the losses are averaged over each loss element in the batch.
+            gamma: (float,double) gamma > 0 reduces the relative loss for well-classified
+                examples (p>0.5) putting more focus on hard misclassified example
+            size_average: (bool, optional) By default, the losses are averaged over
+                each loss element in the batch.
         """
         super(FocalLoss, self).__init__()
         self.gamma = gamma
