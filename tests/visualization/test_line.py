@@ -1,5 +1,6 @@
-from nowcasting_utils.visualization.line import plot_batch_results, plot_one_result, make_trace
 import numpy as np
+
+from nowcasting_utils.visualization.line import make_trace, plot_batch_results, plot_one_result
 
 
 def test_make_trace():

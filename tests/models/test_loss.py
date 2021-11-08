@@ -1,6 +1,7 @@
-from nowcasting_utils.models.loss import WeightedLosses, get_loss
-import torch
 import pytest
+import torch
+
+from nowcasting_utils.models.loss import WeightedLosses, get_loss
 
 
 def test_weight_losses_weights():

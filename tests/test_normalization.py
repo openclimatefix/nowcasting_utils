@@ -1,5 +1,6 @@
-from nowcasting_utils.models.normalization import metnet_normalization
 import numpy as np
+
+from nowcasting_utils.models.normalization import metnet_normalization
 
 
 def test_metnet_normalization():

@@ -1,6 +1,7 @@
-from nowcasting_utils.models.metrics import mse_each_forecast_horizon, mae_each_forecast_horizon
-import torch
 import pytest
+import torch
+
+from nowcasting_utils.models.metrics import mae_each_forecast_horizon, mse_each_forecast_horizon
 
 
 def test_mse_each_forecast_horizon():

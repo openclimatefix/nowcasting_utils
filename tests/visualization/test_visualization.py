@@ -1,10 +1,10 @@
-from nowcasting_utils.visualization.visualization import plot_example
-from nowcasting_dataset.consts import NWP_VARIABLE_NAMES
-from nowcasting_dataset.config.model import Configuration
-from nowcasting_dataloader.fake import FakeDataset
-import torch
-
 import tilemapbase
+import torch
+from nowcasting_dataloader.fake import FakeDataset
+from nowcasting_dataset.config.model import Configuration
+from nowcasting_dataset.consts import NWP_VARIABLE_NAMES
+
+from nowcasting_utils.visualization.visualization import plot_example
 
 # for Github actions need to create this
 try:
@@ -16,8 +16,7 @@ except Exception:
 from nowcasting_dataloader.batch import BatchML
 
 
-def get_batch(
-):
+def get_batch():
 
     c = Configuration()
     c.process.batch_size = 4
