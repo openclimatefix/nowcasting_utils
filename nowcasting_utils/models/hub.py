@@ -25,14 +25,14 @@ try:
     from huggingface_hub import cached_download, hf_hub_url
 
     __version__ = nowcasting_utils.__version__
-    cached_download = partial(cached_download, library_name="satflow", library_version=nowcasting_utils.__version__)
+    cached_download = partial(
+        cached_download, library_name="satflow", library_version=nowcasting_utils.__version__
+    )
 except ImportError:
     hf_hub_url = None
     cached_download = None
 
 from huggingface_hub import CONFIG_NAME, PYTORCH_WEIGHTS_NAME, ModelHubMixin, hf_hub_download
-
-
 
 MODEL_CARD_MARKDOWN = """---
 license: mit
