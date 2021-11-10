@@ -33,7 +33,7 @@ def get_batch():
     return x
 
 
-def test_a_plot_example():
+def test_b_plot_example():
 
     batch = get_batch()
 
@@ -50,7 +50,7 @@ def test_a_plot_example():
     fig.clear()
 
 
-def test_b_plot_example_gsp_yield():
+def test_a_plot_example_gsp_yield():
 
     batch = get_batch()
 
