@@ -19,14 +19,13 @@ try:
 except ImportError:
     from torch.hub import _get_torch_home as get_dir
 
-import nowcasting_utils
+from nowcasting_utils import __version__
 
 try:
     from huggingface_hub import cached_download, hf_hub_url
 
-    __version__ = nowcasting_utils.__version__
     cached_download = partial(
-        cached_download, library_name="satflow", library_version=nowcasting_utils.__version__
+        cached_download, library_name="satflow", library_version=__version__
     )
 except ImportError:
     hf_hub_url = None
