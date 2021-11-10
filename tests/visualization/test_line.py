@@ -27,7 +27,7 @@ def test_plot_batch_results():
 
 
 def test_plot_one_result():
-    """ Test plot one result"""
+    """Test plot one result"""
     x = np.random.random(7)
     y = np.random.random(7)
     y_hat = np.random.random(7)
