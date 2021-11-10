@@ -39,16 +39,19 @@ import xarray as xr
 
 # The source path of the CSV files from ESO.
 ESO_CSV_PATH = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/CSV/"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/"
+    "other_organisations_pv_forecasts/National_Grid_ESO/CSV/"
 )
 
 # The destination NetCDF filename.
 DST_NETCDF = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/"
+    "other_organisations_pv_forecasts/National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc"
 )
 
 # The DATETIME columns to load from the ESO CSVs.
-DATETIME_COLS = ["FORECAST_DATE_TIME", "TARGET_DATE_TIME"]  # Ignore 'WEATHER_FORECAST_DATE_TIME'.
+DATETIME_COLS = ["FORECAST_DATE_TIME", "TARGET_DATE_TIME"]
+# Ignore 'WEATHER_FORECAST_DATE_TIME'.
 
 # The ESO forecasting algorithms (see comments a the top of this script).
 ESO_ALGO_NAMES = ("ASL", "ML")

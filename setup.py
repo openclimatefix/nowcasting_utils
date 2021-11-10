@@ -11,7 +11,7 @@ exec(open("nowcasting_utils/version.py").read())
 setup(
     name="nowcasting_utils",
     packages=find_packages(),
-    version=__version__,
+    version="0.0.12",
     license="MIT",
     description="Nowcasting Utilities",
     author="Jacob Bieker, Jack Kelly, Peter Dudfield",
