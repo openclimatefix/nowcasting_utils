@@ -5,7 +5,7 @@ from nowcasting_utils.models.normalization import metnet_normalization
 
 
 def test_metnet_normalization():
-    """ Test metnet normalization """
+    """Test metnet normalization"""
     data = np.random.random((2, 24, 12, 256, 256))
     data *= 1000  # Ensure not already between -1 and 1
     normalized_data = metnet_normalization(data)

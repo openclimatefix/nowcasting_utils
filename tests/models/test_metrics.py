@@ -5,7 +5,7 @@ from nowcasting_utils.models.metrics import mae_each_forecast_horizon, mse_each_
 
 
 def test_mse_each_forecast_horizon():
-    """ Test MSE for different forecast horizons """
+    """Test MSE for different forecast horizons"""
     output = torch.Tensor([[1, 3], [1, 6]])
     target = torch.Tensor([[1, 5], [1, 3]])
 
@@ -16,7 +16,7 @@ def test_mse_each_forecast_horizon():
 
 
 def test_mae_each_forecast_horizon():
-    """ Test MAE for different forecast horizons """
+    """Test MAE for different forecast horizons"""
     output = torch.Tensor([[1, 3], [1, 6]])
     target = torch.Tensor([[1, 5], [1, 3]])
 

@@ -6,7 +6,7 @@ from nowcasting_utils.models.loss import WeightedLosses, get_loss
 
 
 def test_weight_losses_weights():
-    """ Test weighted loss """
+    """Test weighted loss"""
     forecast_length = 2
     w = WeightedLosses(forecast_length=forecast_length)
 
@@ -15,7 +15,7 @@ def test_weight_losses_weights():
 
 
 def test_mae_exp():
-    """ test MAE exp with weighted loss """
+    """test MAE exp with weighted loss"""
     forecast_length = 2
     w = WeightedLosses(forecast_length=forecast_length)
 
@@ -28,7 +28,7 @@ def test_mae_exp():
 
 
 def test_mse_exp():
-    """ test MSE exp with weighted loss """
+    """test MSE exp with weighted loss"""
     forecast_length = 2
     w = WeightedLosses(forecast_length=forecast_length)
 
@@ -41,7 +41,7 @@ def test_mse_exp():
 
 
 def test_mae_exp_rand():
-    """ test MAE exp with weighted loss  with random tensors """
+    """test MAE exp with weighted loss  with random tensors"""
     forecast_length = 6
     batch_size = 32
 
@@ -55,7 +55,7 @@ def test_mae_exp_rand():
 
 
 def test_mse_exp_rand():
-    """ test MSE exp with weighted loss  with random tensors """
+    """test MSE exp with weighted loss  with random tensors"""
     forecast_length = 6
     batch_size = 32
 
@@ -89,7 +89,7 @@ def test_mse_exp_rand():
     ],
 )
 def test_get_loss(loss_name):
-    """ Test to get loss name """
+    """Test to get loss name"""
     _ = get_loss(loss_name)
 
 
@@ -102,7 +102,7 @@ def test_get_loss(loss_name):
     ],
 )
 def test_video_loss(loss_name):
-    """ Test video loss """
+    """Test video loss"""
     loss = get_loss(loss_name)
     output = torch.randn((2, 24, 12, 512, 512))
     target = torch.randn((2, 24, 12, 512, 512))
@@ -111,7 +111,7 @@ def test_video_loss(loss_name):
 
 
 def test_tv_loss():
-    """ Test TV loss """
+    """Test TV loss"""
     loss = get_loss("tv")
     output = torch.randn((2, 12, 512, 512))
     out = loss(output)
@@ -119,14 +119,14 @@ def test_tv_loss():
 
 
 def test_missing_loss():
-    """ Test to check error is rasied"""
+    """Test to check error is rasied"""
     with pytest.raises(AssertionError):
         _ = get_loss("made_up_metric")
 
 
 @pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
 def test_convert_ssim_loss(loss_name):
-    """ Test for SSIM """
+    """Test for SSIM"""
     loss = get_loss(loss_name, convert_range=True, channel=12)
     output = torch.randn((2, 12, 512, 512))
     target = torch.randn((2, 12, 512, 512))
@@ -139,7 +139,7 @@ def test_convert_ssim_loss(loss_name):
 
 @pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
 def test_convert_ssim_loss(loss_name):
-    """ Test for SSIM with no converted range """
+    """Test for SSIM with no converted range"""
     loss = get_loss(loss_name, convert_range=False, channel=12)
     output = torch.randn((2, 12, 512, 512))
     target = torch.randn((2, 12, 512, 512))
