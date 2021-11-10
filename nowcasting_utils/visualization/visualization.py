@@ -79,7 +79,11 @@ def plot_example(
 
     ax = fig.add_subplot(nrows, ncols, 2)
     ax.imshow(
-        sat_data[:, history_len + 1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max
+        sat_data[:, history_len + 1],
+        extent=extent,
+        interpolation="none",
+        vmin=sat_min,
+        vmax=sat_max,
     )
     if epoch is None:
         ax.set_title("t = 0")
