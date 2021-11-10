@@ -7,7 +7,6 @@ this_directory = Path(__file__).parent
 install_requires = (this_directory / "requirements.txt").read_text().splitlines()
 long_description = (this_directory / "README.md").read_text()
 
-exec(open("nowcasting_utils/version.py").read())
 setup(
     name="nowcasting_utils",
     packages=find_packages(),
