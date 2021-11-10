@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 import tilemapbase
 from nowcasting_dataloader.batch import BatchML
-from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 
