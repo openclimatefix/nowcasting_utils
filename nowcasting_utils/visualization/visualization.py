@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 import tilemapbase
 from nowcasting_dataloader.batch import BatchML
-from nowcasting_dataset.consts import DATETIME_FEATURE_NAMES
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 
@@ -79,7 +78,11 @@ def plot_example(
 
     ax = fig.add_subplot(nrows, ncols, 2)
     ax.imshow(
-        sat_data[history_len + 1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max
+        sat_data[:, history_len + 1],
+        extent=extent,
+        interpolation="none",
+        vmin=sat_min,
+        vmax=sat_max,
     )
     if epoch is None:
         ax.set_title("t = 0")
@@ -108,23 +111,13 @@ def plot_example(
     # ******************* TIMESERIES ******************************************
     # NWP
     ax = fig.add_subplot(nrows, ncols, 5)
-    nwp_dt_index = pd.to_datetime(batch.nwp.target_time[example_i].cpu().numpy(), unit="s")
+    nwp_dt_index = pd.to_datetime(batch.nwp.time[example_i].cpu().numpy(), unit="s")
     pd.DataFrame(
-        batch.nwp.data[example_i, :, 0, 0, :].cpu().numpy(),
+        batch.nwp.data[example_i, :, :, 0, 0].cpu().numpy().T,
         index=nwp_dt_index,
         columns=nwp_channels,
     ).plot(ax=ax)
     ax.set_title("NWP")
-
-    # datetime features
-    ax = fig.add_subplot(nrows, ncols, 6)
-    ax.set_title("datetime features")
-    datetime_features_df = pd.DataFrame(index=nwp_dt_index, columns=DATETIME_FEATURE_NAMES)
-    for key in DATETIME_FEATURE_NAMES:
-        datetime_features_df[key] = getattr(batch.datetime, key)[example_i].cpu().numpy()
-    datetime_features_df.plot(ax=ax)
-    ax.legend()
-    ax.set_xlabel(nwp_dt_index[0].date())
 
     # ************************ PV YIELD ***************************************
     if output_variable == "pv_yield":

@@ -32,21 +32,29 @@ and strip away stuff we don't need, and maintain a list of xr.DataSets to be con
 """
 
 from pathlib import Path
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 import xarray as xr
 
 # The source path of the CSV files from ESO.
-ESO_CSV_PATH = Path('/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/CSV/')
+ESO_CSV_PATH = Path(
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/"
+    "other_organisations_pv_forecasts/National_Grid_ESO/CSV/"
+)
 
 # The destination NetCDF filename.
-DST_NETCDF = Path('/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc')
+DST_NETCDF = Path(
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/"
+    "other_organisations_pv_forecasts/National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc"
+)
 
 # The DATETIME columns to load from the ESO CSVs.
-DATETIME_COLS = ['FORECAST_DATE_TIME', 'TARGET_DATE_TIME']  # Ignore 'WEATHER_FORECAST_DATE_TIME'.
+DATETIME_COLS = ["FORECAST_DATE_TIME", "TARGET_DATE_TIME"]
+# Ignore 'WEATHER_FORECAST_DATE_TIME'.
 
 # The ESO forecasting algorithms (see comments a the top of this script).
-ESO_ALGO_NAMES = ('ASL', 'ML')
+ESO_ALGO_NAMES = ("ASL", "ML")
 
 
 def filenames_and_datetime_periods(path: Path) -> pd.Series:
@@ -57,8 +65,8 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
 
     This is the header and first line of an ESO CSVs:
 
-    ,TALENDID,WEATHER_FORECAST_DATE_TIME,FORECAST_DATE_TIME,TARGET_DATE_TIME,FORECAST_HORIZON,SITE_ID,MW,SCRIPT_NAME
-    0,PV_GSP_ASL_20210401014517,2021-03-31 22:40:00+00:00,2021-04-01 00:46:36+00:00,2021-04-01 01:00:00+00:00,2D,BICF_1,0.0,GSP_PV_ASL_00.00
+    ,TALENDID,WEATHER_FORECAST_DATE_TIME,FORECAST_DATE_TIME,TARGET_DATE_TIME,FORECAST_HORIZON,SITE_ID,MW,SCRIPT_NAME # noqa 501
+    0,PV_GSP_ASL_20210401014517,2021-03-31 22:40:00+00:00,2021-04-01 00:46:36+00:00,2021-04-01 01:00:00+00:00,2D,BICF_1,0.0,GSP_PV_ASL_00.00 # noqa 501
 
     TALENDID: The ID of the forecasting job running on ESO's PEF system.
     WEATHER_FORECAST_DATE_TIME: The datetime when ESO received numerical weather predictions.
@@ -74,11 +82,11 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
         to indicate which ESO forecasting algorithm was used (see the comments
         at the top of this script for more info), and includes the version of the script.
     """
-    csv_filenames = list(path.glob('*.csv'))
+    csv_filenames = list(path.glob("*.csv"))
 
     # The filename stems are of the form "gsp_pv_forecast_Jun2020".
     # Split by "_" and then take the last split to get "Jun2020":
-    periods = [filename.stem.split('_')[-1] for filename in csv_filenames]
+    periods = [filename.stem.split("_")[-1] for filename in csv_filenames]
     periods = [pd.Period(period) for period in periods]
 
     return pd.Series(csv_filenames, index=periods).sort_index()
@@ -88,8 +96,8 @@ def load_csv(csv_filename: Path) -> pd.DataFrame:
     """Load ESO CSV files.  Returns a pd.DataFrame."""
     eso_forecasts_df = pd.read_csv(
         csv_filename,
-        usecols=DATETIME_COLS + ['FORECAST_HORIZON', 'SITE_ID', 'MW', 'SCRIPT_NAME'],
-        dtype={'MW': np.float32},
+        usecols=DATETIME_COLS + ["FORECAST_HORIZON", "SITE_ID", "MW", "SCRIPT_NAME"],
+        dtype={"MW": np.float32},
     )
 
     # Using `parse_dates=DATETIME_COLS` in `read_csv` takes 6 mins 15 secs on leonardo.
@@ -98,7 +106,7 @@ def load_csv(csv_filename: Path) -> pd.DataFrame:
         eso_forecasts_df[col] = pd.to_datetime(eso_forecasts_df[col])
 
         # Remove timezone because xarray doesn't like timezones :)
-        eso_forecasts_df[col] = eso_forecasts_df[col].dt.tz_convert('UTC').dt.tz_convert(None)
+        eso_forecasts_df[col] = eso_forecasts_df[col].dt.tz_convert("UTC").dt.tz_convert(None)
 
     return eso_forecasts_df
 
@@ -112,7 +120,7 @@ def keep_only_2_day_forecasts(eso_forecasts_df: pd.DataFrame) -> pd.DataFrame:
     eso_forecasts_df.FORECAST_HORIZON = eso_forecasts_df.FORECAST_HORIZON.str.upper()
     rows_2D_horizon = eso_forecasts_df.FORECAST_HORIZON == "2D"
     eso_forecasts_df = eso_forecasts_df[rows_2D_horizon]
-    eso_forecasts_df.drop(columns='FORECAST_HORIZON', inplace=True)
+    eso_forecasts_df.drop(columns="FORECAST_HORIZON", inplace=True)
     return eso_forecasts_df
 
 
@@ -131,9 +139,9 @@ def split_asl_and_ml_forecasts(eso_forecasts_df: pd.DataFrame) -> dict[str, pd.D
 
     eso_forecasts = {}
     for algo_name in ESO_ALGO_NAMES:
-        mask = eso_forecasts_df.SCRIPT_NAME.str.contains(f'_{algo_name}_')
+        mask = eso_forecasts_df.SCRIPT_NAME.str.contains(f"_{algo_name}_")
         eso_forecasts[algo_name] = eso_forecasts_df[mask]
-        eso_forecasts[algo_name] = eso_forecasts[algo_name].drop(columns='SCRIPT_NAME')
+        eso_forecasts[algo_name] = eso_forecasts[algo_name].drop(columns="SCRIPT_NAME")
 
     return eso_forecasts
 
@@ -151,22 +159,22 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
 
     # The FORECAST_DATE_TIME is, I think, the time when ESO ran their forecasting script.
     # The times are all over the place.  So floor the datetime to the nearest half-hour:
-    df['forecast_date_time'] = df['FORECAST_DATE_TIME'].dt.floor('30T')
-    df = df.drop(columns='FORECAST_DATE_TIME')
+    df["forecast_date_time"] = df["FORECAST_DATE_TIME"].dt.floor("30T")
+    df = df.drop(columns="FORECAST_DATE_TIME")
 
     # Calculate the forecast "step":
-    df['step'] = df['TARGET_DATE_TIME'] - df['forecast_date_time']
-    df = df.drop(columns='TARGET_DATE_TIME')
+    df["step"] = df["TARGET_DATE_TIME"] - df["forecast_date_time"]
+    df = df.drop(columns="TARGET_DATE_TIME")
 
     # Make sure "step" is positive:
     # (step can be negative for ASL forecasts, for some reasons).
     df = df[df.step >= pd.Timedelta(0)]
 
     # Rename to more column names more like the ones we're used to.
-    df = df.rename(columns={'SITE_ID': 'gsp_name'})
+    df = df.rename(columns={"SITE_ID": "gsp_name"})
 
     # Set index
-    df = df.set_index(['gsp_name', 'forecast_date_time', 'step'])
+    df = df.set_index(["gsp_name", "forecast_date_time", "step"])
     series = df.squeeze()
     del df
 
@@ -183,7 +191,7 @@ def main():
     datasets = []
 
     for i, filename in enumerate(filenames.values):
-        print(f'{i+1:2d}/{n:2d}: {filename}', flush=True)
+        print(f"{i+1:2d}/{n:2d}: {filename}", flush=True)
         eso_forecasts_df = load_csv(filename)
         eso_forecasts_df = keep_only_2_day_forecasts(eso_forecasts_df)
         split_forecasts = split_asl_and_ml_forecasts(eso_forecasts_df)
@@ -198,7 +206,7 @@ def main():
         datasets.append(dataset)
         del dataset, data_arrays
 
-    dataset = xr.concat(datasets, dim='forecast_date_time')
+    dataset = xr.concat(datasets, dim="forecast_date_time")
 
     # The resulting NetCDF file is about 2.3 GBytes.
     dataset.to_netcdf(DST_NETCDF)
