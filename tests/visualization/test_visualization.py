@@ -1,7 +1,7 @@
 """Test general visualization """
+import pytest
 import tilemapbase
 import torch
-import pytest
 from nowcasting_dataloader.fake import FakeDataset
 from nowcasting_dataset.config.model import Configuration
 from nowcasting_dataset.consts import NWP_VARIABLE_NAMES
