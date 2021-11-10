@@ -138,7 +138,7 @@ def test_convert_ssim_loss(loss_name):
 
 
 @pytest.mark.parametrize("loss_name", ["ssim", "ms_ssim"])
-def test_convert_ssim_loss(loss_name):
+def test_convert_ssim_loss_no_convert_range(loss_name):
     """Test for SSIM with no converted range"""
     loss = get_loss(loss_name, convert_range=False, channel=12)
     output = torch.randn((2, 12, 512, 512))

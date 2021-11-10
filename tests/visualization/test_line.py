@@ -22,7 +22,7 @@ def test_plot_batch_results():
     y = np.random.random(size)
     y_hat = np.random.random(size)
 
-    fig = plot_batch_results(x=x, y=y, y_hat=y_hat, model_name="test_model")
+    _ = plot_batch_results(x=x, y=y, y_hat=y_hat, model_name="test_model")
     # fig.show(renderer='browser')
 
 
