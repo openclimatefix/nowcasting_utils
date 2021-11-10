@@ -24,9 +24,7 @@ from nowcasting_utils import __version__
 try:
     from huggingface_hub import cached_download, hf_hub_url
 
-    cached_download = partial(
-        cached_download, library_name="satflow", library_version=__version__
-    )
+    cached_download = partial(cached_download, library_name="satflow", library_version=__version__)
 except ImportError:
     hf_hub_url = None
     cached_download = None
