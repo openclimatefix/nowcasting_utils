@@ -1,10 +1,11 @@
+""" Test for making line plots """
 import numpy as np
 
 from nowcasting_utils.visualization.line import make_trace, plot_batch_results, plot_one_result
 
 
 def test_make_trace():
-
+    """ test make line trace """
     x = np.random.random(7)
     y = np.random.random(7)
 
@@ -14,7 +15,7 @@ def test_make_trace():
 
 
 def test_plot_batch_results():
-
+    """ test plot batch results """
     size = (32, 7)
 
     x = np.random.random(size)
@@ -26,7 +27,7 @@ def test_plot_batch_results():
 
 
 def test_plot_one_result():
-
+    """" test plot one result """
     x = np.random.random(7)
     y = np.random.random(7)
     y_hat = np.random.random(7)

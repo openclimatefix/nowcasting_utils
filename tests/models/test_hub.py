@@ -1,3 +1,4 @@
+""" Test for Hub interface """
 import os
 import tempfile
 
@@ -22,6 +23,7 @@ class DummyModel(BaseModel, NowcastingModelHubMixin):
 
 
 def test_satflow_mixin():
+    """ Check satflow mixin """
     # Override some of the hyperparameters
     config = {"loss": "rmse", "forecast_steps": 123}
     model = DummyModel(**config)
