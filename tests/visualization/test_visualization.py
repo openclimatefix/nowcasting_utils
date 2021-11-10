@@ -19,7 +19,7 @@ from nowcasting_dataloader.batch import BatchML
 
 
 def get_batch():
-    """get batch for tests"""
+    """Get batch for tests"""
     c = Configuration()
     c.process.batch_size = 4
     c.input_data = c.input_data.set_all_to_defaults()
@@ -36,7 +36,7 @@ def get_batch():
 
 
 def test_b_plot_example():
-    """test plot for pv yield"""
+    """Test plot for pv yield"""
     batch = get_batch()
 
     model_output = torch.randn(8, 6)
@@ -54,7 +54,7 @@ def test_b_plot_example():
 
 @pytest.mark.skip(reason="This seems to fail on ubunut at the moment")
 def test_a_plot_example_gsp_yield():
-    """test plot for gsp"""
+    """Test plot for gsp"""
     batch = get_batch()
 
     model_output = torch.randn(8, 1)

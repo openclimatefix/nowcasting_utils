@@ -9,11 +9,15 @@ from nowcasting_utils.models.hub import NowcastingModelHubMixin
 
 
 class DummyModel(BaseModel, NowcastingModelHubMixin):
-    # Define hyperparameters of various types to test serialisation / deserialisation
-    # This follows the pattern adopted in LitMetNet and Perceiver
+    """
+    Define hyperparameters of various types to test serialisation / deserialisation
+
+    This follows the pattern adopted in LitMetNet and Perceiver
+    """
     def __init__(
         self, loss: str = "mse", forecast_steps: int = 42, pretrained: bool = True, lr: float = 0.05
     ):
+        """ Init dummy model """
         super(BaseModel, self).__init__()
         self.loss = loss
         self.forecast_steps = forecast_steps

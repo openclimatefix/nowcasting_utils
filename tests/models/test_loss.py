@@ -15,7 +15,7 @@ def test_weight_losses_weights():
 
 
 def test_mae_exp():
-    """test MAE exp with weighted loss"""
+    """Test MAE exp with weighted loss"""
     forecast_length = 2
     w = WeightedLosses(forecast_length=forecast_length)
 
@@ -28,7 +28,7 @@ def test_mae_exp():
 
 
 def test_mse_exp():
-    """test MSE exp with weighted loss"""
+    """Test MSE exp with weighted loss"""
     forecast_length = 2
     w = WeightedLosses(forecast_length=forecast_length)
 
@@ -41,7 +41,7 @@ def test_mse_exp():
 
 
 def test_mae_exp_rand():
-    """test MAE exp with weighted loss  with random tensors"""
+    """Test MAE exp with weighted loss  with random tensors"""
     forecast_length = 6
     batch_size = 32
 
@@ -55,7 +55,7 @@ def test_mae_exp_rand():
 
 
 def test_mse_exp_rand():
-    """test MSE exp with weighted loss  with random tensors"""
+    """Test MSE exp with weighted loss  with random tensors"""
     forecast_length = 6
     batch_size = 32
 
