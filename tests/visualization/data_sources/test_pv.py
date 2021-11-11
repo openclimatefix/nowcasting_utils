@@ -8,6 +8,7 @@ from nowcasting_utils.visualization.data_sources.plot_pv import (
 from nowcasting_dataset.data_sources.fake import (
     pv_fake,
 )
+import os
 import plotly.graph_objects as go
 
 
@@ -20,7 +21,8 @@ def test_get_trace_centroid_pv():
     # here's if you need to plot the trace
     fig = go.Figure()
     fig.add_trace(trace)
-    fig.show(renderer="browser")
+    if 'CI' not in os.environ.keys():
+        fig.show(renderer="browser")
 
 
 def test_get_trace_all_pv_systems():
@@ -33,7 +35,8 @@ def test_get_trace_all_pv_systems():
     fig = go.Figure()
     for trace in traces:
         fig.add_trace(trace)
-    fig.show(renderer="browser")
+    if 'CI' not in os.environ.keys():
+        fig.show(renderer="browser")
 
 
 def test_get_traces_pv_intensity():
@@ -44,13 +47,15 @@ def test_get_traces_pv_intensity():
 
     fig = make_fig_of_animation_from_frames(traces=traces)
 
-    fig.show(renderer="browser")
+    if 'CI' not in os.environ.keys():
+        fig.show(renderer="browser")
 
 
 def test_get_fig_pv_combined():
     pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
     fig = get_fig_pv_combined(pv=pv, example_index=1)
-    fig.show(renderer="browser")
+    if 'CI' not in os.environ.keys():
+        fig.show(renderer="browser")
 
 
