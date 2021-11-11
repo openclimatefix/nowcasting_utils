@@ -38,38 +38,44 @@ def get_trace_all_pv_systems(pv: PV, example_index: int) -> List[go.Scatter]:
 
 
 def get_traces_pv_intensity(pv: PV, example_index: int):
-    """ Get traces of pv intenisty map """
+    """Get traces of pv intenisty map"""
     time = pv.time[example_index]
     x = pv.x_coords[example_index]
     y = pv.y_coords[example_index]
 
-    n_pv_systems  =pv.data.shape[2]
+    n_pv_systems = pv.data.shape[2]
 
     traces = []
     for t_index in range(len(time)):
         z = pv.data[example_index, t_index, :]
         name = time[t_index].data
         traces.append(
-            make_trace(x, y, truth=False, mode="markers", marker_size=10 * z + 1, name=str(name),
-                       color = ['Blue'] + ['Red']*(n_pv_systems-1))
+            make_trace(
+                x,
+                y,
+                truth=False,
+                mode="markers",
+                marker_size=10 * z + 1,
+                name=str(name),
+                color=["Blue"] + ["Red"] * (n_pv_systems - 1),
+            )
         )
 
     return traces
 
 
 def make_buttons() -> dict:
-    """ Make buttons Play dict """
+    """Make buttons Play dict"""
     return dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])
 
 
 def make_fig_of_animation_from_frames(traces):
-    """ Make animated fig form traces """
+    """Make animated fig form traces"""
     frames = [go.Frame(data=trace) for trace in traces]
     fig = go.Figure(
         data=traces[0],
         layout=go.Layout(
             title="Start Title",
-            # updatemenus=[dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])],
         ),
         frames=frames,
     )
@@ -90,7 +96,7 @@ def get_fig_pv_combined(pv: PV, example_index: int):
 
     traces_pv_intensity_map = get_traces_pv_intensity(pv=pv, example_index=example_index)
 
-    fig = make_subplots(rows=1, cols=2, subplot_titles=('Map', 'Time Series'))
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("Map", "Time Series"))
 
     # add first animation plot
     fig.add_trace(traces_pv_intensity_map[0], row=1, col=1)
@@ -104,10 +110,7 @@ def get_fig_pv_combined(pv: PV, example_index: int):
     frames = []
     static_traces = list(fig.data[1:])
     for trace in traces_pv_intensity_map:
-        frames.append(dict(
-            data=[trace] + static_traces,
-            traces=list(range(n_traces))
-        ))
+        frames.append(dict(data=[trace] + static_traces, traces=list(range(n_traces))))
 
     fig.update(frames=frames)
     fig.update_layout(updatemenus=[make_buttons()])
