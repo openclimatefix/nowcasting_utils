@@ -1,10 +1,11 @@
 """ General functions for plotting PV data """
 from typing import List
 
-from nowcasting_dataset.data_sources.pv.pv_data_source import PV
-from nowcasting_utils.visualization.line import make_trace
 import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.pv.pv_data_source import PV
 from plotly.subplots import make_subplots
+
+from nowcasting_utils.visualization.line import make_trace
 
 
 def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
