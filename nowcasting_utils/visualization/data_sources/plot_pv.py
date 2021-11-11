@@ -1,3 +1,4 @@
+""" General functions for plotting PV data """
 from typing import List
 
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
@@ -57,7 +58,7 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
 
 
 def make_buttons() -> dict:
-    """ make buttons Play dict """
+    """ Make buttons Play dict """
     return dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])
 
 
