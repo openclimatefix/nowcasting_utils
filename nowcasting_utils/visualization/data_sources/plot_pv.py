@@ -37,7 +37,7 @@ def get_trace_all_pv_systems(pv: PV, example_index: int) -> List[go.Scatter]:
 
 
 def get_traces_pv_intensity(pv: PV, example_index: int):
-
+    """ Get traces of pv intenisty map """
     time = pv.time[example_index]
     x = pv.x_coords[example_index]
     y = pv.y_coords[example_index]
@@ -56,11 +56,13 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
     return traces
 
 
-def get_buttons():
+def make_buttons() -> dict:
+    """ make buttons Play dict """
     return dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])
 
 
 def make_fig_of_animation_from_frames(traces):
+    """ Make animated fig form traces """
     frames = [go.Frame(data=trace) for trace in traces]
     fig = go.Figure(
         data=traces[0],
@@ -70,7 +72,7 @@ def make_fig_of_animation_from_frames(traces):
         ),
         frames=frames,
     )
-    fig.update_layout(updatemenus=[get_buttons()])
+    fig.update_layout(updatemenus=[make_buttons()])
 
     return fig
 
@@ -107,24 +109,6 @@ def get_fig_pv_combined(pv: PV, example_index: int):
         ))
 
     fig.update(frames=frames)
-    fig.update_layout(updatemenus=[get_buttons()])
+    fig.update_layout(updatemenus=[make_buttons()])
 
     return fig
-
-
-
-
-#
-# def make_video_of_pv_instensity(pv: PV, example_index: int):
-#
-#     t_index = 0
-#     z = pv.data[example_index, :, t_index]
-#
-#     go.Choroplethmapbox(
-#         geojson=shapes_dict,
-#         locations=gps_data.index,
-#         z=z,
-#         # zmax=max_generation,
-#         # zmin=0,
-#         colorscale="Viridis",
-#     )
