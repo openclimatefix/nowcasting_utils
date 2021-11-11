@@ -3,8 +3,9 @@ from nowcasting_utils.visualization.data_sources.plot_pv import (
     get_trace_all_pv_systems,
     get_traces_pv_intensity,
     make_fig_of_animation_from_frames,
-    get_fig_pv_combined
+    get_fig_pv_combined,
 )
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from nowcasting_dataset.data_sources.fake import (
     pv_fake,
 )
@@ -21,7 +22,7 @@ def test_get_trace_centroid_pv():
     # here's if you need to plot the trace
     fig = go.Figure()
     fig.add_trace(trace)
-    if 'CI' not in os.environ.keys():
+    if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
 
@@ -35,7 +36,7 @@ def test_get_trace_all_pv_systems():
     fig = go.Figure()
     for trace in traces:
         fig.add_trace(trace)
-    if 'CI' not in os.environ.keys():
+    if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
 
@@ -43,11 +44,36 @@ def test_get_traces_pv_intensity():
 
     pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
 
+    example_index = 1
     traces = get_traces_pv_intensity(pv=pv, example_index=1)
 
-    fig = make_fig_of_animation_from_frames(traces=traces)
+    x = pv.x_coords[example_index].mean()
+    y = pv.y_coords[example_index].mean()
 
-    if 'CI' not in os.environ.keys():
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
+    fig = go.Figure()
+    for trace in traces[0:2]:
+        fig.add_trace(trace)
+
+    fig.update_layout(
+        mapbox_style="carto-positron", mapbox_zoom=8, mapbox_center={"lat": lat, "lon": lon}
+    )
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+    if "CI" not in os.environ.keys():
+        fig.show(renderer="browser")
+
+
+def test_get_traces_pv_intensity_and_animate():
+
+    pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
+
+    traces = get_traces_pv_intensity(pv=pv, example_index=1)
+
+    fig = make_fig_of_animation_from_frames(traces=traces, pv=pv, example_index=1)
+
+    if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
 
@@ -55,7 +81,7 @@ def test_get_fig_pv_combined():
     pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
     fig = get_fig_pv_combined(pv=pv, example_index=1)
-    if 'CI' not in os.environ.keys():
+    if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
-
+    fig.write_html("pv_plot.html")

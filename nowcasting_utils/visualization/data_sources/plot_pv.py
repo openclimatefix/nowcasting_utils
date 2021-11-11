@@ -3,6 +3,7 @@ from typing import List
 
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace
@@ -46,21 +47,21 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
 
     n_pv_systems = pv.data.shape[2]
 
-    traces = []
+    traces = [go.Choroplethmapbox(colorscale="Viridis")]
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
     for t_index in range(len(time)):
         z = pv.data[example_index, t_index, :]
         name = time[t_index].data
-        traces.append(
-            make_trace(
-                x,
-                y,
-                truth=False,
-                mode="markers",
-                marker_size=10 * z + 1,
-                name=str(name),
-                color=["Blue"] + ["Red"] * (n_pv_systems - 1),
-            )
+
+        trace = go.Scattermapbox(
+            lat=lat,
+            lon=lon,
+            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=10 * z + 2),
+            name=str(name),
         )
+        traces.append(trace)
 
     return traces
 
@@ -70,9 +71,15 @@ def make_buttons() -> dict:
     return dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])
 
 
-def make_fig_of_animation_from_frames(traces):
+def make_fig_of_animation_from_frames(traces, pv, example_index):
     """Make animated fig form traces"""
-    frames = [go.Frame(data=trace) for trace in traces]
+    frames = [go.Frame(data=trace) for trace in traces[1:]]
+
+    x = pv.x_coords[example_index].mean()
+    y = pv.y_coords[example_index].mean()
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
     fig = go.Figure(
         data=traces[0],
         layout=go.Layout(
@@ -81,6 +88,10 @@ def make_fig_of_animation_from_frames(traces):
         frames=frames,
     )
     fig.update_layout(updatemenus=[make_buttons()])
+    fig.update_layout(
+        mapbox_style="carto-positron", mapbox_zoom=8, mapbox_center={"lat": lat, "lon": lon}
+    )
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     return fig
 
@@ -97,10 +108,22 @@ def get_fig_pv_combined(pv: PV, example_index: int):
 
     traces_pv_intensity_map = get_traces_pv_intensity(pv=pv, example_index=example_index)
 
-    fig = make_subplots(rows=1, cols=2, subplot_titles=("Map", "Time Series"))
+    x = pv.x_coords[example_index].mean()
+    y = pv.y_coords[example_index].mean()
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=("Map", "Time Series"),
+        specs=[
+            [{"type": "choroplethmapbox"}, {"type": "xy"}],
+        ],
+    )
 
     # add first animation plot
-    fig.add_trace(traces_pv_intensity_map[0], row=1, col=1)
+    fig.add_trace(trace=traces_pv_intensity_map[0], row=1, col=1)
 
     # add all time series plots
     for trace in traces_pv_intensity_in_time:
@@ -115,5 +138,10 @@ def get_fig_pv_combined(pv: PV, example_index: int):
 
     fig.update(frames=frames)
     fig.update_layout(updatemenus=[make_buttons()])
+
+    fig.update_layout(
+        mapbox_style="carto-positron", mapbox_zoom=8, mapbox_center={"lat": lat, "lon": lon}
+    )
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     return fig
