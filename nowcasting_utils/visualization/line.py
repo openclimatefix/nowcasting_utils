@@ -28,6 +28,7 @@ def make_trace(
         name: name of the trace
         color: the size of the markers
         marker_size: the size of the markers
+        mode: the mode for plotting, see ref. https://plotly.com/python/reference/scatter/#scatter-mode
 
     Returns:plotly trace
 
