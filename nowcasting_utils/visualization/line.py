@@ -7,7 +7,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def make_trace(x, y, truth: bool, show_legend: bool = True):
+def make_trace(x, y, truth: bool, show_legend: bool = True, name:str = None, mode:str="lines+markers",
+               marker_size:Union[int, List[int]] = 10, color= None):
     """
     Make a plotly trace data (x,y).
 
@@ -16,21 +17,28 @@ def make_trace(x, y, truth: bool, show_legend: bool = True):
         y: values of data
         truth: if y is the truth or predictions. The colour of the line changed depending on this
         show_legend: option to show the legend for this trace or not.
+        name: name of the trace
 
     Returns:plotly trace
 
     """
-    color = "Blue" if truth else "Red"
-    name = "truth" if truth else "predict"
+    if color is None:
+        color = "Blue" if truth else "Red"
+    if name is None:
+        name = "truth" if truth else "predict"
 
-    return go.Scatter(
+    trace = go.Scatter(
         x=x,
         y=y,
-        mode="lines+markers",
-        marker=dict(color=color, line=dict(color=color, width=2)),
+        mode=mode,
+        marker=dict(color=color,
+                    line=dict(color=color, width=2),
+                    size=marker_size),
         name=name,
         showlegend=show_legend,
     )
+
+    return trace
 
 
 def plot_one_result(x, y, y_hat):
