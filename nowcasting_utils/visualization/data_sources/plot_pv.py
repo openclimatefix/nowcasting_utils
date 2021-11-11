@@ -59,7 +59,7 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
         trace = go.Scattermapbox(
             lat=lat,
             lon=lon,
-            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=10 * z + 2),
+            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=20 * z + 2),
             name=str(name),
         )
         traces.append(trace)
@@ -97,7 +97,7 @@ def make_slider(labels: List[str]) -> dict:
                 dict(
                     method="animate",
                     args=[
-                        [f"frame{k}"],
+                        [f"frame{k+1}"],
                         dict(
                             mode="immediate",
                             frame=dict(duration=600, redraw=True),
@@ -123,7 +123,7 @@ def make_fig_of_animation_from_frames(traces, pv, example_index):
 
     frames = []
     for i, trace in enumerate(traces[1:]):
-        frames.append(go.Frame(data=trace, name=f"frame{i}"))
+        frames.append(go.Frame(data=trace, name=f"frame{i+1}"))
 
     # make slider
     labels = [pd.to_datetime(time.data) for time in pv.time[example_index]]
