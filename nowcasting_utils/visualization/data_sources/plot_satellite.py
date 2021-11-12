@@ -1,3 +1,4 @@
+""" Tests to plot satellite data """
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.satellite.satellite_data_source import Satellite
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
@@ -14,12 +15,12 @@ def make_traces_one_channel_one_time(
     Make one trace for one channel and one time
 
     Args:
-        satellite:
-        example_index:
-        channel_index:
-        time_index:
+        satellite: satetlite data
+        example_index: which example to use
+        channel_index: which channel to ise
+        time_index: which time to use
 
-    Returns:
+    Returns: plotly trace
 
     """
     z = satellite.data[example_index, time_index, :, :, channel_index].values
@@ -82,7 +83,7 @@ def make_traces_one_timestep(satellite: Satellite, example_index: int, time_inde
 
 
 def make_animation_one_channels(satellite: Satellite, example_index: int, channel_index: int):
-
+    """ Make animation of one channel """
     traces = make_traces_one_channel(
         satellite=satellite, example_index=example_index, channel_index=0
     )
