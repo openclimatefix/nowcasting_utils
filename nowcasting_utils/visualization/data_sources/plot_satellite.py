@@ -1,11 +1,12 @@
 """ Tests to plot satellite data """
+import numpy as np
+import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.satellite.satellite_data_source import Satellite
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_utils.visualization.utils import make_slider, make_buttons
-import numpy as np
-import pandas as pd
 from plotly.subplots import make_subplots
+
+from nowcasting_utils.visualization.utils import make_buttons, make_slider
 
 
 def make_traces_one_channel_one_time(

@@ -5,10 +5,10 @@ import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_utils.visualization.utils import make_slider, make_buttons
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace
+from nowcasting_utils.visualization.utils import make_buttons, make_slider
 
 
 def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
