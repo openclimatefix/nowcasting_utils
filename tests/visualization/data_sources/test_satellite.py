@@ -18,10 +18,7 @@ from nowcasting_utils.visualization.utils import make_slider, make_buttons
 
 def test_make_traces_one_channel_one_time():
 
-    # satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
-
-    import xarray as xr
-    satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc').rename({'stacked_eumetsat_data':'data'})
+    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
 
     example_index = 1
     trace = make_traces_one_channel_one_time(satellite=satellite, example_index=example_index, channel_index=0, time_index=1)
@@ -43,10 +40,7 @@ def test_make_traces_one_channel_one_time():
 
 def test_make_traces_one_channel():
 
-    # satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
-
-    import xarray as xr
-    satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc').rename({'stacked_eumetsat_data':'data'})
+    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
 
     example_index =1
     traces = make_traces_one_channel(satellite=satellite, example_index=example_index, channel_index=0)
@@ -76,9 +70,6 @@ def test_make_traces_one_channel():
         fig.show(renderer="browser")
 
 def test_make_animation_one_channels():
-
-    import xarray as xr
-    satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc').rename({'stacked_eumetsat_data':'data'})
 
     satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
                                number_satellite_channels=2)
@@ -155,12 +146,12 @@ def test_make_fig_one_timestep():
 
 def test_make_animation_all_channesl():
 
-    import xarray as xr
-    satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc')
-    satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
-    #
-    # satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
-    #                            number_satellite_channels=2)
+    # import xarray as xr
+    # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc')
+    # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
+
+    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
+                               number_satellite_channels=2)
 
     fig = make_animation_all_channels(satellite=satellite, example_index=1)
 
