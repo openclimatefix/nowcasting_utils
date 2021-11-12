@@ -58,23 +58,12 @@ def plot_example(
         float(batch.satellite.y[example_i, 0].cpu().numpy()),
     )
 
-    def _format_ax(ax):
-        if "x_meters_center" in batch.metadata:
-            ax.scatter(
-                batch.metadata.x_meters_center[example_i].cpu(),
-                batch.metadata.y_meters_center[example_i].cpu(),
-                s=500,
-                color="white",
-                marker="x",
-            )
-
     ax = fig.add_subplot(nrows, ncols, 1)
     sat_data = batch.satellite.data[example_i, :, :, :, 0].cpu().numpy()
     sat_min = np.min(sat_data)
     sat_max = np.max(sat_data)
     ax.imshow(sat_data[0], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
     ax.set_title("t = -{}".format(history_len))
-    _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 2)
     ax.imshow(
@@ -88,12 +77,12 @@ def plot_example(
         ax.set_title("t = 0")
     else:
         ax.set_title(f"t = 0, epoch = {epoch}")
-    _format_ax(ax)
+    # _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 3)
     ax.imshow(sat_data[-1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
     ax.set_title("t = {}".format(forecast_len))
-    _format_ax(ax)
+    # _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 4)
     lat_lon_bottom_left = osgb_to_lat_lon(extent[0], extent[2])
