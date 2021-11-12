@@ -1,3 +1,4 @@
+""" Plotting utils functions """
 from typing import List
 
 
@@ -7,7 +8,7 @@ def make_slider(labels: List[str]) -> dict:
         dict(
             steps=[
                 dict(
-                    method="animate",a
+                    method="animate",
                     args=[
                         [f"frame{k+1}"],
                         dict(
@@ -31,7 +32,7 @@ def make_slider(labels: List[str]) -> dict:
 
 
 def make_buttons() -> dict:
-    """Make buttons Play dict"""
+    """Make buttons Play and Pause"""
     return dict(
         type="buttons",
         buttons=[
