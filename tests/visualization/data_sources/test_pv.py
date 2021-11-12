@@ -81,7 +81,7 @@ def test_get_fig_pv_combined():
 
     pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
-    fig = get_fig_pv_combined(pv=pv, example_index=2)
+    fig = get_fig_pv_combined(pv=pv, example_index=1)
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
