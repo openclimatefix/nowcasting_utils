@@ -78,9 +78,14 @@ def test_get_traces_pv_intensity_and_animate():
 
 
 def test_get_fig_pv_combined():
-    pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
-    fig = get_fig_pv_combined(pv=pv, example_index=1)
+    import xarray as xr
+
+    pv = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/pv/000000.nc')
+
+    # pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
+
+    fig = get_fig_pv_combined(pv=pv, example_index=2)
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 

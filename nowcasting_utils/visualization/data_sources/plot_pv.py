@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
+from nowcasting_utils.visualization.utils import make_slider, make_buttons
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace
@@ -67,57 +68,6 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
     return traces
 
 
-def make_buttons() -> dict:
-    """Make buttons Play dict"""
-    return dict(
-        type="buttons",
-        buttons=[
-            dict(label="Play", method="animate", args=[None]),
-            dict(
-                args=[
-                    [None],
-                    {
-                        "frame": {"duration": 0, "redraw": False},
-                        "mode": "immediate",
-                        "transition": {"duration": 0},
-                    },
-                ],
-                label="Pause",
-                method="animate",
-            ),
-        ],
-    )
-
-
-def make_slider(labels: List[str]) -> dict:
-    """Make slider for animation"""
-    sliders = [
-        dict(
-            steps=[
-                dict(
-                    method="animate",
-                    args=[
-                        [f"frame{k+1}"],
-                        dict(
-                            mode="immediate",
-                            frame=dict(duration=600, redraw=True),
-                            transition=dict(duration=200),
-                        ),
-                    ],
-                    label=f"{labels[k]}",
-                )
-                for k in range(0, len(labels))
-            ],
-            transition=dict(duration=100),
-            x=0,
-            y=0,
-            currentvalue=dict(font=dict(size=12), visible=True, xanchor="center"),
-            len=1.0,
-        )
-    ]
-    return sliders
-
-
 def make_fig_of_animation_from_frames(traces, pv, example_index):
     """Make animated fig form traces"""
 
@@ -129,8 +79,8 @@ def make_fig_of_animation_from_frames(traces, pv, example_index):
     labels = [pd.to_datetime(time.data) for time in pv.time[example_index]]
     sliders = make_slider(labels=labels)
 
-    x = pv.x_coords[example_index].mean()
-    y = pv.y_coords[example_index].mean()
+    x = pv.x_coords[example_index][pv.x_coords[example_index] != 0].mean()
+    y = pv.y_coords[example_index][pv.y_coords[example_index] != 0].mean()
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
@@ -163,8 +113,8 @@ def get_fig_pv_combined(pv: PV, example_index: int):
 
     traces_pv_intensity_map = get_traces_pv_intensity(pv=pv, example_index=example_index)
 
-    x = pv.x_coords[example_index].mean()
-    y = pv.y_coords[example_index].mean()
+    x = pv.x_coords[example_index][pv.x_coords[example_index] != 0].mean()
+    y = pv.y_coords[example_index][pv.y_coords[example_index] != 0].mean()
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
