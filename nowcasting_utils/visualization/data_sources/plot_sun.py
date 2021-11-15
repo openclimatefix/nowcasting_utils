@@ -18,4 +18,3 @@ def get_elevation_and_azimuth_trace(sun: Sun, example_index: int) -> List[go.Sca
     trace_azimuth = make_trace(x, y2, truth=True, name="azimuth")
 
     return [trace_elevation, trace_azimuth]
-
