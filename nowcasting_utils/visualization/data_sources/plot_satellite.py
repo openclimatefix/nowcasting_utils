@@ -140,11 +140,11 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
         traces_all.append(traces)
 
     # make subplot
-    n_cols = int(np.ceil(n_channels** 0.5))
+    n_cols = int(np.ceil(n_channels ** 0.5))
     n_rows = int(np.ceil(n_channels / n_cols))
     print(n_cols, n_rows)
 
-    specs= [[{"type": "choroplethmapbox"}] * n_cols] * n_rows
+    specs = [[{"type": "choroplethmapbox"}] * n_cols] * n_rows
 
     fig = make_subplots(
         rows=n_rows,
@@ -181,7 +181,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
 
     mapbox = dict(style="carto-positron", center=dict(lat=lat, lon=lon), zoom=7)
 
-    layout_dict = {f'mapbox{i}': mapbox for i in range(1,n_channels+1)}
+    layout_dict = {f'mapbox{i}': mapbox for i in range(1, n_channels+1)}
     fig.update_layout(layout_dict)
 
     return fig
