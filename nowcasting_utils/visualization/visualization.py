@@ -77,12 +77,10 @@ def plot_example(
         ax.set_title("t = 0")
     else:
         ax.set_title(f"t = 0, epoch = {epoch}")
-    # _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 3)
     ax.imshow(sat_data[-1], extent=extent, interpolation="none", vmin=sat_min, vmax=sat_max)
     ax.set_title("t = {}".format(forecast_len))
-    # _format_ax(ax)
 
     ax = fig.add_subplot(nrows, ncols, 4)
     lat_lon_bottom_left = osgb_to_lat_lon(extent[0], extent[2])
