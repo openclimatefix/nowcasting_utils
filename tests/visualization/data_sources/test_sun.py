@@ -1,12 +1,10 @@
-from nowcasting_utils.visualization.data_sources.plot_sun import (
-    get_elevation_and_azimuth_trace
-)
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.data_sources.fake import (
-    sun_fake,
-)
 import os
+
 import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.fake import sun_fake
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
+
+from nowcasting_utils.visualization.data_sources.plot_sun import get_elevation_and_azimuth_trace
 
 
 def test_get_trace_centroid_pv():

@@ -1,28 +1,32 @@
 """ Tests to plot satellite data """
-from nowcasting_utils.visualization.data_sources.plot_satellite import (
-    make_traces_one_channel_one_time,
-    make_traces_one_channel,
-    make_animation_one_channels,
-    make_animation_all_channels,
-    make_traces_one_timestep,
-)
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.data_sources.fake import (
-    satellite_fake,
-)
-from plotly.subplots import make_subplots
 import os
+
 import numpy as np
 import plotly.graph_objects as go
-from nowcasting_utils.visualization.utils import make_slider, make_buttons
+from nowcasting_dataset.data_sources.fake import satellite_fake
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
+from plotly.subplots import make_subplots
+
+from nowcasting_utils.visualization.data_sources.plot_satellite import (
+    make_animation_all_channels,
+    make_animation_one_channels,
+    make_traces_one_channel,
+    make_traces_one_channel_one_time,
+    make_traces_one_timestep,
+)
+from nowcasting_utils.visualization.utils import make_buttons, make_slider
 
 
 def test_make_traces_one_channel_one_time():
 
-    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
+    satellite = satellite_fake(
+        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
+    )
 
     example_index = 1
-    trace = make_traces_one_channel_one_time(satellite=satellite, example_index=example_index, channel_index=0, time_index=1)
+    trace = make_traces_one_channel_one_time(
+        satellite=satellite, example_index=example_index, channel_index=0, time_index=1
+    )
 
     fig = go.Figure(trace)
 
@@ -41,10 +45,14 @@ def test_make_traces_one_channel_one_time():
 
 def test_make_traces_one_channel():
 
-    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2)
+    satellite = satellite_fake(
+        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
+    )
 
-    example_index =1
-    traces = make_traces_one_channel(satellite=satellite, example_index=example_index, channel_index=0)
+    example_index = 1
+    traces = make_traces_one_channel(
+        satellite=satellite, example_index=example_index, channel_index=0
+    )
 
     x = satellite.x[example_index].mean()
     y = satellite.y[example_index].mean()
@@ -70,10 +78,12 @@ def test_make_traces_one_channel():
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
+
 def test_make_animation_one_channels():
 
-    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
-                               number_satellite_channels=2)
+    satellite = satellite_fake(
+        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
+    )
 
     fig = make_animation_one_channels(satellite=satellite, example_index=1, channel_index=0)
 
@@ -87,12 +97,11 @@ def test_make_animation_all_channesl():
     # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc')
     # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
 
-    satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
-                               number_satellite_channels=8)
+    satellite = satellite_fake(
+        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=8
+    )
 
     fig = make_animation_all_channels(satellite=satellite, example_index=1)
 
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
-
-
