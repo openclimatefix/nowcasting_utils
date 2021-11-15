@@ -88,7 +88,7 @@ def test_make_animation_all_channesl():
     # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
 
     satellite = satellite_fake(batch_size=2, seq_length_5=5, satellite_image_size_pixels=32,
-                               number_satellite_channels=2)
+                               number_satellite_channels=8)
 
     fig = make_animation_all_channels(satellite=satellite, example_index=1)
 

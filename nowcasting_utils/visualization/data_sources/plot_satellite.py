@@ -67,7 +67,7 @@ def make_traces_one_channel(satellite: Satellite, example_index: int, channel_in
 def make_traces_one_timestep(satellite: Satellite, example_index: int, time_index: int):
     """Make traces for one channel"""
 
-    channels = satellite.channels
+    channels = satellite.channels[example_index]
 
     traces = []
     for channel_index in range(len(channels)):
@@ -129,6 +129,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
     Returns: plotly figure
     """
     time = satellite.time[example_index]
+    n_channels = len(satellite.channels[example_index])
 
     # collect all the traces
     traces_all = []
@@ -139,22 +140,25 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
         traces_all.append(traces)
 
     # make subplot
-    n_rows = int(np.floor(len(satellite.channels) ** 0.5))
-    n_cols = int(np.ceil(len(satellite.channels) ** 0.5))
+    n_cols = int(np.ceil(n_channels ** 0.5))
+    n_rows = int(np.ceil(n_channels / n_cols))
+    print(n_cols, n_rows)
+
+    specs = [[{"type": "choroplethmapbox"}] * n_cols] * n_rows
+
     fig = make_subplots(
         rows=n_rows,
         cols=n_cols,
         # subplot_titles= satellite.channels,
-        specs=[
-            [{"type": "choroplethmapbox"}] * n_rows * n_cols,
-        ],
+        specs=specs
     )
+
+    print(len(traces_all[0]))
 
     # add the first timestemp to the figure
     for i, trace in enumerate(traces_all[0]):
         row = i % n_rows + 1
         col = i // n_rows + 1
-        print(row, col)
         fig.add_trace(trace, row, col)
 
     # add frames
@@ -177,9 +181,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
 
     mapbox = dict(style="carto-positron", center=dict(lat=lat, lon=lon), zoom=7)
 
-    fig.update_layout(
-        mapbox1=mapbox,
-        mapbox2=mapbox,
-    )
+    layout_dict = {f'mapbox{i}': mapbox for i in range(1, n_channels+1)}
+    fig.update_layout(layout_dict)
 
     return fig
