@@ -1,8 +1,9 @@
 """ General functions for plotting PV data """
 
+from typing import List
+
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.sun.sun_model import Sun
-from typing import List
 
 from nowcasting_utils.visualization.line import make_trace
 
