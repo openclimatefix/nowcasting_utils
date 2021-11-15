@@ -37,7 +37,7 @@ repos:
             "nowcasting_utils",
           ]
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.0
+    rev: 5.10.1
     hooks:
       - id: isort
         args: [--profile, black, --line-length, "100", "nowcasting_utils"]
