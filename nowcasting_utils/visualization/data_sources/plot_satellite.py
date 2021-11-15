@@ -84,7 +84,7 @@ def make_traces_one_timestep(satellite: Satellite, example_index: int, time_inde
 
 
 def make_animation_one_channels(satellite: Satellite, example_index: int, channel_index: int):
-    """ Make animation of one channel """
+    """Make animation of one channel"""
     traces = make_traces_one_channel(
         satellite=satellite, example_index=example_index, channel_index=0
     )
@@ -150,7 +150,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
         rows=n_rows,
         cols=n_cols,
         # subplot_titles= satellite.channels,
-        specs=specs
+        specs=specs,
     )
 
     print(len(traces_all[0]))
@@ -181,7 +181,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
 
     mapbox = dict(style="carto-positron", center=dict(lat=lat, lon=lon), zoom=7)
 
-    layout_dict = {f'mapbox{i}': mapbox for i in range(1, n_channels+1)}
+    layout_dict = {f"mapbox{i}": mapbox for i in range(1, n_channels + 1)}
     fig.update_layout(layout_dict)
 
     return fig
