@@ -20,6 +20,6 @@ The main pv plot view gives a view of the pv sources in two subplots
 
 # Satellite
 
-The main satellite plot show a video for each satellite channel over. 
+The main satellite plot show a video for each satellite channel over.
 
 <img src="images/satellite.png" width="200" />

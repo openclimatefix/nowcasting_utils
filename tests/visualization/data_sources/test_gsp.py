@@ -1,14 +1,16 @@
-from nowcasting_utils.visualization.data_sources.plot_gsp import (
-    get_trace_centroid_gsp,
-    get_trace_all_gsps,
-    get_traces_gsp_intensity, make_fig_of_animation_from_frames, get_fig_gsp_combined
-)
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from nowcasting_dataset.data_sources.fake import (
-    gsp_fake,
-)
 import os
+
 import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.fake import gsp_fake
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
+
+from nowcasting_utils.visualization.data_sources.plot_gsp import (
+    get_fig_gsp_combined,
+    get_trace_all_gsps,
+    get_trace_centroid_gsp,
+    get_traces_gsp_intensity,
+    make_fig_of_animation_from_frames,
+)
 
 
 def test_get_trace_centroid_pv():
