@@ -60,7 +60,7 @@ def test_get_traces_gsp_intensity():
 
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
-#
+
 
 def test_get_traces_gsp_intensity_and_animate():
 

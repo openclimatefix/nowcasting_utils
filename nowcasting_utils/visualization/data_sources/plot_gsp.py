@@ -17,7 +17,7 @@ def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
     y = gsp.data[example_index, :, 0]
     x = gsp.time[example_index]
 
-    return make_trace(x, y, truth=True, name="centorid pv")
+    return make_trace(x, y, truth=True, name="center gsp")
 
 
 def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
@@ -27,11 +27,11 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
     x = gsp.time[example_index]
     n_gsps = gsp.data.shape[2]
 
-    for pv_system_index in range(1, n_gsps):
-        y = gsp.data[example_index, :, pv_system_index]
+    for gsp_index in range(1, n_gsps):
+        y = gsp.data[example_index, :, gsp_index]
 
         truth = False
-        name = f"pv system {pv_system_index}"
+        name = f"GSP {gsp_index}"
 
         traces.append(make_trace(x, y, truth=truth, name=name))
 
