@@ -3,10 +3,20 @@
 # PV
 
 The main pv plot view gives a view of the pv sources in two subplots
-1. Video of map of pv intenisty over time
-2. Plot of time series data of each ov system
+1. Video of map of pv intensity over time
+2. Plot of time series data of each pv system
 
 <img src="images/pv.png" width="200" />
+
+# GSP
+
+The main pv plot view gives a view of the pv sources in two subplots
+1. Video of map of gsp intensity over time
+2. Plot of time series data of each gsp
+
+# TODO update to use gsp shape files
+
+<img src="images/gsp.png" width="200" />
 
 # Satellite
 

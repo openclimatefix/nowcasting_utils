@@ -5,6 +5,13 @@ import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.fake import satellite_fake
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
+import numpy as np
+import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.fake import satellite_fake
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
+from plotly.subplots import make_subplots
+
+
 from nowcasting_utils.visualization.data_sources.plot_satellite import (
     make_animation_all_channels,
     make_animation_one_channels,
@@ -16,6 +23,7 @@ from nowcasting_utils.visualization.utils import make_buttons
 
 def test_make_traces_one_channel_one_time():
     """Test 'make_traces_one_channel_one_time' functions"""
+
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )
@@ -78,6 +86,7 @@ def test_make_traces_one_channel():
 
 def test_make_animation_one_channels():
     """Test 'make_animation_one_channels' functions"""
+
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )
