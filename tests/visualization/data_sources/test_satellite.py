@@ -91,7 +91,8 @@ def test_make_animation_one_channels():
 def test_make_animation_all_channesl():
     """ Test 'make_animation_all_channels' functions """
     # import xarray as xr
-    # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc')
+    # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/
+    # nowcasting_utils/tests/data/sat/000000.nc')
     # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
 
     satellite = satellite_fake(
