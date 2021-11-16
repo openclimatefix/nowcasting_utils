@@ -15,7 +15,7 @@ from nowcasting_utils.visualization.utils import make_buttons
 
 
 def test_make_traces_one_channel_one_time():
-    """ Test 'make_traces_one_channel_one_time' functions """
+    """Test 'make_traces_one_channel_one_time' functions"""
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )
@@ -41,7 +41,7 @@ def test_make_traces_one_channel_one_time():
 
 
 def test_make_traces_one_channel():
-    """ Test 'make_traces_one_channel' functions """
+    """Test 'make_traces_one_channel' functions"""
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )
@@ -77,7 +77,7 @@ def test_make_traces_one_channel():
 
 
 def test_make_animation_one_channels():
-    """ Test 'make_animation_one_channels' functions """
+    """Test 'make_animation_one_channels' functions"""
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )
@@ -89,7 +89,7 @@ def test_make_animation_one_channels():
 
 
 def test_make_animation_all_channesl():
-    """ Test 'make_animation_all_channels' functions """
+    """Test 'make_animation_all_channels' functions"""
     # import xarray as xr
     # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/tests/data/sat/000000.nc')
     # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})

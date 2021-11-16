@@ -15,7 +15,7 @@ from nowcasting_utils.visualization.data_sources.plot_pv import (
 
 
 def test_get_trace_centroid_pv():
-    """ Test 'get_trace_centroid_pv' function"""
+    """Test 'get_trace_centroid_pv' function"""
     pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
 
     trace = get_trace_centroid_pv(pv=pv, example_index=1)
@@ -28,7 +28,7 @@ def test_get_trace_centroid_pv():
 
 
 def test_get_trace_all_pv_systems():
-    """ Test 'get_trace_all_pv_systems' function"""
+    """Test 'get_trace_all_pv_systems' function"""
     pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
 
     traces = get_trace_all_pv_systems(pv=pv, example_index=1)
@@ -42,7 +42,7 @@ def test_get_trace_all_pv_systems():
 
 
 def test_get_traces_pv_intensity():
-    """ Test 'get_traces_pv_intensity' function"""
+    """Test 'get_traces_pv_intensity' function"""
     pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
 
     example_index = 1
@@ -67,7 +67,7 @@ def test_get_traces_pv_intensity():
 
 
 def test_get_traces_pv_intensity_and_animate():
-    """ Test 'make_fig_of_animation_from_frames' function"""
+    """Test 'make_fig_of_animation_from_frames' function"""
     pv = pv_fake(batch_size=2, seq_length_5=5, n_pv_systems_per_batch=32)
 
     traces = get_traces_pv_intensity(pv=pv, example_index=1)
@@ -79,7 +79,7 @@ def test_get_traces_pv_intensity_and_animate():
 
 
 def test_get_fig_pv_combined():
-    """ Test 'get_fig_pv_combined' function"""
+    """Test 'get_fig_pv_combined' function"""
     pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
     fig = get_fig_pv_combined(pv=pv, example_index=1)
