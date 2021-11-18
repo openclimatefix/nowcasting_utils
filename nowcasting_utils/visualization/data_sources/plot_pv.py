@@ -14,29 +14,37 @@ from nowcasting_utils.visualization.utils import make_buttons, make_slider
 def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
     """Produce plot of centroid pv system"""
 
-    y = pv.data[example_index, :, 0]
+    y = pv.power_mw[example_index, :, 0]
     x = pv.time[example_index]
 
     return make_trace(x, y, truth=True, name="centorid pv")
 
 
-def get_trace_all_pv_systems(pv: PV, example_index: int) -> List[go.Scatter]:
+def get_trace_all_pv_systems(pv: PV, example_index: int, center_system: bool = True) -> List[go.Scatter]:
     """Produce plot of centroid pv system"""
 
     traces = []
     x = pv.time[example_index]
-    n_pv_systems = pv.data.shape[2]
+    n_pv_systems = pv.power_mw.shape[2]
 
-    for pv_system_index in range(1, n_pv_systems):
-        y = pv.data[example_index, :, pv_system_index]
+    if center_system:
+        start_idx = 1
+        centroid_trace = get_trace_centroid_pv(pv=pv, example_index=example_index)
+        traces.append(centroid_trace)
+
+    else:
+        start_idx = 0
+
+    # make the lines a little bit see-through
+    opacity = (1 / n_pv_systems) ** 0.25
+
+    for pv_system_index in range(start_idx, n_pv_systems):
+        y = pv.power_mw[example_index, :, pv_system_index]
 
         truth = False
         name = f"pv system {pv_system_index}"
 
-        traces.append(make_trace(x, y, truth=truth, name=name))
-
-    centroid_trace = get_trace_centroid_pv(pv=pv, example_index=example_index)
-    traces.append(centroid_trace)
+        traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity))
 
     return traces
 
@@ -47,14 +55,14 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
     x = pv.x_coords[example_index]
     y = pv.y_coords[example_index]
 
-    n_pv_systems = pv.data.shape[2]
+    n_pv_systems = pv.power_mw.shape[2]
 
     traces = [go.Choroplethmapbox(colorscale="Viridis")]
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
     for t_index in range(len(time)):
-        z = pv.data[example_index, t_index, :]
+        z = pv.power_mw[example_index, t_index, :]
         name = time[t_index].data
 
         trace = go.Scattermapbox(
@@ -137,14 +145,14 @@ def get_fig_pv_combined(pv: PV, example_index: int):
     n_traces = len(fig.data)
 
     frames = []
-    static_traces = list(fig.data[1:])
+    static_traces = list(fig.power_mw[1:])
     for i, trace in enumerate(traces_pv_intensity_map):
         frames.append(
             dict(data=[trace] + static_traces, traces=list(range(n_traces)), name=f"frame{i}")
         )
 
     # make slider
-    labels = [pd.to_datetime(time.data) for time in pv.time[example_index]]
+    labels = [pd.to_datetime(time.power_mw) for time in pv.time[example_index]]
     sliders = make_slider(labels=labels)
 
     fig.update(frames=frames)

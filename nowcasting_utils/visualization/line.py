@@ -1,6 +1,6 @@
 """Several line plots of predictions and truths."""
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 import numpy as np
 import plotly.graph_objects as go
@@ -16,6 +16,7 @@ def make_trace(
     mode: str = "lines+markers",
     marker_size: Union[int, List[int]] = 10,
     color: Union[str, List[str]] = None,
+    opacity: Optional[float] = None
 ):
     """
     Make a plotly trace data (x,y).
@@ -30,6 +31,7 @@ def make_trace(
         marker_size: the size of the markers
         mode: the mode for plotting,
             see ref. https://plotly.com/python/reference/scatter/#scatter-mode
+        opacity: the opacity of the lines (and markers)
 
     Returns:plotly trace
 
@@ -46,6 +48,7 @@ def make_trace(
         marker=dict(color=color, line=dict(color=color, width=2), size=marker_size),
         name=name,
         showlegend=show_legend,
+        opacity=opacity,
     )
 
     return trace

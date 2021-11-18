@@ -14,7 +14,7 @@ from nowcasting_utils.visualization.utils import make_buttons, make_slider
 def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
     """Produce plot of centroid GSP"""
 
-    y = gsp.data[example_index, :, 0]
+    y = gsp.power_mw[example_index, :, 0]
     x = gsp.time[example_index]
 
     return make_trace(x, y, truth=True, name="center gsp")
@@ -25,17 +25,21 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
 
     traces = []
     x = gsp.time[example_index]
-    n_gsps = gsp.data.shape[2]
+    n_gsps = gsp.power_mw.shape[2]
+
+    # make the lines a little bit see-through
+    opacity = (1/n_gsps)**0.25
 
     for gsp_index in range(1, n_gsps):
-        y = gsp.data[example_index, :, gsp_index]
+        y = gsp.power_mw[example_index, :, gsp_index]
 
         truth = False
         name = f"GSP {gsp_index}"
 
-        traces.append(make_trace(x, y, truth=truth, name=name))
+        traces.append(make_trace(x, y, truth=truth, name=name, color='Green',opacity=opacity))
 
     centroid_trace = get_trace_centroid_gsp(gsp=gsp, example_index=example_index)
+    centroid_trace['legendrank'] = 1
     traces.append(centroid_trace)
 
     return traces
@@ -47,14 +51,14 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
     x = gsp.x_coords[example_index]
     y = gsp.y_coords[example_index]
 
-    n_pv_systems = gsp.data.shape[2]
+    n_pv_systems = gsp.power_mw.shape[2]
 
     traces = [go.Choroplethmapbox(colorscale="Viridis")]
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
     for t_index in range(len(time)):
-        z = gsp.data[example_index, t_index, :]
+        z = gsp.power_mw[example_index, t_index, :]
         name = time[t_index].data
 
         # TODO change this to use GSP boundaries
