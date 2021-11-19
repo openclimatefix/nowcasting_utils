@@ -23,3 +23,11 @@ The main pv plot view gives a view of the pv sources in two subplots
 The main satellite plot show a video for each satellite channel over.
 
 <img src="images/satellite.png" width="200" />
+
+# All
+
+Makes an animation of the satellite, PV and GSP systems
+
+<img src="images/all.png" width="200" />
+
+

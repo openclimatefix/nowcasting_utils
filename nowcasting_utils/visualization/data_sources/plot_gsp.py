@@ -71,6 +71,7 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
     time = gsp.time[example_index]
     x = gsp.x_coords[example_index]
     y = gsp.y_coords[example_index]
+    gsp_id = gsp.id[example_index].values
 
     n_gsp_systems = gsp.power_mw.shape[2]
 
@@ -78,11 +79,17 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
 
     z = gsp.power_normalized[example_index, t_index, :]
     name = time[t_index].data
+    z = z.fillna(0)
 
     if z.max() > 0:
         size = 200 * z
     else:
         size = 0
+
+    lat = np.round(lat, 4)
+    lon = np.round(lon, 4)
+
+    text = [f'GSP {gsp_id}: {z.values:.2f}' for z,gsp_id in zip(z,gsp_id)]
 
     # TODO change this to use GSP boundaries #55
     trace = go.Scattermapbox(
@@ -90,7 +97,7 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
         lon=lon,
         marker=dict(color=["Blue"] + ["Green"] * (n_gsp_systems - 1), size=size, sizemode="area"),
         name=str(name),
-        text=list(z.values.round(2)),
+        text=text,
     )
 
     return trace
