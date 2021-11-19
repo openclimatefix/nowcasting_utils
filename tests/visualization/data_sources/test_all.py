@@ -1,4 +1,4 @@
-""" Test pv plot functions """
+""" Test all plot functions """
 import os
 
 import plotly.graph_objects as go

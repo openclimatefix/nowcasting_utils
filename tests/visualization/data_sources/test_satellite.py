@@ -5,12 +5,6 @@ import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.fake import satellite_fake
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
-import numpy as np
-import plotly.graph_objects as go
-from nowcasting_dataset.data_sources.fake import satellite_fake
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from plotly.subplots import make_subplots
-
 
 from nowcasting_utils.visualization.data_sources.plot_satellite import (
     make_animation_all_channels,
