@@ -15,7 +15,7 @@ from nowcasting_utils.visualization.utils import make_buttons, make_slider
 def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
     """Produce plot of centroid pv system"""
 
-    y = pv.power_mw[example_index, :, 0]
+    y = pv.power_normalized[example_index, :, 0]
     x = pv.time[example_index]
 
     return make_trace(x, y, truth=True, name="centorid pv")
@@ -42,7 +42,7 @@ def get_trace_all_pv_systems(
     opacity = (1 / n_pv_systems) ** 0.25
 
     for pv_system_index in range(start_idx, n_pv_systems):
-        y = pv.power_mw[example_index, :, pv_system_index]
+        y = pv.power_normalized[example_index, :, pv_system_index]
 
         pv_id = pv.id[example_index, pv_system_index].values
         truth = False
@@ -85,7 +85,7 @@ def get_trace_pv_intensity_one_time_step(
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
-    z = pv.power_mw[example_index, t_index, :]
+    z = pv.power_normalized[example_index, t_index, :]
     name = time[t_index].data
 
     if center:

@@ -15,7 +15,7 @@ from nowcasting_utils.visualization.utils import make_buttons, make_slider
 def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
     """Produce plot of centroid GSP"""
 
-    y = gsp.power_mw[example_index, :, 0]
+    y = gsp.power_normalized[example_index, :, 0]
     x = gsp.time[example_index]
 
     return make_trace(x, y, truth=True, name="center gsp", color="Blue")
@@ -32,7 +32,7 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
     opacity = (1 / n_gsps) ** 0.25
 
     for gsp_index in range(1, n_gsps):
-        y = gsp.power_mw[example_index, :, gsp_index]
+        y = gsp.power_normalized[example_index, :, gsp_index]
 
         gsp_id = gsp.id[example_index, gsp_index].values
         truth = False
@@ -76,7 +76,7 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
 
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
-    z = gsp.power_mw[example_index, t_index, :]
+    z = gsp.power_normalized[example_index, t_index, :]
     name = time[t_index].data
 
     if z.max() > 0:
