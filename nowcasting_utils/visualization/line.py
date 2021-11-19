@@ -16,7 +16,7 @@ def make_trace(
     mode: str = "lines+markers",
     marker_size: Union[int, List[int]] = 10,
     color: Union[str, List[str]] = None,
-    opacity: Optional[float] = None
+    opacity: Optional[float] = None,
 ):
     """
     Make a plotly trace data (x,y).

@@ -1,6 +1,6 @@
-from nowcasting_dataset.dataset.batch import Batch
-from nowcasting_dataset.config.model import Configuration
 import pytest
+from nowcasting_dataset.config.model import Configuration
+from nowcasting_dataset.dataset.batch import Batch
 
 
 @pytest.fixture

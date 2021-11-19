@@ -2,15 +2,15 @@
 import os
 
 import plotly.graph_objects as go
-from nowcasting_dataset.dataset.batch import Batch
-from nowcasting_dataset.data_sources.pv.pv_model import PV
 from nowcasting_dataset.config.model import Configuration
+from nowcasting_dataset.data_sources.pv.pv_model import PV
+from nowcasting_dataset.dataset.batch import Batch
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 from nowcasting_utils.visualization.data_sources.plot_all import (
     make_fig_time_series_pv_and_gsp,
+    make_satellite_gsp_pv_map,
     make_satellite_gsp_pv_map_one_time_value,
-    make_satellite_gsp_pv_map
 )
 
 
@@ -53,11 +53,10 @@ def test_make_satellite_gsp_pv_map_one_time_step(batch):
 
 def test_make_satellite_gsp_pv_map(batch):
 
-    fig = make_satellite_gsp_pv_map(batch=batch, example_index=1,satellite_channel_index=7)
+    fig = make_satellite_gsp_pv_map(batch=batch, example_index=1, satellite_channel_index=7)
 
     # here's if you need to plot the trace
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 
     # fig.write_html("batch_all_plot.html")
-
