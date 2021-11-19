@@ -21,7 +21,9 @@ def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
     return make_trace(x, y, truth=True, name="centorid pv")
 
 
-def get_trace_all_pv_systems(pv: PV, example_index: int, center_system: bool = True) -> List[go.Scatter]:
+def get_trace_all_pv_systems(
+    pv: PV, example_index: int, center_system: bool = True
+) -> List[go.Scatter]:
     """Produce plot of centroid pv system"""
 
     traces = []
@@ -42,7 +44,7 @@ def get_trace_all_pv_systems(pv: PV, example_index: int, center_system: bool = T
     for pv_system_index in range(start_idx, n_pv_systems):
         y = pv.power_mw[example_index, :, pv_system_index]
 
-        pv_id = pv.id[example_index,pv_system_index].values
+        pv_id = pv.id[example_index, pv_system_index].values
         truth = False
 
         if ~np.isnan(pv_id):
@@ -62,14 +64,18 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
 
     for t_index in range(len(time)):
 
-        trace = get_trace_pv_intensity_one_time_step(pv=pv, example_index=example_index, t_index=t_index)
+        trace = get_trace_pv_intensity_one_time_step(
+            pv=pv, example_index=example_index, t_index=t_index
+        )
 
         traces.append(trace)
 
     return traces
 
 
-def get_trace_pv_intensity_one_time_step(pv: PV, example_index: int, t_index: int, center: bool =False):
+def get_trace_pv_intensity_one_time_step(
+    pv: PV, example_index: int, t_index: int, center: bool = False
+):
     """Get trace of pv intensity map"""
     time = pv.time[example_index]
     x = pv.x_coords[example_index]
@@ -83,7 +89,7 @@ def get_trace_pv_intensity_one_time_step(pv: PV, example_index: int, t_index: in
     name = time[t_index].data
 
     if center:
-        colour = ["Blue"] + ["Red"] * (n_pv_systems - 1),
+        colour = (["Blue"] + ["Red"] * (n_pv_systems - 1),)
     else:
         colour = ["Red"] * n_pv_systems
 
@@ -92,9 +98,9 @@ def get_trace_pv_intensity_one_time_step(pv: PV, example_index: int, t_index: in
     trace = go.Scattermapbox(
         lat=lat,
         lon=lon,
-        marker=dict(color=colour, size=size, sizemode='area'),
+        marker=dict(color=colour, size=size, sizemode="area"),
         name=str(name),
-        text=list(z.values.round(2))
+        text=list(z.values.round(2)),
     )
 
     return trace

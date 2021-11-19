@@ -29,22 +29,22 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
     n_gsps = gsp.power_mw.shape[2]
 
     # make the lines a little bit see-through
-    opacity = (1/n_gsps)**0.25
+    opacity = (1 / n_gsps) ** 0.25
 
     for gsp_index in range(1, n_gsps):
         y = gsp.power_mw[example_index, :, gsp_index]
 
-        gsp_id = gsp.id[example_index,gsp_index].values
+        gsp_id = gsp.id[example_index, gsp_index].values
         truth = False
 
         if ~np.isnan(gsp_id):
             gsp_id = int(gsp_id)
             name = f"GSP {gsp_id}"
 
-            traces.append(make_trace(x, y, truth=truth, name=name, color='Green',opacity=opacity))
+            traces.append(make_trace(x, y, truth=truth, name=name, color="Green", opacity=opacity))
 
     centroid_trace = get_trace_centroid_gsp(gsp=gsp, example_index=example_index)
-    centroid_trace['legendrank'] = 1
+    centroid_trace["legendrank"] = 1
     traces.append(centroid_trace)
 
     return traces
@@ -58,7 +58,9 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
 
     for t_index in range(len(time)):
 
-        trace = get_trace_gsp_intensity_one_time_step(gsp=gsp,example_index=example_index, t_index=t_index)
+        trace = get_trace_gsp_intensity_one_time_step(
+            gsp=gsp, example_index=example_index, t_index=t_index
+        )
         traces.append(trace)
 
     return traces
@@ -86,9 +88,9 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
     trace = go.Scattermapbox(
         lat=lat,
         lon=lon,
-        marker=dict(color=["Blue"] + ["Green"] * (n_gsp_systems - 1), size=size, sizemode='area'),
+        marker=dict(color=["Blue"] + ["Green"] * (n_gsp_systems - 1), size=size, sizemode="area"),
         name=str(name),
-        text=list(z.values.round(2))
+        text=list(z.values.round(2)),
     )
 
     return trace
