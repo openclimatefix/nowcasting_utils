@@ -6,7 +6,7 @@ from nowcasting_dataset.dataset.batch import Batch
 
 @pytest.fixture
 def batch():
-    """ Make fake batch """
+    """Make fake batch"""
     config = Configuration()
     config.input_data = config.input_data.set_all_to_defaults()
     config.process.batch_size = 4
