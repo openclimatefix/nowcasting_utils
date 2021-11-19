@@ -97,10 +97,10 @@ def get_trace_pv_intensity_one_time_step(
     z = z.fillna(0)
     size = 200 * z
 
-    lat = np.round(lat,4)
+    lat = np.round(lat, 4)
     lon = np.round(lon, 4)
 
-    text = [f'PV {pv_id}: {z.values:.2f}' for z, pv_id in zip(z, pv_id)]
+    text = [f"PV {pv_id}: {z.values:.2f}" for z, pv_id in zip(z, pv_id)]
 
     trace = go.Scattermapbox(
         lat=lat,
@@ -154,7 +154,9 @@ def get_fig_pv_combined(pv: PV, example_index: int):
     2. Plot the pv intensity with coords and animate in time
     """
 
-    traces_pv_intensity_in_time = get_trace_all_pv_systems(pv=pv, example_index=example_index, center_system=False)
+    traces_pv_intensity_in_time = get_trace_all_pv_systems(
+        pv=pv, example_index=example_index, center_system=False
+    )
 
     traces_pv_intensity_map = get_traces_pv_intensity(pv=pv, example_index=example_index)
 
