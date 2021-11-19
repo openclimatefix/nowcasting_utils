@@ -30,10 +30,6 @@ def make_trace_time_series_pv_and_gsp(batch: Batch, example_index: int):
     pv = batch.pv
     gsp = batch.gsp
 
-    # pv.__setitem__('power_mw',pv.power_mw / pv.capacity_mwp)
-    # gsp.__setitem__('power_mw', gsp.power_mw / gsp.capacity_mwp)
-    # gsp.power_mw = gsp.power_mw / gsp.capacity_mwp
-
     traces_pv = get_trace_all_pv_systems(pv=pv, example_index=example_index, center_system=False)
     traces_gsp = get_trace_all_gsps(gsp=gsp, example_index=example_index)
 
@@ -59,7 +55,7 @@ def make_fig_time_series_pv_and_gsp(batch: Batch, example_index: int):
 
 
 def get_time_index(times: xr.DataArray, time_value) -> int:
-
+    """ Get the time index from a time value """
     previous_and_equal_mask = times <= time_value
     previous_and_equal_times_index = times[previous_and_equal_mask].time_index
 
@@ -72,6 +68,7 @@ def get_time_index(times: xr.DataArray, time_value) -> int:
 def make_satellite_gsp_pv_map_one_time_value(
     batch: Batch, example_index: int, satellite_channel_index, time_value
 ):
+    """ Make plot of satellite, gps and pv for one time step """
 
     pv = batch.pv
     gsp = batch.gsp
@@ -99,7 +96,7 @@ def make_satellite_gsp_pv_map_one_time_value(
 
 
 def make_satellite_gsp_pv_map(batch: Batch, example_index: int, satellite_channel_index: int):
-
+    """ Make a animation of the satellite, gsp and the pv data """
     trace_times = []
     times = batch.satellite.time[example_index]
     pv = batch.pv
