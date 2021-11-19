@@ -1,11 +1,9 @@
 """ Tests to plot satellite data """
-import numpy as np
 import pandas as pd
 import xarray as xr
 import plotly.graph_objects as go
 from nowcasting_dataset.dataset.batch import Batch
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.utils import make_buttons, make_slider
 from nowcasting_utils.visualization.data_sources.plot_pv import (
@@ -14,7 +12,6 @@ from nowcasting_utils.visualization.data_sources.plot_pv import (
 )
 from nowcasting_utils.visualization.data_sources.plot_gsp import (
     get_trace_all_gsps,
-    get_traces_gsp_intensity,
     get_trace_gsp_intensity_one_time_step,
 )
 from nowcasting_utils.visualization.data_sources.plot_satellite import (
