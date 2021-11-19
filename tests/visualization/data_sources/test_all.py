@@ -22,7 +22,7 @@ def test_make_fig_time_series_pv_and_gsp(batch):
 
 
 def test_make_satellite_gsp_pv_map_one_time_step(batch):
-    """make plot of satellite, gsp and pv"""
+    """Make plot of satellite, gsp and pv"""
     example_index = 0
     time_index = 6
     time_value = batch.satellite.time[example_index, time_index]
