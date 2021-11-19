@@ -2,9 +2,6 @@
 import os
 
 import plotly.graph_objects as go
-from nowcasting_dataset.dataset.batch import Batch
-from nowcasting_dataset.data_sources.pv.pv_model import PV
-from nowcasting_dataset.config.model import Configuration
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 from nowcasting_utils.visualization.data_sources.plot_all import (
@@ -25,7 +22,7 @@ def test_make_fig_time_series_pv_and_gsp(batch):
 
 
 def test_make_satellite_gsp_pv_map_one_time_step(batch):
-
+    """ make plot of satellite, gsp and pv """
     example_index = 0
     time_index = 6
     time_value = batch.satellite.time[example_index, time_index]
@@ -52,7 +49,7 @@ def test_make_satellite_gsp_pv_map_one_time_step(batch):
 
 
 def test_make_satellite_gsp_pv_map(batch):
-
+    """ Test make animation of satelite, gsp and pv"""
     fig = make_satellite_gsp_pv_map(batch=batch, example_index=1,satellite_channel_index=7)
 
     # here's if you need to plot the trace
