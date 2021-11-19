@@ -1,12 +1,9 @@
 """ PLotting script for real data """
-import plotly.graph_objects as go
 from nowcasting_dataset.dataset.batch import Batch
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 from nowcasting_utils.visualization.data_sources.plot_all import (
     make_fig_time_series_pv_and_gsp,
     make_satellite_gsp_pv_map,
-    make_satellite_gsp_pv_map_one_time_value,
 )
 from nowcasting_utils.visualization.data_sources.plot_gsp import get_fig_gsp_combined
 from nowcasting_utils.visualization.data_sources.plot_pv import get_fig_pv_combined
