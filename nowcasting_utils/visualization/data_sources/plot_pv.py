@@ -1,6 +1,7 @@
 """ General functions for plotting PV data """
 from typing import List
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
@@ -14,58 +15,102 @@ from nowcasting_utils.visualization.utils import make_buttons, make_slider
 def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
     """Produce plot of centroid pv system"""
 
-    y = pv.data[example_index, :, 0]
+    y = pv.power_normalized[example_index, :, 0]
     x = pv.time[example_index]
 
     return make_trace(x, y, truth=True, name="centorid pv")
 
 
-def get_trace_all_pv_systems(pv: PV, example_index: int) -> List[go.Scatter]:
+def get_trace_all_pv_systems(
+    pv: PV, example_index: int, center_system: bool = True
+) -> List[go.Scatter]:
     """Produce plot of centroid pv system"""
 
     traces = []
     x = pv.time[example_index]
-    n_pv_systems = pv.data.shape[2]
+    n_pv_systems = pv.power_mw.shape[2]
 
-    for pv_system_index in range(1, n_pv_systems):
-        y = pv.data[example_index, :, pv_system_index]
+    if center_system:
+        start_idx = 1
+        centroid_trace = get_trace_centroid_pv(pv=pv, example_index=example_index)
+        traces.append(centroid_trace)
 
+    else:
+        start_idx = 0
+
+    # make the lines a little bit see-through
+    opacity = (1 / n_pv_systems) ** 0.25
+
+    for pv_system_index in range(start_idx, n_pv_systems):
+        y = pv.power_normalized[example_index, :, pv_system_index]
+
+        pv_id = pv.id[example_index, pv_system_index].values
         truth = False
-        name = f"pv system {pv_system_index}"
 
-        traces.append(make_trace(x, y, truth=truth, name=name))
+        if ~np.isnan(pv_id):
+            pv_id = int(pv_id)
+            name = f"PV system {pv_id}"
 
-    centroid_trace = get_trace_centroid_pv(pv=pv, example_index=example_index)
-    traces.append(centroid_trace)
+            traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity))
 
     return traces
 
 
 def get_traces_pv_intensity(pv: PV, example_index: int):
-    """Get traces of pv intenisty map"""
+    """Get traces of pv intensity map"""
     time = pv.time[example_index]
-    x = pv.x_coords[example_index]
-    y = pv.y_coords[example_index]
-
-    n_pv_systems = pv.data.shape[2]
 
     traces = [go.Choroplethmapbox(colorscale="Viridis")]
 
-    lat, lon = osgb_to_lat_lon(x=x, y=y)
-
     for t_index in range(len(time)):
-        z = pv.data[example_index, t_index, :]
-        name = time[t_index].data
 
-        trace = go.Scattermapbox(
-            lat=lat,
-            lon=lon,
-            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=20 * z + 2),
-            name=str(name),
+        trace = get_trace_pv_intensity_one_time_step(
+            pv=pv, example_index=example_index, t_index=t_index
         )
+
         traces.append(trace)
 
     return traces
+
+
+def get_trace_pv_intensity_one_time_step(
+    pv: PV, example_index: int, t_index: int, center: bool = False
+):
+    """Get trace of pv intensity map"""
+    time = pv.time[example_index]
+    x = pv.x_coords[example_index]
+    y = pv.y_coords[example_index]
+    pv_id = pv.id[example_index].values
+
+    n_pv_systems = pv.power_mw.shape[2]
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
+    z = pv.power_normalized[example_index, t_index, :]
+    name = time[t_index].data
+
+    if center:
+        colour = (["Blue"] + ["Red"] * (n_pv_systems - 1),)
+    else:
+        colour = ["Red"] * n_pv_systems
+
+    z = z.fillna(0)
+    size = 200 * z
+
+    lat = np.round(lat, 4)
+    lon = np.round(lon, 4)
+
+    text = [f"PV {pv_id}: {z.values:.2f}" for z, pv_id in zip(z, pv_id)]
+
+    trace = go.Scattermapbox(
+        lat=lat,
+        lon=lon,
+        marker=dict(color=colour, size=size, sizemode="area"),
+        name=str(name),
+        text=text,
+    )
+
+    return trace
 
 
 def make_fig_of_animation_from_frames(traces, pv, example_index):
@@ -109,7 +154,9 @@ def get_fig_pv_combined(pv: PV, example_index: int):
     2. Plot the pv intensity with coords and animate in time
     """
 
-    traces_pv_intensity_in_time = get_trace_all_pv_systems(pv=pv, example_index=example_index)
+    traces_pv_intensity_in_time = get_trace_all_pv_systems(
+        pv=pv, example_index=example_index, center_system=False
+    )
 
     traces_pv_intensity_map = get_traces_pv_intensity(pv=pv, example_index=example_index)
 

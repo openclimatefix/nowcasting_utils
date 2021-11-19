@@ -24,7 +24,8 @@ def make_traces_one_channel_one_time(
     Returns: plotly trace
 
     """
-    z = satellite.data[example_index, time_index, :, :, channel_index].values
+    z = satellite.data[example_index, time_index, :, :, channel_index]
+    z = z.transpose("y_index", "x_index").values
 
     x = satellite.x[example_index]
     y = satellite.y[example_index]
@@ -37,8 +38,8 @@ def make_traces_one_channel_one_time(
     # if lat = [53,54], lon = [0,1]
     # then we want to change it to
     # lat = [53,54,43,54] and  lon = [0,0,1,1]
-    lat = np.tile(lat, len(y))
-    lon = np.repeat(lon, len(x))
+    lat = np.repeat(lat, len(y))
+    lon = np.tile(lon, len(x))
 
     return go.Densitymapbox(
         z=z, lat=lat, lon=lon, colorscale="Viridis", opacity=0.5, zmax=1000, zmin=0

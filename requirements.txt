@@ -9,3 +9,4 @@ nowcasting-dataloader
 pytorch_msssim
 torchvision
 pytorch_lightning
+neptune-client
