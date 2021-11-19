@@ -15,7 +15,7 @@ from nowcasting_utils.visualization.data_sources.plot_gsp import (
 
 
 def test_get_trace_centroid_gsp():
-    """ Test get trace for center gsp"""
+    """Test get trace for center gsp"""
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
     trace = get_trace_centroid_gsp(gsp=gsp, example_index=1)
@@ -28,7 +28,7 @@ def test_get_trace_centroid_gsp():
 
 
 def test_get_trace_all_gps():
-    """ Test get traces for all gsps"""
+    """Test get traces for all gsps"""
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
     traces = get_trace_all_gsps(gsp=gsp, example_index=1)
@@ -42,7 +42,7 @@ def test_get_trace_all_gps():
 
 
 def test_get_traces_gsp_intensity():
-    """ Test get traces for gsp intensity """
+    """Test get traces for gsp intensity"""
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
     example_index = 1
@@ -67,7 +67,7 @@ def test_get_traces_gsp_intensity():
 
 
 def test_get_traces_gsp_intensity_and_animate():
-    """ Test to get traces for gsp intensity and make animation"""
+    """Test to get traces for gsp intensity and make animation"""
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
     traces = get_traces_gsp_intensity(gsp=gsp, example_index=1)
@@ -79,7 +79,7 @@ def test_get_traces_gsp_intensity_and_animate():
 
 
 def test_get_fig_gsp_combined():
-    """ Test gsp combined plot"""
+    """Test gsp combined plot"""
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
     fig = get_fig_gsp_combined(gsp=gsp, example_index=1)
