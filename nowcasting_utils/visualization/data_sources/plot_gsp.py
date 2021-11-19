@@ -89,7 +89,7 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
     lat = np.round(lat, 4)
     lon = np.round(lon, 4)
 
-    text = [f'GSP {gsp_id}: {z.values:.2f}' for z,gsp_id in zip(z,gsp_id)]
+    text = [f"GSP {gsp_id}: {z.values:.2f}" for z, gsp_id in zip(z, gsp_id)]
 
     # TODO change this to use GSP boundaries #55
     trace = go.Scattermapbox(
