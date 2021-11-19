@@ -58,16 +58,6 @@ def plot_example(
         float(batch.satellite.y[example_i, 0].cpu().numpy()),
     )
 
-    # def _format_ax(ax):
-    #     if "x_meters_center" in batch.metadata:
-    #         ax.scatter(
-    #             batch.metadata.x_meters_center[example_i].cpu(),
-    #             batch.metadata.y_meters_center[example_i].cpu(),
-    #             s=500,
-    #             color="white",
-    #             marker="x",
-    #         )
-
     ax = fig.add_subplot(nrows, ncols, 1)
     sat_data = batch.satellite.data[example_i, :, :, :, 0].cpu().numpy()
     sat_min = np.min(sat_data)

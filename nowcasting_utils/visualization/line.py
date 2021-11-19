@@ -1,13 +1,23 @@
 """Several line plots of predictions and truths."""
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def make_trace(x, y, truth: bool, show_legend: bool = True):
+def make_trace(
+    x,
+    y,
+    truth: bool,
+    show_legend: bool = True,
+    name: str = None,
+    mode: str = "lines+markers",
+    marker_size: Union[int, List[int]] = 10,
+    color: Union[str, List[str]] = None,
+    opacity: Optional[float] = None,
+):
     """
     Make a plotly trace data (x,y).
 
@@ -16,21 +26,32 @@ def make_trace(x, y, truth: bool, show_legend: bool = True):
         y: values of data
         truth: if y is the truth or predictions. The colour of the line changed depending on this
         show_legend: option to show the legend for this trace or not.
+        name: name of the trace
+        color: the size of the markers
+        marker_size: the size of the markers
+        mode: the mode for plotting,
+            see ref. https://plotly.com/python/reference/scatter/#scatter-mode
+        opacity: the opacity of the lines (and markers)
 
     Returns:plotly trace
 
     """
-    color = "Blue" if truth else "Red"
-    name = "truth" if truth else "predict"
+    if color is None:
+        color = "Blue" if truth else "Red"
+    if name is None:
+        name = "truth" if truth else "predict"
 
-    return go.Scatter(
+    trace = go.Scatter(
         x=x,
         y=y,
-        mode="lines+markers",
-        marker=dict(color=color, line=dict(color=color, width=2)),
+        mode=mode,
+        marker=dict(color=color, line=dict(color=color, width=2), size=marker_size),
         name=name,
         showlegend=show_legend,
+        opacity=opacity,
     )
+
+    return trace
 
 
 def plot_one_result(x, y, y_hat):
