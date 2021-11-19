@@ -1,6 +1,7 @@
 """ General functions for plotting PV data """
 from typing import List
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.gsp.gsp_model import GSP
@@ -17,7 +18,7 @@ def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
     y = gsp.power_mw[example_index, :, 0]
     x = gsp.time[example_index]
 
-    return make_trace(x, y, truth=True, name="center gsp")
+    return make_trace(x, y, truth=True, name="center gsp", color="Blue")
 
 
 def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
@@ -33,10 +34,14 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
     for gsp_index in range(1, n_gsps):
         y = gsp.power_mw[example_index, :, gsp_index]
 
+        gsp_id = gsp.id[example_index,gsp_index].values
         truth = False
-        name = f"GSP {gsp_index}"
 
-        traces.append(make_trace(x, y, truth=truth, name=name, color='Green',opacity=opacity))
+        if ~np.isnan(gsp_id):
+            gsp_id = int(gsp_id)
+            name = f"GSP {gsp_id}"
+
+            traces.append(make_trace(x, y, truth=truth, name=name, color='Green',opacity=opacity))
 
     centroid_trace = get_trace_centroid_gsp(gsp=gsp, example_index=example_index)
     centroid_trace['legendrank'] = 1
@@ -48,29 +53,45 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
 def get_traces_gsp_intensity(gsp: GSP, example_index: int):
     """Get traces of pv intenisty map"""
     time = gsp.time[example_index]
-    x = gsp.x_coords[example_index]
-    y = gsp.y_coords[example_index]
 
-    n_pv_systems = gsp.power_mw.shape[2]
-
-    traces = [go.Choroplethmapbox(colorscale="Viridis")]
-
-    lat, lon = osgb_to_lat_lon(x=x, y=y)
+    traces = []
 
     for t_index in range(len(time)):
-        z = gsp.power_mw[example_index, t_index, :]
-        name = time[t_index].data
 
-        # TODO change this to use GSP boundaries
-        trace = go.Scattermapbox(
-            lat=lat,
-            lon=lon,
-            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=20 * z + 2),
-            name=str(name),
-        )
+        trace = get_trace_gsp_intensity_one_time_step(gsp=gsp,example_index=example_index, t_index=t_index)
         traces.append(trace)
 
     return traces
+
+
+def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index: int):
+    """Get trace of pv intensity map"""
+    time = gsp.time[example_index]
+    x = gsp.x_coords[example_index]
+    y = gsp.y_coords[example_index]
+
+    n_gsp_systems = gsp.power_mw.shape[2]
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
+    z = gsp.power_mw[example_index, t_index, :]
+    name = time[t_index].data
+
+    if z.max() > 0:
+        size = 200 * z
+    else:
+        size = 0
+
+    # TODO change this to use GSP boundaries
+    trace = go.Scattermapbox(
+        lat=lat,
+        lon=lon,
+        marker=dict(color=["Blue"] + ["Green"] * (n_gsp_systems - 1), size=size, sizemode='area'),
+        name=str(name),
+        text=list(z.values.round(2))
+    )
+
+    return trace
 
 
 def make_fig_of_animation_from_frames(traces, gsp: GSP, example_index: int):

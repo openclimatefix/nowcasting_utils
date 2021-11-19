@@ -80,7 +80,13 @@ def test_get_fig_gsp_combined():
 
     gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
 
+    import xarray as xr
+    gsp = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/train/gsp/000000.nc')
+
+    gsp.__setitem__('power_mw',(gsp.power_mw / gsp.capacity_mwp).fillna(0))
+
     fig = get_fig_gsp_combined(gsp=gsp, example_index=1)
+
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")
 

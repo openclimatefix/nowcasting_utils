@@ -99,16 +99,15 @@ def test_make_animation_one_channels():
 
 def test_make_animation_all_channesl():
     """Test 'make_animation_all_channels' functions"""
-    # import xarray as xr
-    # satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/
-    # nowcasting_utils/tests/data/sat/000000.nc')
-    # satellite = satellite.rename({'stacked_eumetsat_data':'data', "variable":"channels"})
 
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=8
     )
 
-    fig = make_animation_all_channels(satellite=satellite, example_index=1)
+    import xarray as xr
+    satellite = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/train/satellite/000000.nc')
+
+    fig = make_animation_all_channels(satellite=satellite, example_index=0)
 
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")

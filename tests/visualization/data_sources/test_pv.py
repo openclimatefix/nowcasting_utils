@@ -82,6 +82,12 @@ def test_get_fig_pv_combined():
     """Test 'get_fig_pv_combined' function"""
     pv = pv_fake(batch_size=2, seq_length_5=19, n_pv_systems_per_batch=8)
 
+    import xarray as xr
+    pv = xr.load_dataset('/Users/peterdudfield/Documents/Github/nowcasting_utils/train/pv/000000.nc')
+    # pv = pv.rename({'data':'power_mw'})
+
+    pv.__setitem__('power_mw', (pv.power_mw / pv.capacity_mwp).fillna(0))
+
     fig = get_fig_pv_combined(pv=pv, example_index=1)
     if "CI" not in os.environ.keys():
         fig.show(renderer="browser")

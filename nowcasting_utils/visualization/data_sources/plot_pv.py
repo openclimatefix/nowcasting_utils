@@ -2,6 +2,7 @@
 from typing import List
 
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
@@ -41,39 +42,62 @@ def get_trace_all_pv_systems(pv: PV, example_index: int, center_system: bool = T
     for pv_system_index in range(start_idx, n_pv_systems):
         y = pv.power_mw[example_index, :, pv_system_index]
 
+        pv_id = pv.id[example_index,pv_system_index].values
         truth = False
-        name = f"pv system {pv_system_index}"
 
-        traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity))
+        if ~np.isnan(pv_id):
+            pv_id = int(pv_id)
+            name = f"PV system {pv_id}"
+
+            traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity))
 
     return traces
 
 
 def get_traces_pv_intensity(pv: PV, example_index: int):
-    """Get traces of pv intenisty map"""
+    """Get traces of pv intensity map"""
+    time = pv.time[example_index]
+
+    traces = [go.Choroplethmapbox(colorscale="Viridis")]
+
+    for t_index in range(len(time)):
+
+        trace = get_trace_pv_intensity_one_time_step(pv=pv, example_index=example_index, t_index=t_index)
+
+        traces.append(trace)
+
+    return traces
+
+
+def get_trace_pv_intensity_one_time_step(pv: PV, example_index: int, t_index: int, center: bool =False):
+    """Get trace of pv intensity map"""
     time = pv.time[example_index]
     x = pv.x_coords[example_index]
     y = pv.y_coords[example_index]
 
     n_pv_systems = pv.power_mw.shape[2]
 
-    traces = [go.Choroplethmapbox(colorscale="Viridis")]
-
     lat, lon = osgb_to_lat_lon(x=x, y=y)
 
-    for t_index in range(len(time)):
-        z = pv.power_mw[example_index, t_index, :]
-        name = time[t_index].data
+    z = pv.power_mw[example_index, t_index, :]
+    name = time[t_index].data
 
-        trace = go.Scattermapbox(
-            lat=lat,
-            lon=lon,
-            marker=dict(color=["Blue"] + ["Red"] * (n_pv_systems - 1), size=20 * z + 2),
-            name=str(name),
-        )
-        traces.append(trace)
+    if center:
+        colour = ["Blue"] + ["Red"] * (n_pv_systems - 1),
+    else:
+        colour = ["Red"] * n_pv_systems
 
-    return traces
+    size = 200 * z
+
+    trace = go.Scattermapbox(
+        lat=lat,
+        lon=lon,
+        marker=dict(color=colour, size=size, sizemode='area'),
+        name=str(name),
+        text=list(z.values.round(2))
+    )
+
+    return trace
 
 
 def make_fig_of_animation_from_frames(traces, pv, example_index):
@@ -145,14 +169,14 @@ def get_fig_pv_combined(pv: PV, example_index: int):
     n_traces = len(fig.data)
 
     frames = []
-    static_traces = list(fig.power_mw[1:])
+    static_traces = list(fig.data[1:])
     for i, trace in enumerate(traces_pv_intensity_map):
         frames.append(
             dict(data=[trace] + static_traces, traces=list(range(n_traces)), name=f"frame{i}")
         )
 
     # make slider
-    labels = [pd.to_datetime(time.power_mw) for time in pv.time[example_index]]
+    labels = [pd.to_datetime(time.data) for time in pv.time[example_index]]
     sliders = make_slider(labels=labels)
 
     fig.update(frames=frames)
