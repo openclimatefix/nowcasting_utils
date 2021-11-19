@@ -1,22 +1,22 @@
 """ Tests to plot satellite data """
 import pandas as pd
-import xarray as xr
 import plotly.graph_objects as go
+import xarray as xr
 from nowcasting_dataset.dataset.batch import Batch
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
-from nowcasting_utils.visualization.utils import make_buttons, make_slider
-from nowcasting_utils.visualization.data_sources.plot_pv import (
-    get_trace_all_pv_systems,
-    get_trace_pv_intensity_one_time_step,
-)
 from nowcasting_utils.visualization.data_sources.plot_gsp import (
     get_trace_all_gsps,
     get_trace_gsp_intensity_one_time_step,
 )
+from nowcasting_utils.visualization.data_sources.plot_pv import (
+    get_trace_all_pv_systems,
+    get_trace_pv_intensity_one_time_step,
+)
 from nowcasting_utils.visualization.data_sources.plot_satellite import (
     make_traces_one_channel_one_time,
 )
+from nowcasting_utils.visualization.utils import make_buttons, make_slider
 
 
 def make_trace_time_series_pv_and_gsp(batch: Batch, example_index: int):

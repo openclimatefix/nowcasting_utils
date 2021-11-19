@@ -1,8 +1,8 @@
 """ General functions for plotting PV data """
 from typing import List
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.pv.pv_data_source import PV
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
