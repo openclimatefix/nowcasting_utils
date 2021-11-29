@@ -1,3 +1,4 @@
+""" Functions to save validation results to logger/csv """
 import pandas as pd
 from typing import List, Optional
 
