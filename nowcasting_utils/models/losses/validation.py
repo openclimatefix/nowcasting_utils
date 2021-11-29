@@ -1,9 +1,15 @@
 import pandas as pd
-from typing import Optional
+from typing import List, Optional
 
 
-def make_validation_results(predictions, truths, gsp_ids, t0_datetimes_utc,
-                            batch_idx: Optional[int] = None) -> pd.DataFrame:
+import logging
+
+_log = logging.getLogger(__name__)
+
+
+def make_validation_results(
+    predictions, truths, gsp_ids, t0_datetimes_utc, batch_idx: Optional[int] = None
+) -> pd.DataFrame:
     """
     Make validations results.
 
@@ -36,3 +42,29 @@ def make_validation_results(predictions, truths, gsp_ids, t0_datetimes_utc,
         results["batch_index"] = batch_idx
 
     return results
+
+
+def save_validation_results_to_logger(
+    results_dfs: List[pd.DataFrame], logger, results_file_name: str, current_epoch: int
+):
+    """
+    Save validation results to logger
+    """
+
+    _log.info("Saving results of validation to logger")
+
+    # join all validation step results together
+    results_df = pd.concat(results_dfs)
+    results_df.reset_index(inplace=True)
+
+    # save to csv file
+    name_csv = f"{results_file_name}_{current_epoch}.csv"
+    results_df.to_csv(name_csv)
+
+    # upload csv to neptune
+    try:
+        logger.experiment[-1][f"validation/results/epoch_{current_epoch}"].upload(name_csv)
+    except Exception as e:
+        _log.debug(e)
+        _log.debug('Could not save validation results to logger')
+
