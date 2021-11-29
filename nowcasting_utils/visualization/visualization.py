@@ -109,13 +109,14 @@ def plot_example(
     # ************************ PV YIELD ***************************************
     if output_variable == "pv_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
+        pv_time = pd.to_datetime(batch.pv.pv_datetime_index[example_i].cpu().numpy(), unit="s")
         ax.set_title(f"PV yield for PV ID {batch.pv.pv_system_id[example_i, 0].cpu()}")
         pv_actual = pd.Series(
-            batch.pv.pv_yield[example_i, :, 0].cpu().numpy(), index=nwp_dt_index, name="actual"
+            batch.pv.pv_yield[example_i, :, 0].cpu().numpy(), index=pv_time, name="actual"
         )
         pv_pred = pd.Series(
             model_output[example_i].detach().cpu().numpy(),
-            index=nwp_dt_index[history_len + 1 :],
+            index=pv_time[history_len + 1 :],
             name="prediction",
         )
         pd.concat([pv_actual, pv_pred], axis="columns").plot(ax=ax)
