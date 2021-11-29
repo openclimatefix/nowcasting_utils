@@ -1,8 +1,7 @@
 """ Functions to save validation results to logger/csv """
 import logging
-from typing import List, Optional
-
 from datetime import timedelta
+from typing import List, Optional
 
 import pandas as pd
 from neptune.new.integrations.pytorch_lightning import NeptuneLogger
@@ -11,7 +10,12 @@ _log = logging.getLogger(__name__)
 
 
 def make_validation_results(
-    predictions_mw, truths_mw, gsp_ids: List[int], t0_datetimes_utc: pd.DatetimeIndex, batch_idx: Optional[int] = None, forecast_sample_period: timedelta = timedelta(minutes=30)
+    predictions_mw,
+    truths_mw,
+    gsp_ids: List[int],
+    t0_datetimes_utc: pd.DatetimeIndex,
+    batch_idx: Optional[int] = None,
+    forecast_sample_period: timedelta = timedelta(minutes=30),
 ) -> pd.DataFrame:
     """
     Make validations results.
@@ -34,9 +38,13 @@ def make_validation_results(
     results_per_forecast_horizon = []
 
     for i in range(predictions_mw.shape[1]):
-        predictions_mw_df = pd.DataFrame(predictions_mw[:, i], columns=['forecast_gsp_pv_outturn_mw'])
-        predictions_mw_df['actual_gsp_pv_outturn_mw'] = truths_mw[:, i]
-        predictions_mw_df["target_datetime_utc"] = t0_datetimes_utc + (i+1)*forecast_sample_period
+        predictions_mw_df = pd.DataFrame(
+            predictions_mw[:, i], columns=["forecast_gsp_pv_outturn_mw"]
+        )
+        predictions_mw_df["actual_gsp_pv_outturn_mw"] = truths_mw[:, i]
+        predictions_mw_df["target_datetime_utc"] = (
+            t0_datetimes_utc + (i + 1) * forecast_sample_period
+        )
         predictions_mw_df["gsp_id"] = gsp_ids
         predictions_mw_df["t0_datetime_utc"] = t0_datetimes_utc
 

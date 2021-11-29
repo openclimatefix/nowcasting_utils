@@ -16,7 +16,7 @@ def test_make_validation_results():
 
     predictions = np.random.random(size=(batch_size, forecast_length))
     truths = np.random.random(size=(batch_size, forecast_length))
-    t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0,high=1000,size=batch_size))
+    t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0, high=1000, size=batch_size))
     gsp_ids = np.random.random(size=batch_size)
 
     results = make_validation_results(
@@ -27,7 +27,7 @@ def test_make_validation_results():
         gsp_ids=gsp_ids,
     )
 
-    assert len(results) == batch_size*forecast_length
+    assert len(results) == batch_size * forecast_length
     assert "t0_datetime_utc" in results.keys()
     assert "gsp_id" in results.keys()
     assert f"actual_gsp_pv_outturn_mw" in results.keys()
@@ -41,7 +41,7 @@ def test_save_validation_results_to_logger():
 
     predictions = np.random.random(size=(batch_size, forecast_length))
     truths = np.random.random(size=(batch_size, forecast_length))
-    t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0,high=1000,size=batch_size))
+    t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0, high=1000, size=batch_size))
     gsp_ids = np.random.random(size=batch_size)
 
     results1 = make_validation_results(
