@@ -1,5 +1,6 @@
 """ Functions to save validation results to logger/csv """
 import logging
+from datetime import timedelta
 from typing import List, Optional
 
 import pandas as pd
@@ -9,36 +10,63 @@ _log = logging.getLogger(__name__)
 
 
 def make_validation_results(
-    predictions, truths, gsp_ids, t0_datetimes_utc, batch_idx: Optional[int] = None
+    predictions_mw,
+    truths_mw,
+    gsp_ids: List[int],
+    t0_datetimes_utc: pd.DatetimeIndex,
+    batch_idx: Optional[int] = None,
+    forecast_sample_period: timedelta = timedelta(minutes=30),
 ) -> pd.DataFrame:
     """
     Make validations results.
 
+    Args:
+        predictions_mw: predictions in mw, shape [batch_size, n_forecast_horizons]
+        truths_mw: truths in mw, shape [batch_size, n_forecast_horizons]
+        gsp_ids: the gsp ids for eahc prediction, shape [batch_size]
+        t0_datetimes_utc: list of date times when the predictions are for
+        batch_idx: optional index of the batch
+        forecast_sample_period: the different between each forecast horizon
+
     The following columns are made:
 
     - t0_datetime_utc
+    - target_datetime_utc
     - gsp_id
-
-    - prediction_{i} where i in range(0,n_forecast_steps)
-    - truth_{i} where i in range(0,n_forecast_steps)
+    - actual_gsp_pv_outturn_mw
+    - forecast_gsp_pv_outturn_mw
     - batch_index (optional)
     - example_index (optional)
 
     return: Dataframe of predictions and truths
     """
 
-    predictions = pd.DataFrame(
-        predictions, columns=[f"prediction_{i}" for i in range(predictions.shape[1])]
-    )
-    truths = pd.DataFrame(truths, columns=[f"truth_{i}" for i in range(truths.shape[1])])
+    assert predictions_mw.shape == truths_mw.shape
+
+    results_per_forecast_horizon = []
+
+    # TODO #64 vectorize
+    n_forecast_timesteps = predictions_mw.shape[1]
+    for i in range(n_forecast_timesteps):
+        predictions_mw_df = pd.DataFrame(
+            predictions_mw[:, i], columns=["forecast_gsp_pv_outturn_mw"]
+        )
+        predictions_mw_df["actual_gsp_pv_outturn_mw"] = truths_mw[:, i]
+        predictions_mw_df["target_datetime_utc"] = (
+            t0_datetimes_utc + (i + 1) * forecast_sample_period
+        )
+        predictions_mw_df["gsp_id"] = gsp_ids
+        predictions_mw_df["t0_datetime_utc"] = t0_datetimes_utc
+
+        results_per_forecast_horizon.append(predictions_mw_df)
+
+    # join truths and predictions for each forecast horizon
+    results = pd.concat(results_per_forecast_horizon)
 
     # join truths and predictions
-    results = pd.concat([predictions, truths], axis=1, join="inner")
     results.index.name = "example_index"
 
-    # add metadata
-    results["gsp_id"] = gsp_ids
-    results["t0_datetime_utc"] = t0_datetimes_utc
+    # add batch index
     if batch_idx is not None:
         results["batch_index"] = batch_idx
 
