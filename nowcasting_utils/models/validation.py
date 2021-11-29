@@ -1,9 +1,8 @@
 """ Functions to save validation results to logger/csv """
-import pandas as pd
+import logging
 from typing import List, Optional
 
-
-import logging
+import pandas as pd
 
 _log = logging.getLogger(__name__)
 
