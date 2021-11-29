@@ -67,5 +67,4 @@ def save_validation_results_to_logger(
         logger.experiment[-1][f"validation/results/epoch_{current_epoch}"].upload(name_csv)
     except Exception as e:
         _log.debug(e)
-        _log.debug('Could not save validation results to logger')
-
+        _log.debug("Could not save validation results to logger")
