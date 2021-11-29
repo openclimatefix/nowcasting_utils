@@ -20,13 +20,21 @@ def make_validation_results(
     """
     Make validations results.
 
+    Args:
+        predictions_mw: predictions in mw, shape [batch_size, n_forecast_horizons]
+        truths_mw: truths in mw, shape [batch_size, n_forecast_horizons]
+        gsp_ids: the gsp ids for eahc prediction, shape [batch_size]
+        t0_datetimes_utc: list of date times when the predictions are for
+        batch_idx: optional index of the batch
+        forecast_sample_period: the different between each forecast horizon
+
     The following columns are made:
 
     - t0_datetime_utc
+    - target_datetime_utc
     - gsp_id
-
-    - prediction_{i} where i in range(0,n_forecast_steps)
-    - truth_{i} where i in range(0,n_forecast_steps)
+    - actual_gsp_pv_outturn_mw
+    - forecast_gsp_pv_outturn_mw
     - batch_index (optional)
     - example_index (optional)
 
@@ -37,7 +45,9 @@ def make_validation_results(
 
     results_per_forecast_horizon = []
 
-    for i in range(predictions_mw.shape[1]):
+    # TODO #64 vectorize
+    n_forecast_timesteps = predictions_mw.shape[1]
+    for i in range(n_forecast_timesteps):
         predictions_mw_df = pd.DataFrame(
             predictions_mw[:, i], columns=["forecast_gsp_pv_outturn_mw"]
         )
