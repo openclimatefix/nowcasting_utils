@@ -8,7 +8,7 @@ from nowcasting_utils.models.validation import (
 
 
 def test_make_validation_results():
-    """ Test making the validation """
+    """Test making the validation"""
 
     batch_size = 2
     forecast_length = 4
@@ -27,15 +27,15 @@ def test_make_validation_results():
     )
 
     assert len(results) == batch_size
-    assert 't0_datetime_utc' in results.keys()
-    assert 'gsp_id' in results.keys()
+    assert "t0_datetime_utc" in results.keys()
+    assert "gsp_id" in results.keys()
     for i in range(forecast_length):
-        assert f'truth_{i}' in results.keys()
-        assert f'prediction_{i}' in results.keys()
+        assert f"truth_{i}" in results.keys()
+        assert f"prediction_{i}" in results.keys()
 
 
 def test_save_validation_results_to_logger():
-    """ Test save_validation_results_to_logger """
+    """Test save_validation_results_to_logger"""
     batch_size = 2
     forecast_length = 4
 
@@ -62,5 +62,6 @@ def test_save_validation_results_to_logger():
 
     results_dfs = [results1, results2]
 
-    save_validation_results_to_logger(results_dfs=results_dfs, logger=None,results_file_name = 'test_file_name', current_epoch=0)
-
+    save_validation_results_to_logger(
+        results_dfs=results_dfs, logger=None, results_file_name="test_file_name", current_epoch=0
+    )

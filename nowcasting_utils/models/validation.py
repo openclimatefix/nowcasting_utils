@@ -1,9 +1,9 @@
 """ Functions to save validation results to logger/csv """
 import logging
-from neptune.new.integrations.pytorch_lightning import NeptuneLogger
 from typing import List, Optional
 
 import pandas as pd
+from neptune.new.integrations.pytorch_lightning import NeptuneLogger
 
 _log = logging.getLogger(__name__)
 
@@ -46,7 +46,10 @@ def make_validation_results(
 
 
 def save_validation_results_to_logger(
-    results_dfs: List[pd.DataFrame], results_file_name: str, current_epoch: int, logger: Optional[NeptuneLogger] = None
+    results_dfs: List[pd.DataFrame],
+    results_file_name: str,
+    current_epoch: int,
+    logger: Optional[NeptuneLogger] = None,
 ):
     """
     Save validation results to logger
@@ -54,7 +57,7 @@ def save_validation_results_to_logger(
 
     _log.info("Saving results of validation to logger")
     if logger is None:
-        _log.debug('logger is not set, so not saving validation results')
+        _log.debug("logger is not set, so not saving validation results")
     else:
         _log.info("Saving results of validation to logger")
 
