@@ -1,7 +1,7 @@
 """ Test saving validation results """
 import numpy as np
 
-from nowcasting_utils.models.validation import (
+from nowcasting_utils.metrics.validation import (
     make_validation_results,
     save_validation_results_to_logger,
 )
