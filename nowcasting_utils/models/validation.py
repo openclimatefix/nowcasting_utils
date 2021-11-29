@@ -1,5 +1,6 @@
 """ Functions to save validation results to logger/csv """
 import logging
+from neptune.new.integrations.pytorch_lightning import NeptuneLogger
 from typing import List, Optional
 
 import pandas as pd
@@ -45,25 +46,29 @@ def make_validation_results(
 
 
 def save_validation_results_to_logger(
-    results_dfs: List[pd.DataFrame], logger, results_file_name: str, current_epoch: int
+    results_dfs: List[pd.DataFrame], results_file_name: str, current_epoch: int, logger: Optional[NeptuneLogger] = None
 ):
     """
     Save validation results to logger
     """
 
     _log.info("Saving results of validation to logger")
+    if logger is None:
+        _log.debug('logger is not set, so not saving validation results')
+    else:
+        _log.info("Saving results of validation to logger")
 
-    # join all validation step results together
-    results_df = pd.concat(results_dfs)
-    results_df.reset_index(inplace=True)
+        # join all validation step results together
+        results_df = pd.concat(results_dfs)
+        results_df.reset_index(inplace=True)
 
-    # save to csv file
-    name_csv = f"{results_file_name}_{current_epoch}.csv"
-    results_df.to_csv(name_csv)
+        # save to csv file
+        name_csv = f"{results_file_name}_{current_epoch}.csv"
+        results_df.to_csv(name_csv)
 
-    # upload csv to neptune
-    try:
-        logger.experiment[-1][f"validation/results/epoch_{current_epoch}"].upload(name_csv)
-    except Exception as e:
-        _log.debug(e)
-        _log.debug("Could not save validation results to logger")
+        # upload csv to neptune
+        try:
+            logger.experiment[-1][f"validation/results/epoch_{current_epoch}"].upload(name_csv)
+        except Exception as e:
+            _log.debug(e)
+            _log.debug("Could not save validation results to logger")
