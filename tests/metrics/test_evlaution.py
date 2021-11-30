@@ -1,8 +1,9 @@
-from nowcasting_utils.metrics.evaluation import evaluation
-import nowcasting_utils
+from pathlib import Path
 
 import pandas as pd
-from pathlib import Path
+
+import nowcasting_utils
+from nowcasting_utils.metrics.evaluation import evaluation
 
 
 def test_evaluation():
