@@ -24,18 +24,21 @@ def evaluation(
         save_fig: option to save figure or not
 
     """
-
-    check_results_df(results_df)
-
+    # make datetimes columns are datetimes
     results_df["t0_datetime_utc"] = pd.to_datetime(results_df["t0_datetime_utc"])
     results_df["target_datetime_utc"] = pd.to_datetime(results_df["target_datetime_utc"])
 
+    # check result format
+    check_results_df(results_df)
+
+    # make figure of data
     fig = data_evaluation(results_df, model_name)
     if show_fig:
         fig.show(renderer="browser")
     if save_fig:
         fig.write_html(f"./evaluation_data_{model_name}.html")
 
+    # make figure of results
     fig = results_evaluation(results_df, model_name)
     if show_fig:
         fig.show(renderer="browser")
@@ -145,10 +148,12 @@ def make_main_metrics(results_df, normalize: bool = False):
 
     main_metrics = run_metrics(y=y, y_hat=y_hat, name="All horizons")
 
+    # metrics ready for plotting
     metrics = list(main_metrics.keys())
     if normalize:
         metrics = [f"Normalised {metric}" for metric in metrics]
 
+    # values ready for plotting
     values = np.array(list(main_metrics.values()))
     if normalize:
         values *= 100
@@ -159,6 +164,7 @@ def make_main_metrics(results_df, normalize: bool = False):
     else:
         header = ["Metric", "Values [MW]"]
 
+    # make table for plot
     trace_main_normalized = go.Table(
         header=dict(values=header),
         cells=dict(values=[metrics, values]),
@@ -174,6 +180,7 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False):
     n_forecast_hoirzons = 4
     time_delta = timedelta(minutes=30)
     forecast_horizon_metrics = {}
+    # loop over the number of forecast horizons
     for i in range(n_forecast_hoirzons):
 
         forecast_horizon = (i + 1) * time_delta
@@ -202,6 +209,7 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False):
 
     forecast_horizon_metrics_df = pd.DataFrame(forecast_horizon_metrics).T
     trace_forecast_horizons = []
+    # loop over the different columns / metrics and plot them
     for i in range(len(forecast_horizon_metrics_df.columns)):
 
         col = forecast_horizon_metrics_df.columns[i]
@@ -232,6 +240,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
     3. make histogram of MAE
     """
 
+    # make metrics per gsp
     n_gsp_ids = int(results_df["gsp_id"].max())
     gsp_metrics = {}
     for i in range(n_gsp_ids):
@@ -251,6 +260,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
 
     gsp_metrics_df = pd.DataFrame(gsp_metrics).T
 
+    # plot metrics
     trace_gsp_id = []
     for i in range(len(gsp_metrics_df.columns)):
 
@@ -270,6 +280,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
         )
         trace_gsp_id.append(trace_forecast_horizon)
 
+    # make histogram
     trace_histogram = go.Histogram(
         x=gsp_metrics_df["Mean Absolute Error"],
         marker_color=colours[0],
@@ -284,18 +295,22 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str):
     Make metrics from truth and predictions
     """
 
+    # basic metrics
     mean_absolute_error = (y - y_hat).abs().mean()
     mean_error = (y - y_hat).mean()
     root_mean_squared_error = (((y - y_hat) ** 2).mean()) ** 0.5
 
+    # max value
     max_absolute_error = (y - y_hat).max()
 
+    # std and CI statistics
     std_absolute_error = (y - y_hat).abs().std()
     if len(y) > 0:
         ci_absolute_error = std_absolute_error / (len(y) ** 0.5)
     else:
         ci_absolute_error = np.nan
 
+    # print metrics out
     print(name)
     print(f"{mean_absolute_error=:0.3f} MW (+- {ci_absolute_error:0.3f})")
     print(f"{mean_error=:0.3f} MW")
