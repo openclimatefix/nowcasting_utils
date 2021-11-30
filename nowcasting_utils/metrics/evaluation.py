@@ -11,21 +11,26 @@ from nowcasting_utils.metrics.utils import check_results_df
 colours = ["rgb(77,137,99)", "rgb(105,165,131)", "rgb(225,179,120)", "rgb(224,204,151)"]
 
 
-def evaluation(results_df: pd.DataFrame, model_name: str):
+def evaluation(results_df: pd.DataFrame, model_name: str, show_fig: bool = True):
     """
     Main evaluation method
 
     Args:
         results_df: results dataframe
         model_name: the model name, used for adding titles to plots
+        show_fig: display figure in browser - this doesnt work for CI
 
     """
 
     check_results_df(results_df)
 
-    data_evaluation(results_df, model_name)
+    fig = data_evaluation(results_df, model_name)
+    if show_fig:
+        fig.show(renderer="browser")
 
-    results_evaluation(results_df, model_name)
+    fig = results_evaluation(results_df, model_name)
+    if show_fig:
+        fig.show(renderer="browser")
 
 
 def results_evaluation(results_df: pd.DataFrame, model_name: str):
@@ -116,7 +121,7 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str):
     fig.update_layout(xaxis_range=[0.4, 2.1])
     fig.update_layout(xaxis2_range=[0.4, 2.1])
 
-    fig.show(renderer="browser")
+    return fig
 
 
 def make_main_metrics(results_df, normalize: bool = False):
@@ -334,4 +339,4 @@ def data_evaluation(results_df: pd.DataFrame, model_name: str):
     fig["layout"]["yaxis2"]["title"] = "Count"
     fig["layout"]["title"] = model_name
 
-    fig.show(renderer="browser")
+    return fig
