@@ -1,3 +1,4 @@
+""" Test for evaluation functions """
 from pathlib import Path
 
 import pandas as pd
@@ -7,7 +8,7 @@ from nowcasting_utils.metrics.evaluation import evaluation
 
 
 def test_evaluation():
-
+    """ Test evaluation for fake data """
     file = (
         Path(nowcasting_utils.__file__).parent.parent.absolute()
         / "tests"
