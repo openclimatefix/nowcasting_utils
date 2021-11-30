@@ -11,7 +11,7 @@ from nowcasting_utils.metrics.utils import check_results_df
 colours = ["rgb(77,137,99)", "rgb(105,165,131)", "rgb(225,179,120)", "rgb(224,204,151)"]
 
 
-def evaluation(results_df: pd.DataFrame, model_name: str, show_fig: bool = True):
+def evaluation(results_df: pd.DataFrame, model_name: str, show_fig: bool = True, save_fig: bool = True):
     """
     Main evaluation method
 
@@ -19,18 +19,26 @@ def evaluation(results_df: pd.DataFrame, model_name: str, show_fig: bool = True)
         results_df: results dataframe
         model_name: the model name, used for adding titles to plots
         show_fig: display figure in browser - this doesnt work for CI
+        save_fig: option to save figure or not
 
     """
 
     check_results_df(results_df)
 
+    results_df["t0_datetime_utc"] = pd.to_datetime(results_df["t0_datetime_utc"])
+    results_df["target_datetime_utc"] = pd.to_datetime(results_df["target_datetime_utc"])
+
     fig = data_evaluation(results_df, model_name)
     if show_fig:
         fig.show(renderer="browser")
+    if save_fig:
+        fig.write_html(f"./evaluation_data_{model_name}.html")
 
     fig = results_evaluation(results_df, model_name)
     if show_fig:
         fig.show(renderer="browser")
+    if save_fig:
+        fig.write_html(f"./evaluation_results_{model_name}.html")
 
 
 def results_evaluation(results_df: pd.DataFrame, model_name: str):

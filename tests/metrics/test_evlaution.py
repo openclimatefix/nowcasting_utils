@@ -18,4 +18,4 @@ def test_evaluation():
     data_df["t0_datetime_utc"] = pd.to_datetime(data_df["t0_datetime_utc"])
     data_df["target_datetime_utc"] = pd.to_datetime(data_df["target_datetime_utc"])
 
-    evaluation(data_df, "Unittest Model Name", show_fig=False)
+    evaluation(data_df, "Unittest Model Name", show_fig=False, save_fig=False)
