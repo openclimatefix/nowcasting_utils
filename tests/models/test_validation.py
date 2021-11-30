@@ -26,7 +26,7 @@ def test_make_validation_results():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
-        capacity_mwp=capacity
+        capacity_mwp=capacity,
     )
 
     assert len(results) == batch_size * forecast_length
@@ -53,7 +53,7 @@ def test_save_validation_results_to_logger():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
-        capacity_mwp=capacity
+        capacity_mwp=capacity,
     )
 
     results2 = make_validation_results(
@@ -62,7 +62,7 @@ def test_save_validation_results_to_logger():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
-        capacity_mwp=capacity
+        capacity_mwp=capacity,
     )
 
     results_dfs = [results1, results2]
