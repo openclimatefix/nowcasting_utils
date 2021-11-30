@@ -24,7 +24,7 @@ def make_validation_results(
     Args:
         predictions_mw: predictions in mw, shape [batch_size, n_forecast_horizons]
         truths_mw: truths in mw, shape [batch_size, n_forecast_horizons]
-        capacity_mwp: the capacity of each gsp
+        capacity_mwp: the capacity of each gsp at that time
         gsp_ids: the gsp ids for eahc prediction, shape [batch_size]
         t0_datetimes_utc: list of date times when the predictions are for
         batch_idx: optional index of the batch
