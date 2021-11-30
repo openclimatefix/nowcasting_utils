@@ -8,7 +8,7 @@ from nowcasting_utils.metrics.evaluation import evaluation
 
 
 def test_evaluation():
-    """ Test evaluation for fake data """
+    """Test evaluation for fake data"""
     file = (
         Path(nowcasting_utils.__file__).parent.parent.absolute()
         / "tests"
