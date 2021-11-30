@@ -11,7 +11,9 @@ from nowcasting_utils.metrics.utils import check_results_df
 colours = ["rgb(77,137,99)", "rgb(105,165,131)", "rgb(225,179,120)", "rgb(224,204,151)"]
 
 
-def evaluation(results_df: pd.DataFrame, model_name: str, show_fig: bool = True, save_fig: bool = True):
+def evaluation(
+    results_df: pd.DataFrame, model_name: str, show_fig: bool = True, save_fig: bool = True
+):
     """
     Main evaluation method
 
