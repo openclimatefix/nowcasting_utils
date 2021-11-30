@@ -7,12 +7,12 @@ this_directory = Path(__file__).parent
 install_requires = (this_directory / "requirements.txt").read_text().splitlines()
 long_description = (this_directory / "README.md").read_text()
 
-version = open("nowcasting_utils/version.py").read()
+version = open("nowcasting_utils/version.py").readlines()[-1].split()[-1].strip("\"'")
 
 setup(
     name="nowcasting_utils",
     packages=find_packages(),
-    version="0.0.23",
+    version=version,
     license="MIT",
     description="Nowcasting Utilities",
     author="Jacob Bieker, Jack Kelly, Peter Dudfield",
