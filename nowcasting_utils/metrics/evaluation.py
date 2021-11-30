@@ -8,7 +8,7 @@ from plotly.subplots import make_subplots
 
 from nowcasting_utils.metrics.utils import check_results_df
 
-colours = ["rgb(77,137,99)", "rgb(105,165,131)", "rgb(225,179,120)", "rgb(224,204,151)"]
+colours = ["rgb(77,137,99)", "rgb(225,179,120)", "rgb(224,204,151)", "rgb(105,165,131)"]
 
 
 def evaluation(
@@ -92,13 +92,13 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str):
         ],
         subplot_titles=[
             "Metrics",
-            "Normalized Metrics",
-            "Forecast Horizon",
-            "Forecast Horizon (Normalized)",
-            "GSP ID",
-            "GSP ID (Normalized)",
-            "GSP ID MAE Histogram",
-            "GSP ID MAE Histogram (Normalized)",
+            "Normalised Metrics",
+            "Forecast Error as a function of Forecast Horizon",
+            "Forecast Normalised Error as a function of Forecast Horizon",
+            "Forecast Error as a function of GSP ID",
+            "Forecast Normalised Error as a function of GSP ID",
+            "Histogram of MAE for GSP",
+            "Histogram of NMAE for GSP",
         ],
     )
 
@@ -147,7 +147,7 @@ def make_main_metrics(results_df, normalize: bool = False):
 
     metrics = list(main_metrics.keys())
     if normalize:
-        metrics = [f"Normalized {metric}" for metric in metrics]
+        metrics = [f"Normalised {metric}" for metric in metrics]
 
     values = np.array(list(main_metrics.values()))
     if normalize:
@@ -155,7 +155,7 @@ def make_main_metrics(results_df, normalize: bool = False):
     values = np.round(values, 3)
 
     if normalize:
-        header = ["Normalized Metric", "Values [%]"]
+        header = ["Normalised Metric", "Values [%]"]
     else:
         header = ["Metric", "Values [MW]"]
 
@@ -209,7 +209,7 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False):
 
         name = col
         if normalize:
-            name = f"Normalized {col}"
+            name = f"Normalised {col}"
 
         trace_forecast_horizon = go.Scatter(
             x=forecast_horizon_metrics_df.index,
@@ -259,7 +259,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
 
         name = col
         if normalize:
-            name = f"Normalized {col}"
+            name = f"Normalised {col}"
 
         trace_forecast_horizon = go.Scatter(
             x=gsp_metrics_df.index,
@@ -307,7 +307,7 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str):
 
     return {
         "Mean Absolute Error": mean_absolute_error,
-        "Mean Error": mean_error,
+        # "Mean Error": mean_error,
         "Root Mean Squared Error": root_mean_squared_error,
         # "Max Absolute Error": max_absolute_error,
         # "Std Absolute Error": std_absolute_error,
