@@ -12,7 +12,7 @@ version = open("nowcasting_utils/version.py").read()
 setup(
     name="nowcasting_utils",
     packages=find_packages(),
-    version="0.0.12",
+    version="0.0.23",
     license="MIT",
     description="Nowcasting Utilities",
     author="Jacob Bieker, Jack Kelly, Peter Dudfield",
