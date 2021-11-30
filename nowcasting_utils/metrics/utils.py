@@ -1,3 +1,4 @@
+""" Util evaluation functions """
 import pandas as pd
 
 
@@ -5,7 +6,7 @@ def check_results_df(results_df: pd.DataFrame):
     """
     Check the dataframe has the correct columns
 
-    args:
+    Args:
         results_df: results dataframe
 
     """

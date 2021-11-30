@@ -15,8 +15,9 @@ def evaluation(results_df: pd.DataFrame, model_name: str):
     """
     Main evaluation method
 
-    args:
+    Args:
         results_df: results dataframe
+        model_name: the model name, used for adding titles to plots
 
     """
 
@@ -31,8 +32,9 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str):
     """
     Calculate metrics of the results
 
-    args:
+    Args:
         results_df: results dataframe
+        model_name: the model name, used for adding titles to plots
 
     """
 
@@ -302,8 +304,9 @@ def data_evaluation(results_df: pd.DataFrame, model_name: str):
     """
     Calculate metrics of the data in the results
 
-    args:
+    Args:
         results_df: results dataframe
+        model_name: the name of the model, used as a plot title
 
     """
 
