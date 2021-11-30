@@ -330,15 +330,16 @@ def data_evaluation(results_df: pd.DataFrame, model_name: str):
     print(f"Number of data points: {N_data}")
 
     # set up plots
-    fig = make_subplots(rows=1, cols=2, subplot_titles=["Time distribution", "GSP ID distribution"])
+    fig = make_subplots(rows=1, cols=2, subplot_titles=["Histogram of data distribution as a function of time",
+                                                        "Histogram of data distribution as a function of GSP ID"])
 
     # plot histogram of datetimes
     months = results_df["t0_datetime_utc"].dt.strftime("%Y-%m")
-    trace0 = go.Histogram(x=months)
+    trace0 = go.Histogram(x=months, showlegend=False )
 
     # plot histogram of gsp_ids
     N_bins = int(results_df["gsp_id"].max() - results_df["gsp_id"].min() + 1)
-    trace1 = go.Histogram(x=results_df["gsp_id"], nbinsx=N_bins)
+    trace1 = go.Histogram(x=results_df["gsp_id"], nbinsx=N_bins, showlegend=False)
 
     fig.append_trace(trace0, 1, 1)
     fig.append_trace(trace1, 1, 2)
