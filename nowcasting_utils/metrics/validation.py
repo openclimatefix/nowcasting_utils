@@ -60,7 +60,7 @@ def make_validation_results(
         )
         predictions_mw_df["gsp_id"] = gsp_ids
         predictions_mw_df["t0_datetime_utc"] = t0_datetimes_utc
-        predictions_mw_df["capacity_mwp"] = capacity_mwp
+        predictions_mw_df["capacity_mwp"] = capacity_mwp[:, i]
 
         results_per_forecast_horizon.append(predictions_mw_df)
 
