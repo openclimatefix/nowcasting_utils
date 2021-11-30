@@ -15,6 +15,7 @@ def test_make_validation_results():
     forecast_length = 4
 
     predictions = np.random.random(size=(batch_size, forecast_length))
+    capacity = np.random.random(size=(batch_size, forecast_length))
     truths = np.random.random(size=(batch_size, forecast_length))
     t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0, high=1000, size=batch_size))
     gsp_ids = np.random.random(size=batch_size)
@@ -25,6 +26,7 @@ def test_make_validation_results():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
+        capacity_mwp=capacity
     )
 
     assert len(results) == batch_size * forecast_length
@@ -40,6 +42,7 @@ def test_save_validation_results_to_logger():
     forecast_length = 4
 
     predictions = np.random.random(size=(batch_size, forecast_length))
+    capacity = np.random.random(size=(batch_size, forecast_length))
     truths = np.random.random(size=(batch_size, forecast_length))
     t0_datetimes_utc = pd.to_datetime(np.random.randint(low=0, high=1000, size=batch_size))
     gsp_ids = np.random.random(size=batch_size)
@@ -50,6 +53,7 @@ def test_save_validation_results_to_logger():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
+        capacity_mwp=capacity
     )
 
     results2 = make_validation_results(
@@ -58,6 +62,7 @@ def test_save_validation_results_to_logger():
         t0_datetimes_utc=t0_datetimes_utc,
         batch_idx=0,
         gsp_ids=gsp_ids,
+        capacity_mwp=capacity
     )
 
     results_dfs = [results1, results2]
