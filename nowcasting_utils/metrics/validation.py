@@ -12,6 +12,7 @@ _log = logging.getLogger(__name__)
 def make_validation_results(
     predictions_mw,
     truths_mw,
+    capacity_mwp,
     gsp_ids: List[int],
     t0_datetimes_utc: pd.DatetimeIndex,
     batch_idx: Optional[int] = None,
@@ -23,6 +24,7 @@ def make_validation_results(
     Args:
         predictions_mw: predictions in mw, shape [batch_size, n_forecast_horizons]
         truths_mw: truths in mw, shape [batch_size, n_forecast_horizons]
+        capacity_mwp: the capacity of each gsp at that time
         gsp_ids: the gsp ids for eahc prediction, shape [batch_size]
         t0_datetimes_utc: list of date times when the predictions are for
         batch_idx: optional index of the batch
@@ -35,6 +37,7 @@ def make_validation_results(
     - gsp_id
     - actual_gsp_pv_outturn_mw
     - forecast_gsp_pv_outturn_mw
+    - capacity_mwp
     - batch_index (optional)
     - example_index (optional)
 
@@ -57,6 +60,7 @@ def make_validation_results(
         )
         predictions_mw_df["gsp_id"] = gsp_ids
         predictions_mw_df["t0_datetime_utc"] = t0_datetimes_utc
+        predictions_mw_df["capacity_mwp"] = capacity_mwp[:, i]
 
         results_per_forecast_horizon.append(predictions_mw_df)
 
