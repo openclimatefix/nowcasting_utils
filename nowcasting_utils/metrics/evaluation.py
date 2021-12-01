@@ -100,8 +100,8 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str):
             "Forecast Normalised Error as a function of Forecast Horizon",
             "Forecast Error as a function of GSP ID",
             "Forecast Normalised Error as a function of GSP ID",
-            "Histogram of MAE for GSP",
-            "Histogram of NMAE for GSP",
+            "Histogram of MAE for each GSP",
+            "Histogram of NMAE for each GSP",
         ],
     )
 
@@ -277,6 +277,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
             name=name,
             showlegend=False,
             marker=dict(color=colour),
+            line={"shape": 'hv'},
         )
         trace_gsp_id.append(trace_forecast_horizon)
 
