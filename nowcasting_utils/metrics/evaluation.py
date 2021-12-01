@@ -277,7 +277,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
             name=name,
             showlegend=False,
             marker=dict(color=colour),
-            line={"shape": 'hv'},
+            line={"shape": "hv"},
         )
         trace_gsp_id.append(trace_forecast_horizon)
 
