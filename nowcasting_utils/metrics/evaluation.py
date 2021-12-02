@@ -1,7 +1,7 @@
 """ Evaluation the model results """
 from datetime import timedelta
-
 from typing import List
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
