@@ -17,3 +17,4 @@ def check_results_df(results_df: pd.DataFrame):
     assert "forecast_gsp_pv_outturn_mw" in results_df.keys()
     assert "actual_gsp_pv_outturn_mw" in results_df.keys()
     assert "gsp_id" in results_df.keys()
+    assert "capacity_mwp" in results_df.keys()

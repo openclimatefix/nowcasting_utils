@@ -1,6 +1,7 @@
 """ Evaluation the model results """
 from datetime import timedelta
 
+from typing import List
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -17,14 +18,24 @@ def evaluation(
     """
     Main evaluation method
 
+    1. checks results_df is in the correct format
+    2. Make evaluation and plots of the data
+    3. Make evaluation and plots of the ml results
+
     Args:
-        results_df: results dataframe
+        results_df: results dataframe. This should have the following columns:
+            - t0_datetime_utc
+            - target_datetime_utc
+            - forecast_gsp_pv_outturn_mw
+            - actual_gsp_pv_outturn_mw
+            - gsp_id
+            - capacity_mwp
         model_name: the model name, used for adding titles to plots
         show_fig: display figure in browser - this doesnt work for CI
         save_fig: option to save figure or not
 
     """
-    # make datetimes columns are datetimes
+    # make sure datetimes columns datetimes
     results_df["t0_datetime_utc"] = pd.to_datetime(results_df["t0_datetime_utc"])
     results_df["target_datetime_utc"] = pd.to_datetime(results_df["target_datetime_utc"])
 
@@ -46,7 +57,7 @@ def evaluation(
         fig.write_html(f"./evaluation_results_{model_name}.html")
 
 
-def results_evaluation(results_df: pd.DataFrame, model_name: str):
+def results_evaluation(results_df: pd.DataFrame, model_name: str) -> go.Figure:
     """
     Calculate metrics of the results
 
@@ -137,7 +148,7 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str):
     return fig
 
 
-def make_main_metrics(results_df, normalize: bool = False):
+def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
     """Make whole metrics and make plotly Table"""
     y_hat = results_df["forecast_gsp_pv_outturn_mw"]
     y = results_df["actual_gsp_pv_outturn_mw"]
@@ -173,7 +184,7 @@ def make_main_metrics(results_df, normalize: bool = False):
     return trace_main_normalized
 
 
-def make_forecast_horizon_metrics(results_df, normalize: bool = False):
+def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[go.Trace]:
     """
     Make forecast horizons metrics and plots
     """
@@ -231,7 +242,7 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False):
     return trace_forecast_horizons
 
 
-def make_gsp_id_metrics(results_df, normalize: bool = False):
+def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.Histogram):
     """
     Make the gsp id metrics
 
@@ -291,7 +302,7 @@ def make_gsp_id_metrics(results_df, normalize: bool = False):
     return trace_gsp_id, trace_histogram
 
 
-def run_metrics(y_hat: pd.Series, y: pd.Series, name: str):
+def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
     """
     Make metrics from truth and predictions
     """
@@ -331,7 +342,7 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str):
     }
 
 
-def data_evaluation(results_df: pd.DataFrame, model_name: str):
+def data_evaluation(results_df: pd.DataFrame, model_name: str) -> go.Figure:
     """
     Calculate metrics of the data in the results
 
