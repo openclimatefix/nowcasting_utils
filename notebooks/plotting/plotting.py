@@ -10,7 +10,7 @@ from nowcasting_utils.visualization.data_sources.plot_pv import get_fig_pv_combi
 from nowcasting_utils.visualization.data_sources.plot_satellite import make_animation_all_channels
 
 # load batch
-file_path = "./../train"
+file_path = "./train"
 batch = Batch.load_netcdf(file_path, 0)
 
 

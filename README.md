@@ -2,6 +2,10 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+[![codecov](https://codecov.io/gh/openclimatefix/nowcasting_utils/branch/main/graph/badge.svg?token=JQFI9C86GL)](https://codecov.io/gh/openclimatefix/nowcasting_api)
+
+
 Common functionality between [SatFlow](https://github.com/openclimatefix/satflow)
 and [predict_pv_yield](https://github.com/openclimatefix/predict_pv_yield)
 
