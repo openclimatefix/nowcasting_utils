@@ -206,8 +206,8 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[g
         y = results_df_one_forecast_hoirzon["actual_gsp_pv_outturn_mw"]
 
         if normalize:
-            y_hat = y_hat / results_df["capacity_mwp"]
-            y = y / results_df["capacity_mwp"]
+            y_hat = 100* y_hat / results_df["capacity_mwp"]
+            y = 100*y / results_df["capacity_mwp"]
 
         if normalize:
             legendgroup = "2"
@@ -264,8 +264,8 @@ def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.
         y = results_df_one_forecast_hoirzon["actual_gsp_pv_outturn_mw"]
 
         if normalize:
-            y_hat = y_hat / results_df["capacity_mwp"]
-            y = y / results_df["capacity_mwp"]
+            y_hat = 100*y_hat / results_df["capacity_mwp"]
+            y = 100*y / results_df["capacity_mwp"]
 
         gsp_metrics[gsp_id] = run_metrics(y=y, y_hat=y_hat, name=f"GSP ID: {gsp_id}")
 
