@@ -43,6 +43,7 @@ def test_make_traces_one_channel_one_time():
 
 def test_make_traces_one_channel():
     """Test 'make_traces_one_channel' functions"""
+
     satellite = satellite_fake(
         batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
     )

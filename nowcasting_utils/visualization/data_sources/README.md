@@ -24,6 +24,7 @@ The main satellite plot show a video for each satellite channel over.
 
 <img src="images/satellite.png" width="200" />
 
+
 # All
 
 Makes an animation of the satellite, PV and GSP systems
