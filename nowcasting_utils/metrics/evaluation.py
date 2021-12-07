@@ -205,10 +205,10 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
     # *******
 
     trace_datetime, trace_datetime_hist = make_t0_datetime_utc_metrics(
-        results_df=results_df, normalize=False
+        results_df=national_results_df, normalize=False
     )
     trace_datetime_normalized, trace_datetime_normalized_hist = make_t0_datetime_utc_metrics(
-        results_df=results_df, normalize=True
+        results_df=national_results_df, normalize=True
     )
 
     # *******
