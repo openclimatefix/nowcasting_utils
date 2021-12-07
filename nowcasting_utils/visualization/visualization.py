@@ -98,7 +98,7 @@ def plot_example(
     # ******************* TIMESERIES ******************************************
     # NWP
     ax = fig.add_subplot(nrows, ncols, 5)
-    nwp_dt_index = pd.to_datetime(batch.nwp.time[example_i].cpu().numpy(), unit="s")
+    nwp_dt_index = pd.to_datetime(batch.nwp.time[example_i].cpu().numpy())
     pd.DataFrame(
         batch.nwp.data[example_i, :, :, 0, 0].cpu().numpy().T,
         index=nwp_dt_index,
@@ -109,7 +109,7 @@ def plot_example(
     # ************************ PV YIELD ***************************************
     if output_variable == "pv_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
-        pv_time = pd.to_datetime(batch.pv.pv_datetime_index[example_i].cpu().numpy(), unit="s")
+        pv_time = pd.to_datetime(batch.pv.pv_datetime_index[example_i].cpu().numpy())
         ax.set_title(f"PV yield for PV ID {batch.pv.pv_system_id[example_i, 0].cpu()}")
         pv_actual = pd.Series(
             batch.pv.pv_yield[example_i, :, 0].cpu().numpy(), index=pv_time, name="actual"
@@ -126,7 +126,7 @@ def plot_example(
         ax = fig.add_subplot(nrows, ncols, 7)
         ax.set_title(f"GSP yield for G" f"SP ID {batch.gsp.gsp_id[example_i, 0].cpu()}")
         gsp_dt_index = pd.to_datetime(
-            batch.gsp.gsp_datetime_index[example_i].cpu().numpy(), unit="s"
+            batch.gsp.gsp_datetime_index[example_i].cpu().numpy()
         )
         gsp_actual = pd.Series(
             batch.gsp.gsp_yield[example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
