@@ -1,3 +1,4 @@
+""" Plotting functions """
 from datetime import timedelta
 from typing import List
 
