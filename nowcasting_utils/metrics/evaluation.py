@@ -2,8 +2,12 @@
 
 import pandas as pd
 import plotly.graph_objects as go
-from nowcasting_utils.metrics.plot import make_main_metrics, make_forecast_horizon_metrics, make_gsp_id_metrics, \
-    make_t0_datetime_utc_metrics
+from nowcasting_utils.metrics.plot import (
+    make_main_metrics,
+    make_forecast_horizon_metrics,
+    make_gsp_id_metrics,
+    make_t0_datetime_utc_metrics,
+)
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.metrics.utils import check_results_df
@@ -35,7 +39,7 @@ def evaluation(
     # make sure datetimes columns datetimes and floor target time t
     results_df["t0_datetime_utc"] = pd.to_datetime(results_df["t0_datetime_utc"])
     results_df["target_datetime_utc"] = pd.to_datetime(results_df["target_datetime_utc"])
-    results_df["target_datetime_utc"] = results_df["target_datetime_utc"].dt.floor('30T')
+    results_df["target_datetime_utc"] = results_df["target_datetime_utc"].dt.floor("30T")
 
     # check result format
     check_results_df(results_df)
@@ -163,9 +167,13 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
 
     """
 
-    national_results_df = results_df.groupby(["t0_datetime_utc","target_datetime_utc"]).sum().reset_index()
-    national_results_df_count = results_df.groupby(["t0_datetime_utc", "target_datetime_utc"]).count().reset_index()
-    national_results_df['gsp_id_count'] = national_results_df_count['gsp_id']
+    national_results_df = (
+        results_df.groupby(["t0_datetime_utc", "target_datetime_utc"]).sum().reset_index()
+    )
+    national_results_df_count = (
+        results_df.groupby(["t0_datetime_utc", "target_datetime_utc"]).count().reset_index()
+    )
+    national_results_df["gsp_id_count"] = national_results_df_count["gsp_id"]
 
     # *******
     # main metrics (and normalized)
@@ -191,7 +199,9 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
     # evaluate by "t0_datetime_utc"
     # *******
 
-    trace_datetime, trace_datetime_hist = make_t0_datetime_utc_metrics(results_df=results_df, normalize=False)
+    trace_datetime, trace_datetime_hist = make_t0_datetime_utc_metrics(
+        results_df=results_df, normalize=False
+    )
     trace_datetime_normalized, trace_datetime_normalized_hist = make_t0_datetime_utc_metrics(
         results_df=results_df, normalize=True
     )
