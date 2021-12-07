@@ -22,6 +22,7 @@ def evaluation(
     1. checks results_df is in the correct format
     2. Make evaluation and plots of the data
     3. Make evaluation and plots of the ml results
+    4. Make national evaluation and plots of the ml results
 
     Args:
         results_df: results dataframe. This should have the following columns:
@@ -166,6 +167,10 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
         model_name: the model name, used for adding titles to plots
 
     """
+    # lets just get unique results on three columns
+    results_df = (
+        results_df.groupby(["t0_datetime_utc", "target_datetime_utc", "gsp_id"]).first().reset_index()
+    )
 
     national_results_df = (
         results_df.groupby(["t0_datetime_utc", "target_datetime_utc"]).sum().reset_index()
