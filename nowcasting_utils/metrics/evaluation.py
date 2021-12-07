@@ -2,14 +2,14 @@
 
 import pandas as pd
 import plotly.graph_objects as go
-from nowcasting_utils.metrics.plot import (
-    make_main_metrics,
-    make_forecast_horizon_metrics,
-    make_gsp_id_metrics,
-    make_t0_datetime_utc_metrics,
-)
 from plotly.subplots import make_subplots
 
+from nowcasting_utils.metrics.plot import (
+    make_forecast_horizon_metrics,
+    make_gsp_id_metrics,
+    make_main_metrics,
+    make_t0_datetime_utc_metrics,
+)
 from nowcasting_utils.metrics.utils import check_results_df
 
 
