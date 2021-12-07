@@ -20,13 +20,23 @@ def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
 
     main_metrics = run_metrics(y=y, y_hat=y_hat, name="All horizons")
 
+    if "gsp_id_count" in results_df.keys():
+        main_metrics["Average GSP for each forecast"] = results_df["gsp_id_count"].mean()
+
     print(main_metrics)
 
     # metrics ready for plotting
     metrics = list(main_metrics.keys())
     if normalize:
-        metrics = [f"Normalised {metric}" for metric in metrics]
+        metrics = [
+            f"Normalised {metric}"
+            for metric in metrics
+        ]
         main_metrics["Number of Data Points"] = main_metrics["Number of Data Points"] / 100
+        if "gsp_id_count" in results_df.keys():
+            main_metrics["Average GSP for each forecast"] = (
+                main_metrics["Average GSP for each forecast"] / 100
+            )
 
     # values ready for plotting
     values = np.array(list(main_metrics.values()))
@@ -182,7 +192,9 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
 
         target_datetime_utc = target_datetimes_utc[i]
 
-        results_df_one_datetime = results_df[results_df["target_datetime_utc"] == target_datetime_utc]
+        results_df_one_datetime = results_df[
+            results_df["target_datetime_utc"] == target_datetime_utc
+        ]
 
         y_hat = results_df_one_datetime["forecast_gsp_pv_outturn_mw"]
         y = results_df_one_datetime["actual_gsp_pv_outturn_mw"]
@@ -191,7 +203,9 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
             y_hat = 100 * y_hat / results_df["capacity_mwp"]
             y = 100 * y / results_df["capacity_mwp"]
 
-        t0_datetime_metrics[target_datetime_utc] = run_metrics(y=y, y_hat=y_hat, name=f"target_datetime_utc: {target_datetime_utc}")
+        t0_datetime_metrics[target_datetime_utc] = run_metrics(
+            y=y, y_hat=y_hat, name=f"target_datetime_utc: {target_datetime_utc}"
+        )
 
     gsp_metrics_df = pd.DataFrame(t0_datetime_metrics).T
 
@@ -257,7 +271,7 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
 
     print("")
 
-    return {
+    metrics = {
         "MAE": mean_absolute_error,
         "Mean Error": mean_error,
         "RMSE": root_mean_squared_error,
@@ -266,3 +280,5 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
         "Ci Absolute Error": ci_absolute_error,
         "Number of Data Points": n_data,
     }
+
+    return metrics

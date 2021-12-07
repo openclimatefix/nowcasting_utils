@@ -164,11 +164,12 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
     """
 
     national_results_df = results_df.groupby(["t0_datetime_utc","target_datetime_utc"]).sum().reset_index()
+    national_results_df_count = results_df.groupby(["t0_datetime_utc", "target_datetime_utc"]).count().reset_index()
+    national_results_df['gsp_id_count'] = national_results_df_count['gsp_id']
 
     # *******
     # main metrics (and normalized)
     # ********
-
 
     trace_main_national = make_main_metrics(results_df=national_results_df, normalize=False)
     trace_main_national_normalized = make_main_metrics(
