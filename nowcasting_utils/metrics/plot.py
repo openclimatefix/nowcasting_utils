@@ -189,6 +189,12 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
     # make metrics per gsp
     target_datetimes_utc = sorted(results_df["target_datetime_utc"].unique())
     t0_datetime_metrics = {}
+
+    results_df = results_df.copy()
+    if normalize:
+        results_df["forecast_gsp_pv_outturn_mw"] = 100 * results_df["forecast_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
+        results_df["actual_gsp_pv_outturn_mw"] = 100 * results_df["actual_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
+
     for i in range(len(target_datetimes_utc)):
 
         target_datetime_utc = target_datetimes_utc[i]
@@ -199,10 +205,6 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
 
         y_hat = results_df_one_datetime["forecast_gsp_pv_outturn_mw"]
         y = results_df_one_datetime["actual_gsp_pv_outturn_mw"]
-
-        if normalize:
-            y_hat = 100 * y_hat / results_df["capacity_mwp"]
-            y = 100 * y / results_df["capacity_mwp"]
 
         t0_datetime_metrics[target_datetime_utc] = run_metrics(
             y=y, y_hat=y_hat, name=f"target_datetime_utc: {target_datetime_utc}"
