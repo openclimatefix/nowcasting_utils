@@ -2,7 +2,7 @@
 import os
 
 import plotly.graph_objects as go
-from nowcasting_dataset.data_sources.fake import gsp_fake
+from nowcasting_dataset.data_sources.fake.batch import gsp_fake
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 from nowcasting_utils.visualization.data_sources.plot_gsp import (
@@ -14,9 +14,9 @@ from nowcasting_utils.visualization.data_sources.plot_gsp import (
 )
 
 
-def test_get_trace_centroid_gsp():
+def test_get_trace_centroid_gsp(configuration):
     """Test get trace for center gsp"""
-    gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
+    gsp = gsp_fake(configuration=configuration)
 
     trace = get_trace_centroid_gsp(gsp=gsp, example_index=1)
 
@@ -27,9 +27,9 @@ def test_get_trace_centroid_gsp():
         fig.show(renderer="browser")
 
 
-def test_get_trace_all_gps():
+def test_get_trace_all_gps(configuration):
     """Test get traces for all gsps"""
-    gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
+    gsp = gsp_fake(configuration=configuration)
 
     traces = get_trace_all_gsps(gsp=gsp, example_index=1)
 
@@ -41,9 +41,9 @@ def test_get_trace_all_gps():
         fig.show(renderer="browser")
 
 
-def test_get_traces_gsp_intensity():
+def test_get_traces_gsp_intensity(configuration):
     """Test get traces for gsp intensity"""
-    gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
+    gsp = gsp_fake(configuration=configuration)
 
     example_index = 1
     traces = get_traces_gsp_intensity(gsp=gsp, example_index=1)
@@ -66,9 +66,9 @@ def test_get_traces_gsp_intensity():
         fig.show(renderer="browser")
 
 
-def test_get_traces_gsp_intensity_and_animate():
+def test_get_traces_gsp_intensity_and_animate(configuration):
     """Test to get traces for gsp intensity and make animation"""
-    gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
+    gsp = gsp_fake(configuration=configuration)
 
     traces = get_traces_gsp_intensity(gsp=gsp, example_index=1)
 
@@ -78,9 +78,9 @@ def test_get_traces_gsp_intensity_and_animate():
         fig.show(renderer="browser")
 
 
-def test_get_fig_gsp_combined():
+def test_get_fig_gsp_combined(configuration):
     """Test gsp combined plot"""
-    gsp = gsp_fake(batch_size=2, seq_length_30=5, n_gsp_per_batch=32)
+    gsp = gsp_fake(configuration=configuration)
 
     fig = get_fig_gsp_combined(gsp=gsp, example_index=1)
 
