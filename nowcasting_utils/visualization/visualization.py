@@ -125,9 +125,7 @@ def plot_example(
     if output_variable == "gsp_yield":
         ax = fig.add_subplot(nrows, ncols, 7)
         ax.set_title(f"GSP yield for G" f"SP ID {batch.gsp.gsp_id[example_i, 0].cpu()}")
-        gsp_dt_index = pd.to_datetime(
-            batch.gsp.gsp_datetime_index[example_i].cpu().numpy()
-        )
+        gsp_dt_index = pd.to_datetime(batch.gsp.gsp_datetime_index[example_i].cpu().numpy())
         gsp_actual = pd.Series(
             batch.gsp.gsp_yield[example_i, :, 0].cpu().numpy(), index=gsp_dt_index, name="actual"
         )

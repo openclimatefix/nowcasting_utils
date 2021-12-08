@@ -17,8 +17,7 @@ from nowcasting_utils.visualization.utils import make_buttons
 def test_make_traces_one_channel_one_time(configuration):
     """Test 'make_traces_one_channel_one_time' functions"""
 
-    satellite = satellite_fake(configuration=configuration
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     example_index = 1
     trace = make_traces_one_channel_one_time(
@@ -42,9 +41,7 @@ def test_make_traces_one_channel_one_time(configuration):
 
 def test_make_traces_one_channel(configuration):
     """Test 'make_traces_one_channel' functions"""
-    satellite = satellite_fake(
-        configuration=configuration
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     example_index = 1
     traces = make_traces_one_channel(
@@ -79,9 +76,7 @@ def test_make_traces_one_channel(configuration):
 def test_make_animation_one_channels(configuration):
     """Test 'make_animation_one_channels' functions"""
 
-    satellite = satellite_fake(
-        configuration=configuration
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     fig = make_animation_one_channels(satellite=satellite, example_index=1, channel_index=0)
 
@@ -92,9 +87,7 @@ def test_make_animation_one_channels(configuration):
 def test_make_animation_all_channesl(configuration):
     """Test 'make_animation_all_channels' functions"""
 
-    satellite = satellite_fake(
-        configuration=configuration
-    )
+    satellite = satellite_fake(configuration=configuration)
     fig = make_animation_all_channels(satellite=satellite, example_index=0)
 
     if "CI" not in os.environ.keys():
