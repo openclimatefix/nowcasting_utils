@@ -1,12 +1,11 @@
 """ Script to convert ESO results to OCF ML format """
 from pathlib import Path
-import pandas as pd
-from tqdm import tqdm
-import xarray as xr
 
+import pandas as pd
+import xarray as xr
 from nowcasting_dataset.data_sources.gsp import eso
 from nowcasting_dataset.geospatial import lat_lon_to_osgb
-
+from tqdm import tqdm
 
 # # Convert ESO results
 
@@ -43,9 +42,11 @@ ESO_PV_FORECASTS_PATH = Path(
 )
 
 # The locations of the tests dataset
-TEST_DATASET_FILE = "/mnt/storage_ssd_4tb/data/ocf/solar_pv_nowcasting/" \
-                    "nowcasting_dataset_pipeline/prepared_ML_training_data/" \
-                    "v16/test/spatial_and_temporal_locations_of_each_example.csv"
+TEST_DATASET_FILE = (
+    "/mnt/storage_ssd_4tb/data/ocf/solar_pv_nowcasting/"
+    "nowcasting_dataset_pipeline/prepared_ML_training_data/"
+    "v16/test/spatial_and_temporal_locations_of_each_example.csv"
+)
 
 # The "ground truth" estimated total PV generation from each Grid Supply Point from Sheffield Solar:
 GSP_ZARR_PATH = Path(
