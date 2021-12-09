@@ -2,7 +2,7 @@
 import os
 
 import plotly.graph_objects as go
-from nowcasting_dataset.data_sources.fake import satellite_fake
+from nowcasting_dataset.data_sources.fake.batch import satellite_fake
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 from nowcasting_utils.visualization.data_sources.plot_satellite import (
@@ -14,12 +14,10 @@ from nowcasting_utils.visualization.data_sources.plot_satellite import (
 from nowcasting_utils.visualization.utils import make_buttons
 
 
-def test_make_traces_one_channel_one_time():
+def test_make_traces_one_channel_one_time(configuration):
     """Test 'make_traces_one_channel_one_time' functions"""
 
-    satellite = satellite_fake(
-        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     example_index = 1
     trace = make_traces_one_channel_one_time(
@@ -41,11 +39,9 @@ def test_make_traces_one_channel_one_time():
         fig.show(renderer="browser")
 
 
-def test_make_traces_one_channel():
+def test_make_traces_one_channel(configuration):
     """Test 'make_traces_one_channel' functions"""
-    satellite = satellite_fake(
-        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     example_index = 1
     traces = make_traces_one_channel(
@@ -77,12 +73,10 @@ def test_make_traces_one_channel():
         fig.show(renderer="browser")
 
 
-def test_make_animation_one_channels():
+def test_make_animation_one_channels(configuration):
     """Test 'make_animation_one_channels' functions"""
 
-    satellite = satellite_fake(
-        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=2
-    )
+    satellite = satellite_fake(configuration=configuration)
 
     fig = make_animation_one_channels(satellite=satellite, example_index=1, channel_index=0)
 
@@ -90,12 +84,10 @@ def test_make_animation_one_channels():
         fig.show(renderer="browser")
 
 
-def test_make_animation_all_channesl():
+def test_make_animation_all_channesl(configuration):
     """Test 'make_animation_all_channels' functions"""
 
-    satellite = satellite_fake(
-        batch_size=2, seq_length_5=5, satellite_image_size_pixels=32, number_satellite_channels=8
-    )
+    satellite = satellite_fake(configuration=configuration)
     fig = make_animation_all_channels(satellite=satellite, example_index=0)
 
     if "CI" not in os.environ.keys():
