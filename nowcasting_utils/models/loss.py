@@ -56,7 +56,7 @@ class WeightedLosses:
         """Loss function weighted MSE"""
 
         # get the differences weighted by the forecast horizon weights
-        diff_with_weights = self.weights * ((output - target)**2)
+        diff_with_weights = self.weights * ((output - target) ** 2)
 
         # sum across each example
         example_loss = torch.sum(diff_with_weights, dim=0)
