@@ -166,7 +166,8 @@ selected_eso_forecasts_dataarray = selected_eso_forecasts_dataarray.sel(
 locations_df = locations_df[locations_df["t0_datetime_UTC_floor_30_mins"].isin(forecast_date_time)]
 print(locations_df)
 
-# Dont want to load any unnecessary data, so going to loop through t0_datetime_UTC and only save the forecast we need
+# Dont want to load any unnecessary data, so going to loop through
+# t0_datetime_UTC and only save the forecast we need
 
 eso_dataarrays_list = []
 # this can take about 2 seconds for ~5000 samples
