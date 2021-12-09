@@ -105,9 +105,10 @@ print(gsp_metadata[["location_x", "location_y"]])
 # ************
 print("Load test dataset")
 
+import numpy as np
+
 # get list of datetimes fof test set
 import pandas as pd
-import numpy as np
 from tqdm import tqdm
 
 # load location for test dataset
@@ -121,14 +122,16 @@ gsp_metadata_format = gsp_metadata[["location_x", "location_y", "gsp_id"]].renam
 )
 
 # round coordinates so that merge works
-gsp_metadata_format['x_center_OSGB'] = gsp_metadata_format['x_center_OSGB'].round(6)
-gsp_metadata_format['y_center_OSGB'] = gsp_metadata_format['y_center_OSGB'].round(6)
-locations_df['x_center_OSGB'] = locations_df['x_center_OSGB'].round(6)
-locations_df['y_center_OSGB'] = locations_df['y_center_OSGB'].round(6)
+gsp_metadata_format["x_center_OSGB"] = gsp_metadata_format["x_center_OSGB"].round(6)
+gsp_metadata_format["y_center_OSGB"] = gsp_metadata_format["y_center_OSGB"].round(6)
+locations_df["x_center_OSGB"] = locations_df["x_center_OSGB"].round(6)
+locations_df["y_center_OSGB"] = locations_df["y_center_OSGB"].round(6)
 
-locations_df = locations_df.merge(gsp_metadata_format, on=["x_center_OSGB", "y_center_OSGB"], how='left')
+locations_df = locations_df.merge(
+    gsp_metadata_format, on=["x_center_OSGB", "y_center_OSGB"], how="left"
+)
 
-assert locations_df['gsp_id'].isna().sum() == 0
+assert locations_df["gsp_id"].isna().sum() == 0
 
 # ************
 print("Reduce ESO forecasts")

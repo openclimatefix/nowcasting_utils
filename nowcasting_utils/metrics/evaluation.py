@@ -169,7 +169,9 @@ def results_national_evaluation(results_df: pd.DataFrame, model_name: str) -> go
     """
     # lets just get unique results on three columns
     results_df = (
-        results_df.groupby(["t0_datetime_utc", "target_datetime_utc", "gsp_id"]).first().reset_index()
+        results_df.groupby(["t0_datetime_utc", "target_datetime_utc", "gsp_id"])
+        .first()
+        .reset_index()
     )
 
     national_results_df = (

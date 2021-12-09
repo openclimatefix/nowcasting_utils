@@ -29,10 +29,7 @@ def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
     # metrics ready for plotting
     metrics = list(main_metrics.keys())
     if normalize:
-        metrics = [
-            f"Normalised {metric}"
-            for metric in metrics
-        ]
+        metrics = [f"Normalised {metric}" for metric in metrics]
         main_metrics["Number of Data Points"] = main_metrics["Number of Data Points"] / 100
         if "gsp_id_count" in results_df.keys():
             main_metrics["Average GSP for each forecast"] = (
@@ -192,8 +189,12 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
 
     results_df = results_df.copy()
     if normalize:
-        results_df["forecast_gsp_pv_outturn_mw"] = 100 * results_df["forecast_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
-        results_df["actual_gsp_pv_outturn_mw"] = 100 * results_df["actual_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
+        results_df["forecast_gsp_pv_outturn_mw"] = (
+            100 * results_df["forecast_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
+        )
+        results_df["actual_gsp_pv_outturn_mw"] = (
+            100 * results_df["actual_gsp_pv_outturn_mw"] / results_df["capacity_mwp"]
+        )
 
     for i in range(len(target_datetimes_utc)):
 
