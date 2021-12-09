@@ -45,8 +45,10 @@ class WeightedLosses:
             [math.exp(-self.decay_rate * i) for i in range(0, self.forecast_length)]
         )
 
-        # normalized the weights
-        self.weights = weights / weights.sum()
+        # normalized the weights, so there mean is 1.
+        # To calculate the loss, we times the weights by the differences between truth
+        # and predictions and then take the mean across all forecast horizons and the batch
+        self.weights = weights / weights.sum() * len(weights)
 
         # move weights to gpu is needed
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -58,11 +60,8 @@ class WeightedLosses:
         # get the differences weighted by the forecast horizon weights
         diff_with_weights = self.weights * ((output - target) ** 2)
 
-        # sum across each example
-        example_loss = torch.sum(diff_with_weights, dim=0)
-
         # average across batches
-        return torch.mean(example_loss)
+        return torch.mean(diff_with_weights)
 
     def get_mae_exp(self, output, target):
         """Loss function weighted MAE"""
@@ -70,11 +69,8 @@ class WeightedLosses:
         # get the differences weighted by the forecast horizon weights
         diff_with_weights = self.weights * torch.abs(output - target)
 
-        # sum across each example
-        example_loss = torch.sum(diff_with_weights, dim=0)
-
         # average across batches
-        return torch.mean(example_loss)
+        return torch.mean(diff_with_weights)
 
 
 class GradientDifferenceLoss(nn.Module):
