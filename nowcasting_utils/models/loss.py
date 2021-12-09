@@ -54,11 +54,27 @@ class WeightedLosses:
 
     def get_mse_exp(self, output, target):
         """Loss function weighted MSE"""
-        return torch.sum(self.weights * (output - target) ** 2)
+
+        # get the differences weighted by the forecast horizon weights
+        diff_with_weights = self.weights * ((output - target)**2)
+
+        # sum across each example
+        example_loss = torch.sum(diff_with_weights, dim=0)
+
+        # average across batches
+        return torch.mean(example_loss)
 
     def get_mae_exp(self, output, target):
         """Loss function weighted MAE"""
-        return torch.sum(self.weights * torch.abs(output - target))
+
+        # get the differences weighted by the forecast horizon weights
+        diff_with_weights = self.weights * torch.abs(output - target)
+
+        # sum across each example
+        example_loss = torch.sum(diff_with_weights, dim=0)
+
+        # average across batches
+        return torch.mean(example_loss)
 
 
 class GradientDifferenceLoss(nn.Module):
