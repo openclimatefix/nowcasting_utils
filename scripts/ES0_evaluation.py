@@ -8,11 +8,12 @@ from nowcasting_utils.metrics.evaluation import evaluation
 
 # Output csv
 ESO_PV_FORECASTS_OUTPUT_FILE = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/CSV/testset_v16.csv"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/"
+    "National_Grid_ESO/CSV/testset_v16.csv"
 )
 
 # run evaluation for ESO forecast
-model_name = f"ESO forecast v16"
+model_name = "ESO forecast v16"
 
 results_df = pd.read_csv(ESO_PV_FORECASTS_OUTPUT_FILE)
 print(results_df)

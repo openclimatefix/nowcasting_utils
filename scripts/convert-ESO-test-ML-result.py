@@ -1,4 +1,13 @@
 """ Script to convert ESO results to OCF ML format """
+from pathlib import Path
+import pandas as pd
+from tqdm import tqdm
+import xarray as xr
+
+from nowcasting_dataset.data_sources.gsp import eso
+from nowcasting_dataset.geospatial import lat_lon_to_osgb
+
+
 # # Convert ESO results
 
 # Idea is to convert to raw ESO results into the same format than the outputs from OCF ML models
@@ -9,11 +18,13 @@
 
 # ## Load ESO GSP metadata
 
-# Load the ESO GSP metadata. We will need to convert between GSP ID and GSP name, and know the location of each GSP
+# Load the ESO GSP metadata. We will need to convert between GSP ID and GSP name,
+# and know the location of each GSP
 
 # ## Load test dataset
 
-# Let load the test dataset meta file. This is so we know which times and what locations / gsps to compare
+# Let load the test dataset meta file. This is so we know which times
+# and what locations / gsps to compare
 
 # ## Reduce ESO forecasts
 
@@ -25,30 +36,31 @@
 
 # ************
 
-from pathlib import Path
-
 # location fo ESO forecasts
 ESO_PV_FORECASTS_PATH = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/"
+    "National_Grid_ESO/NetCDF/ESO_GSP_PV_forecasts.nc"
 )
 
 # The locations of the tests dataset
-TEST_DATASET_FILE = "/mnt/storage_ssd_4tb/data/ocf/solar_pv_nowcasting/nowcasting_dataset_pipeline/prepared_ML_training_data/v16/test/spatial_and_temporal_locations_of_each_example.csv"
+TEST_DATASET_FILE = "/mnt/storage_ssd_4tb/data/ocf/solar_pv_nowcasting/" \
+                    "nowcasting_dataset_pipeline/prepared_ML_training_data/" \
+                    "v16/test/spatial_and_temporal_locations_of_each_example.csv"
 
 # The "ground truth" estimated total PV generation from each Grid Supply Point from Sheffield Solar:
 GSP_ZARR_PATH = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/nowcasting_dataset_pipeline/PV/GSP/v3/pv_gsp.zarr"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/"
+    "nowcasting_dataset_pipeline/PV/GSP/v3/pv_gsp.zarr"
 )
 
 # Output csv
 ESO_PV_FORECASTS_OUTPUT_FILE = Path(
-    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/National_Grid_ESO/CSV/testset_v16.csv"
+    "/mnt/storage_b/data/ocf/solar_pv_nowcasting/other_organisations_pv_forecasts/"
+    "National_Grid_ESO/CSV/testset_v16.csv"
 )
 
 # ************
 print("Load main file")
-
-import xarray as xr
 
 eso_pv_forecasts_dataset = xr.open_dataset(ESO_PV_FORECASTS_PATH)
 eso_pv_forecasts_dataset = eso_pv_forecasts_dataset.rename({"gsp_id": "gsp_name"})
@@ -56,7 +68,6 @@ eso_pv_forecasts_dataset
 
 # ************
 print("ESO 30 mins to 2 hours")
-import pandas as pd
 
 # Select just two timesteps: 30 minutes to 2 hours ahead:
 ESO_FORECAST_ALGO_NAME = "ASL"  # Either ASL or ML.
@@ -69,9 +80,6 @@ selected_eso_forecasts_dataarray
 # ************
 print("Load ESO file")
 print("Load ESO GSP metadata")
-
-from nowcasting_dataset.data_sources.gsp import eso
-from nowcasting_dataset.geospatial import lat_lon_to_osgb
 
 # Download metadata from ESO for each GSP.  We need this because
 # the GSP PV data from Sheffield Solar uses integer gsp_ids, whilst
@@ -105,12 +113,7 @@ print(gsp_metadata[["location_x", "location_y"]])
 
 # ************
 print("Load test dataset")
-
-import numpy as np
-
 # get list of datetimes fof test set
-import pandas as pd
-from tqdm import tqdm
 
 # load location for test dataset
 locations_df = pd.read_csv(TEST_DATASET_FILE)
