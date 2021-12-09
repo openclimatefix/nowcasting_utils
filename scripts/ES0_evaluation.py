@@ -1,3 +1,4 @@
+""" Script to run ESO evaluation """
 # imports
 from pathlib import Path
 

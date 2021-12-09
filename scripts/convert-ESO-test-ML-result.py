@@ -1,3 +1,4 @@
+""" Script to convert ESO results to OCF ML format """
 # # Convert ESO results
 
 # Idea is to convert to raw ESO results into the same format than the outputs from OCF ML models
