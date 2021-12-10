@@ -41,7 +41,7 @@ def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
             gsp_id = int(gsp_id)
             name = f"GSP {gsp_id}"
 
-            traces.append(make_trace(x, y, truth=truth, name=name, color="Green", opacity=opacity))
+            traces.append(make_trace(x, y, truth=truth, name=name, color="Green", opacity=opacity, mode='lines'))
 
     centroid_trace = get_trace_centroid_gsp(gsp=gsp, example_index=example_index)
     centroid_trace["legendrank"] = 1
