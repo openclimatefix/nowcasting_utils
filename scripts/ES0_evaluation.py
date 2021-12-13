@@ -13,7 +13,7 @@ ESO_PV_FORECASTS_OUTPUT_FILE = Path(
 )
 
 # run evaluation for ESO forecast
-model_name = "ESO forecast v16"
+model_name = "ESO_forecast_v16"
 
 results_df = pd.read_csv(ESO_PV_FORECASTS_OUTPUT_FILE)
 print(results_df)
