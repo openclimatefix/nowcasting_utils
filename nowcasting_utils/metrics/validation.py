@@ -1,7 +1,7 @@
 """ Functions to save validation results to logger/csv """
 import logging
 from datetime import timedelta
-from typing import List, Optional
+from typing import List, Union, Optional
 
 import pandas as pd
 from neptune.new.integrations.pytorch_lightning import NeptuneLogger
@@ -80,7 +80,7 @@ def make_validation_results(
 def save_validation_results_to_logger(
     results_dfs: List[pd.DataFrame],
     results_file_name: str,
-    current_epoch: int,
+    current_epoch: Union[int, str],
     logger: Optional[NeptuneLogger] = None,
 ):
     """
