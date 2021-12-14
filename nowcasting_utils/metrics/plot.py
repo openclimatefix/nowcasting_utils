@@ -7,7 +7,7 @@ import pandas as pd
 from plotly import graph_objects as go
 
 colours = ["rgb(77,137,99)", "rgb(225,179,120)", "rgb(224,204,151)", "rgb(105,165,131)"]
-plotting_metrics = ["RMSE", "MAE"]
+plotting_metrics = ["MAE"]
 
 
 def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
