@@ -41,7 +41,7 @@ def get_trace_all_pv_systems(
         start_idx = 0
 
     # make the lines a little bit see-through
-    opacity = (1 / n_pv_systems) ** 0.5
+    opacity = (1 / n_pv_systems) ** 0.35
 
     for pv_system_index in range(start_idx, n_pv_systems):
         y = pv.power_normalized[example_index, :, pv_system_index]
