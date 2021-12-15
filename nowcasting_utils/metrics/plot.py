@@ -114,7 +114,7 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[g
     return trace_forecast_horizons
 
 
-def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.Histogram):
+def make_gsp_id_metrics(results_df, model_name:str, normalize: bool = False) -> (go.Scatter, go.Histogram):
     """
     Make the gsp id metrics
 
@@ -170,6 +170,11 @@ def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.
         marker_color=colours[0],
         showlegend=False,
     )
+
+    # save to csv
+    if normalize:
+        model_name = f'{model_name}_normalized'
+    gsp_metrics_df.to_csv(f'{model_name}.csv')
 
     return trace_gsp_id, trace_histogram
 

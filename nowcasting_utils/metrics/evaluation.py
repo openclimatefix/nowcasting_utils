@@ -97,9 +97,9 @@ def results_evaluation(results_df: pd.DataFrame, model_name: str) -> go.Figure:
     # evaluate per gsp
     # ********
 
-    trace_gsp_id, trace_gsp_id_hist = make_gsp_id_metrics(results_df=results_df, normalize=False)
+    trace_gsp_id, trace_gsp_id_hist = make_gsp_id_metrics(results_df=results_df, normalize=False, model_name=model_name)
     trace_gsp_id_normalized, trace_gsp_id_normalized_hist = make_gsp_id_metrics(
-        results_df=results_df, normalize=True
+        results_df=results_df, normalize=True, model_name=model_name
     )
 
     # *******
