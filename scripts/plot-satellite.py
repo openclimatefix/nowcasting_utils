@@ -67,7 +67,8 @@ for example_index in range(11, 13):
     for i in range(len(traces_pv)):
         fig.add_trace(traces_pv[i], 1, i + 1)
 
-    # fig.update_layout(mapbox_style="carto-positron", mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})
+    # fig.update_layout(mapbox_style="carto-positron",
+    # mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})
     # fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     mapbox = dict(style="carto-positron", center=dict(lat=lat, lon=lon), zoom=7.2)
