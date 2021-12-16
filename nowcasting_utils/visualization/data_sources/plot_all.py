@@ -47,6 +47,7 @@ def make_fig_time_series_pv_and_gsp(batch: Batch, example_index: int):
     fig.update_layout(
         title="GSP and PV time series plot",
     )
+    fig["layout"]["yaxis"]["title"] = "Solar Generation (Normalised) "
 
     return fig
 
@@ -88,8 +89,43 @@ def make_satellite_gsp_pv_map_one_time_value(
         time_index=satellite_time_index,
     )
 
-    # return traces_gsp + traces_pv + [trace_satellite]
-    return [trace_pv, trace_gsp, trace_satellite]
+    return [trace_pv] + [trace_gsp] + [trace_satellite]
+
+
+def make_satellite_gsp_pv_map_still(batch: Batch, example_index: int, satellite_channel_index: int):
+    """Make a still of the satellite, gsp and the pv data"""
+    trace_times = []
+    times = batch.satellite.time[example_index]
+    pv = batch.pv
+
+    time = times[0]
+
+    trace_times.append(
+        make_satellite_gsp_pv_map_one_time_value(
+            batch=batch,
+            example_index=example_index,
+            satellite_channel_index=satellite_channel_index,
+            time_value=time,
+        )
+    )
+
+    x = pv.x_coords[example_index][pv.x_coords[example_index] != 0].mean()
+    y = pv.y_coords[example_index][pv.y_coords[example_index] != 0].mean()
+
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
+
+    fig = go.Figure(
+        data=trace_times[0],
+        layout=go.Layout(
+            title="Start Title",
+        ),
+    )
+    # fig.update_layout(updatemenus=[make_buttons()])
+    fig.update_layout(
+        mapbox_style="carto-positron", mapbox_zoom=8, mapbox_center={"lat": lat, "lon": lon}
+    )
+
+    return fig
 
 
 def make_satellite_gsp_pv_map(batch: Batch, example_index: int, satellite_channel_index: int):
