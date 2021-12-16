@@ -1,18 +1,24 @@
 # create a custom plot where only some gsp id are plotted
 
-import pandas as pd
-import xarray as xr
-import fsspec
 import io
 import json
+
+import fsspec
+import pandas as pd
 import plotly.graph_objects as go
-from nowcasting_dataset.data_sources.gsp.eso import get_gsp_shape_from_eso, get_gsp_metadata_from_eso
+import xarray as xr
+from nowcasting_dataset.data_sources.gsp.eso import (
+    get_gsp_metadata_from_eso,
+    get_gsp_shape_from_eso,
+)
 
 # gsp ids to plot
-gsp_id =[261,170,332,280,228,255,162,158]
+gsp_id = [261, 170, 332, 280, 228, 255, 162, 158]
 
 # PV files
-pv_metadata_fileanme = "gs://solar-pv-nowcasting-data/PV/Passive/ocf_formatted/v0/system_metadata.csv"
+pv_metadata_fileanme = (
+    "gs://solar-pv-nowcasting-data/PV/Passive/ocf_formatted/v0/system_metadata.csv"
+)
 pv_filename = "gs://solar-pv-nowcasting-data/PV/Passive/ocf_formatted/v0/passiv.netcdf"
 
 # load pv files
@@ -36,7 +42,7 @@ gsp_shape["Amount"] = 0
 
 # optional to only plot some gsp ids
 gsp_metadata = get_gsp_metadata_from_eso()
-gsp_metadata = gsp_metadata[gsp_metadata['gsp_id'].isin(gsp_id)]
+gsp_metadata = gsp_metadata[gsp_metadata["gsp_id"].isin(gsp_id)]
 gsp_shape = gsp_shape[gsp_shape.RegionID.isin(gsp_metadata.region_id)]
 
 # get dict shapes
@@ -45,27 +51,31 @@ shapes_dict = json.loads(gsp_shape.to_json())
 
 # plot GSP shape
 trace_gsp = go.Choroplethmapbox(
-        geojson=shapes_dict, locations=gsp_shape.index, z=gsp_shape.Amount, colorscale="Viridis", marker=dict(opacity=0.5)
-    )
+    geojson=shapes_dict,
+    locations=gsp_shape.index,
+    z=gsp_shape.Amount,
+    colorscale="Viridis",
+    marker=dict(opacity=0.5),
+)
 
 # plot PVs
 trace_pv = go.Scattermapbox(
-        lat=pv.latitude,
-        lon=pv.longitude,
-        marker=dict(color="Red", size=3, sizemode="area"),
-        name='PV',
-        text=pv.system_id,
-    )
+    lat=pv.latitude,
+    lon=pv.longitude,
+    marker=dict(color="Red", size=3, sizemode="area"),
+    name="PV",
+    text=pv.system_id,
+)
 
 # make figure
 fig = go.Figure(
-        data=[trace_gsp, trace_pv],
-        layout=go.Layout(
-            title="PV systems",
-        ),
-    )
+    data=[trace_gsp, trace_pv],
+    layout=go.Layout(
+        title="PV systems",
+    ),
+)
 fig.update_layout(
     mapbox_style="carto-positron", mapbox_zoom=4, mapbox_center={"lat": 54, "lon": -1}
 )
 
-fig.show(renderer='browser')
+fig.show(renderer="browser")

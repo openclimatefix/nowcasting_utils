@@ -1,15 +1,16 @@
 """
 Baseline model for predicting GSP level results for by using yesterdays results
 """
+from datetime import timedelta
+from pathlib import Path
+
 import pandas as pd
 import xarray as xr
-from pathlib import Path
-from tqdm import tqdm
 from nowcasting_dataset.data_sources.gsp import eso
 from nowcasting_dataset.geospatial import lat_lon_to_osgb
-from nowcasting_utils.metrics.evaluation import evaluation
+from tqdm import tqdm
 
-from datetime import timedelta
+from nowcasting_utils.metrics.evaluation import evaluation
 
 # The locations of the tests dataset
 TEST_DATASET_FILE = (
@@ -21,8 +22,7 @@ TEST_DATASET_FILE = (
 GSP_ZARR_PATH = "gs://solar-pv-nowcasting-data/PV/GSP/v3/pv_gsp.zarr"
 
 # Output csv
-BASELINE_PV_FORECASTS_OUTPUT_FILE = Path(
-    "baseline_yesterday_testset_v16.csv")
+BASELINE_PV_FORECASTS_OUTPUT_FILE = Path("baseline_yesterday_testset_v16.csv")
 
 # Load test set results
 locations_df = pd.read_csv(TEST_DATASET_FILE)
@@ -59,20 +59,27 @@ pv_live_dataset = xr.open_dataset(GSP_ZARR_PATH, engine="zarr")
 
 
 predictions_and_truths = locations_df
-predictions_and_truths['actual_gsp_pv_outturn_mw'] = -1.0
-predictions_and_truths['forecast_gsp_pv_outturn_mw'] = -1.0
-predictions_and_truths['capacity_mwp'] = -1.0
-predictions_and_truths.t0_datetime_UTC = pd.to_datetime(predictions_and_truths.t0_datetime_UTC_floor_30_mins)
+predictions_and_truths["actual_gsp_pv_outturn_mw"] = -1.0
+predictions_and_truths["forecast_gsp_pv_outturn_mw"] = -1.0
+predictions_and_truths["capacity_mwp"] = -1.0
+predictions_and_truths.t0_datetime_UTC = pd.to_datetime(
+    predictions_and_truths.t0_datetime_UTC_floor_30_mins
+)
 # 'target_datetime_utc'
 
-predictions_and_truths['t0_datetime_utc'] = predictions_and_truths.t0_datetime_UTC
+predictions_and_truths["t0_datetime_utc"] = predictions_and_truths.t0_datetime_UTC
 
 results_df = []
-forecast_horizons = [timedelta(hours=0.5), timedelta(hours=1),timedelta(hours=1.5),timedelta(hours=2)]
+forecast_horizons = [
+    timedelta(hours=0.5),
+    timedelta(hours=1),
+    timedelta(hours=1.5),
+    timedelta(hours=2),
+]
 
 
 for i in tqdm(range(len(predictions_and_truths))):
-# for i in tqdm(range(10)):
+    # for i in tqdm(range(10)):
     t0_datetime_utc = predictions_and_truths.t0_datetime_UTC.iloc[i]
     yesterday_datetime_utc = t0_datetime_utc - timedelta(hours=24)
 
@@ -81,18 +88,34 @@ for i in tqdm(range(len(predictions_and_truths))):
 
     # yesterday
     one_pv_live_dataset = pv_live_dataset.sel(datetime_gmt=yesterday_datetime_utc)
-    forecast_gsp_pv_outturn_mw = one_pv_live_dataset.generation_mw.to_dataframe().reset_index().rename(columns={'datetime_gmt':'yesterday_datetime_utc'})
-    forecast_gsp_pv_outturn_mw['target_datetime_utc'] = forecast_gsp_pv_outturn_mw['yesterday_datetime_utc'] + timedelta(hours=24)
+    forecast_gsp_pv_outturn_mw = (
+        one_pv_live_dataset.generation_mw.to_dataframe()
+        .reset_index()
+        .rename(columns={"datetime_gmt": "yesterday_datetime_utc"})
+    )
+    forecast_gsp_pv_outturn_mw["target_datetime_utc"] = forecast_gsp_pv_outturn_mw[
+        "yesterday_datetime_utc"
+    ] + timedelta(hours=24)
 
     # actual
     one_pv_live_dataset = pv_live_dataset.sel(datetime_gmt=target_datetimes_utc)
-    actual_gsp_pv_outturn_mw = one_pv_live_dataset.generation_mw.to_dataframe().reset_index().rename(columns={'datetime_gmt':'target_datetime_utc'})
-    capacity_mwp = one_pv_live_dataset.installedcapacity_mwp.to_dataframe().reset_index().rename(columns={'datetime_gmt':'target_datetime_utc'})
+    actual_gsp_pv_outturn_mw = (
+        one_pv_live_dataset.generation_mw.to_dataframe()
+        .reset_index()
+        .rename(columns={"datetime_gmt": "target_datetime_utc"})
+    )
+    capacity_mwp = (
+        one_pv_live_dataset.installedcapacity_mwp.to_dataframe()
+        .reset_index()
+        .rename(columns={"datetime_gmt": "target_datetime_utc"})
+    )
 
-    results_df_one = forecast_gsp_pv_outturn_mw.rename(columns={'generation_mw':'forecast_gsp_pv_outturn_mw'})
-    results_df_one['actual_gsp_pv_outturn_mw'] = actual_gsp_pv_outturn_mw['generation_mw']
-    results_df_one['capacity_mwp'] = capacity_mwp['installedcapacity_mwp']
-    results_df_one['t0_datetime_utc'] = t0_datetime_utc
+    results_df_one = forecast_gsp_pv_outturn_mw.rename(
+        columns={"generation_mw": "forecast_gsp_pv_outturn_mw"}
+    )
+    results_df_one["actual_gsp_pv_outturn_mw"] = actual_gsp_pv_outturn_mw["generation_mw"]
+    results_df_one["capacity_mwp"] = capacity_mwp["installedcapacity_mwp"]
+    results_df_one["t0_datetime_utc"] = t0_datetime_utc
 
     results_df.append(results_df_one)
 
@@ -106,4 +129,4 @@ results_df_all.to_csv(BASELINE_PV_FORECASTS_OUTPUT_FILE)
 
 
 # run evaluation
-evaluation(results_df=results_df_all,model_name='yesterday')
+evaluation(results_df=results_df_all, model_name="yesterday")

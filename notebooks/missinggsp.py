@@ -4,12 +4,10 @@ import json
 import geopandas as gpd
 import numpy as np
 import plotly.graph_objects as go
-
 from nowcasting_dataset.data_sources.gsp.eso import (
-    get_gsp_shape_from_eso,
     get_gsp_metadata_from_eso,
+    get_gsp_shape_from_eso,
 )
-
 
 WGS84_CRS = "EPSG:4326"
 
@@ -49,7 +47,33 @@ missing_gsp_ids = [
     331,
     333,
 ]
-missing_gsp_ids = [18, 25, 34, 41, 47, 50, 76, 89, 112, 114, 185, 203, 215, 222, 258, 260, 270, 278, 313, 314, 316, 317, 318, 331, 333]
+missing_gsp_ids = [
+    18,
+    25,
+    34,
+    41,
+    47,
+    50,
+    76,
+    89,
+    112,
+    114,
+    185,
+    203,
+    215,
+    222,
+    258,
+    260,
+    270,
+    278,
+    313,
+    314,
+    316,
+    317,
+    318,
+    331,
+    333,
+]
 # missing_gsp_ids = [160, 164, 175, 180, 206, 217]
 
 shapes_gdp = shapes_gdp.to_crs(WGS84_CRS)
@@ -87,6 +111,7 @@ fig.write_html("gsp_missing.html")
 ### load raw data
 
 from datetime import datetime
+
 import numcodecs
 import xarray as xr
 
@@ -110,9 +135,10 @@ nans = [x for x in missing_gsp_ids if x in gsp_ids_with_nans]
 no_nans = [x for x in missing_gsp_ids if x not in gsp_ids_with_nans]
 
 
+import pytz
+
 # load data from pv live
 from pvlive_api import PVLive
-import pytz
 
 gsp_id = 34
 start_dt = datetime.fromisoformat("2020-07-01").replace(tzinfo=pytz.utc)
