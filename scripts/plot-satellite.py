@@ -1,4 +1,4 @@
-""" PLotting script for real data """
+""" PLotting script for real satellite data """
 from nowcasting_dataset.dataset.batch import Batch
 from nowcasting_utils.visualization.data_sources.plot_satellite import make_traces_one_channel_one_time
 from nowcasting_utils.visualization.data_sources.plot_pv import get_trace_pv_intensity_one_time_step
@@ -18,11 +18,12 @@ time_index = 10
 
 batch = Batch.load_netcdf(tmp_path, batch_idx)
 
-
+# get data componets
 gsp = batch.gsp
 pv = batch.pv
 satellite = batch.satellite
 
+# loop over examples
 for example_index in range(11,13):
 
     x = satellite.x[example_index].mean()
@@ -30,16 +31,19 @@ for example_index in range(11,13):
 
     lat, lon = osgb_to_lat_lon(x=x,y=y)
 
+    # make satellite sub plots
     traces = []
     for time_index in [0,15,30]:
         trace = make_traces_one_channel_one_time(satellite=satellite,example_index=example_index,channel_index=8,time_index=time_index)
         traces.append(trace)
 
+    # make pv sub plots
     traces_pv = []
     for time_index in [0,15,30]:
         trace = get_trace_pv_intensity_one_time_step(pv=pv,example_index=example_index,t_index=time_index)
         traces_pv.append(trace)
 
+    # make figure
     fig = make_subplots(
         rows=1,
         cols=3,
@@ -49,11 +53,9 @@ for example_index in range(11,13):
         ],
     )
     for i in range(len(traces)):
-
         fig.add_trace(traces[i],1,i+1)
 
     for i in range(len(traces_pv)):
-
         fig.add_trace(traces_pv[i],1,i+1)
 
     # fig.update_layout(mapbox_style="carto-positron", mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})

@@ -1,10 +1,13 @@
-# Baseline model for predicting GSP level results for by using yesterdays results
+"""
+Baseline model for predicting GSP level results for by using yesterdays results
+"""
 import pandas as pd
 import xarray as xr
 from pathlib import Path
 from tqdm import tqdm
 from nowcasting_dataset.data_sources.gsp import eso
 from nowcasting_dataset.geospatial import lat_lon_to_osgb
+from nowcasting_utils.metrics.evaluation import evaluation
 
 from datetime import timedelta
 
@@ -97,11 +100,10 @@ for i in tqdm(range(len(predictions_and_truths))):
 results_df_all = pd.concat(results_df)
 
 
-
+# save csv
 print(results_df_all)
 results_df_all.to_csv(BASELINE_PV_FORECASTS_OUTPUT_FILE)
 
 
-from nowcasting_utils.metrics.evaluation import evaluation
-
+# run evaluation
 evaluation(results_df=results_df_all,model_name='yesterday')
