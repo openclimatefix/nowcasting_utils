@@ -83,7 +83,7 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
 def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index: int):
     """Get trace of pv intensity map"""
     time = gsp.time[example_index]
-    gsp_id = gsp.id[example_index,0].values
+    gsp_id = gsp.id[example_index, 0].values
     name = str(time[t_index].data)
 
     # get shape from eso
@@ -91,7 +91,7 @@ def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index:
     gsp_metadata = get_gsp_metadata_from_eso()
 
     # select first GSP system
-    gsp_metadata = gsp_metadata[gsp_metadata['gsp_id'] == gsp_id]
+    gsp_metadata = gsp_metadata[gsp_metadata["gsp_id"] == gsp_id]
     gsp_shape = gsp_shape[gsp_shape.RegionID.isin(gsp_metadata.region_id)]
 
     # add z axis for colour
