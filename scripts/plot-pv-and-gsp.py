@@ -1,4 +1,4 @@
-# create a custom plot where only some gsp id are plotted
+"""Plot all gsp and all pvs systems"""
 
 import io
 import json

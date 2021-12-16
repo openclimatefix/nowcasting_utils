@@ -1,4 +1,6 @@
+""" Plot of specific gsp ids """
 import json
+import pytz
 from datetime import datetime
 
 import plotly.graph_objects as go
@@ -82,7 +84,7 @@ fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 fig.show(renderer="browser")
 fig.write_html("gsp_missing.html")
 
-### load raw data
+# ## load raw data
 start_dt = datetime.fromisoformat("2020-01-01")
 end_dt = datetime.fromisoformat("2021-09-01")
 end_dt = datetime.fromisoformat("2020-01-02")
@@ -102,8 +104,6 @@ gsp_ids_with_nans = maximum_gsp[maximum_gsp.isnull()].gsp_id.values
 nans = [x for x in missing_gsp_ids if x in gsp_ids_with_nans]
 no_nans = [x for x in missing_gsp_ids if x not in gsp_ids_with_nans]
 
-
-import pytz
 
 # load data from pv live
 gsp_id = 34

@@ -1,3 +1,4 @@
+""" Plot of good and bad results """
 import neptune.new as neptune
 import pandas as pd
 from plotly.subplots import make_subplots

@@ -23,7 +23,8 @@ time_index = 10
 # from nowcasting_dataset.utils import get_netcdf_filename
 # from nowcasting_dataset.consts import SPATIAL_AND_TEMPORAL_LOCATIONS_OF_EACH_EXAMPLE_FILENAME
 #
-# data_sources_names = ['gsp','pv','satellite','nwp', 'hrvsatellite','topographic','opticalflow', 'sun']
+# data_sources_names
+# = ['gsp','pv','satellite','nwp', 'hrvsatellite','topographic','opticalflow', 'sun']
 # for data_source in data_sources_names:
 #     data_source_and_filename = f"{data_source}/{get_netcdf_filename(batch_idx)}"
 #     download_to_local(
@@ -92,7 +93,8 @@ for example_index in range(5, 6):
     for i in range(len(traces_pv)):
         fig.add_trace(traces_pv[i], 1, i + 1)
 
-    # fig.update_layout(mapbox_style="carto-positron", mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})
+    # fig.update_layout(mapbox_style="carto-positron",
+    # mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})
     # fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     mapbox = dict(style="carto-positron", center=dict(lat=lat, lon=lon), zoom=7.2)
