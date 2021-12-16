@@ -1,13 +1,10 @@
 """ Tests to plot satellite data """
 import numpy as np
-import pandas as pd
 import plotly.graph_objects as go
 from nowcasting_dataset.data_sources.nwp.nwp_data_source import NWP
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-from plotly.subplots import make_subplots
 
 
-from nowcasting_utils.visualization.utils import make_buttons, make_slider
 from nowcasting_dataloader.data_sources.nwp.nwp_model import NWP_MEAN, NWP_STD
 
 
