@@ -46,9 +46,14 @@ def make_traces_one_channel_one_time(
     lat = np.repeat(lat, len(y))
     lon = np.tile(lon, len(x))
 
-
     return go.Densitymapbox(
-        z=z, lat=lat, lon=lon, colorscale=[[0, 'blue'],[0.3, 'blue'], [1, 'white']], opacity=0.3, zmax=2, zmin=-2
+        z=z,
+        lat=lat,
+        lon=lon,
+        colorscale=[[0, "blue"], [0.3, "blue"], [1, "white"]],
+        opacity=0.3,
+        zmax=2,
+        zmin=-2,
     )
 
 
