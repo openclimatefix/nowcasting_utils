@@ -1,9 +1,9 @@
 """ Plot of specific gsp ids """
 import json
-import pytz
 from datetime import datetime
 
 import plotly.graph_objects as go
+import pytz
 import xarray as xr
 from nowcasting_dataset.data_sources.gsp.eso import (
     get_gsp_metadata_from_eso,
