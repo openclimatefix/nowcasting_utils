@@ -13,7 +13,6 @@ from nowcasting_utils.visualization.line import make_trace
 from nowcasting_utils.visualization.utils import make_buttons, make_slider
 
 from nowcasting_dataset.data_sources.gsp.eso import (
-    get_gsp_shape_from_eso,
     get_gsp_metadata_from_eso,
 )
 
