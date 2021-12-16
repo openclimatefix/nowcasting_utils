@@ -13,7 +13,6 @@ from nowcasting_utils.visualization.data_sources.plot_gsp import get_fig_gsp_com
 from nowcasting_utils.visualization.data_sources.plot_pv import get_fig_pv_combined
 from nowcasting_utils.visualization.data_sources.plot_satellite import make_animation_all_channels
 
-
 # load batch
 tmp_path = "./temp"
 src_path = "s3://solar-pv-nowcasting-data/prepared_ML_training_data/v16/train"

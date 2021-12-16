@@ -1,7 +1,5 @@
 import neptune.new as neptune
-
 import pandas as pd
-
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace

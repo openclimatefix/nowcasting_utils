@@ -1,19 +1,13 @@
 import json
+from datetime import datetime
 
 import plotly.graph_objects as go
-
-
-from datetime import datetime
 import xarray as xr
-
-
 from nowcasting_dataset.data_sources.gsp.eso import (
     get_gsp_metadata_from_eso,
     get_gsp_shape_from_eso,
 )
-
 from pvlive_api import PVLive
-
 
 WGS84_CRS = "EPSG:4326"
 
