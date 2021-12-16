@@ -1,6 +1,8 @@
 """ PLotting script for real nwp data """
 from nowcasting_dataset.dataset.batch import Batch
-from nowcasting_utils.visualization.data_sources.plot_nwp import make_traces_nwp_one_channel_one_time
+from nowcasting_utils.visualization.data_sources.plot_nwp import (
+    make_traces_nwp_one_channel_one_time,
+)
 from nowcasting_utils.visualization.data_sources.plot_pv import get_trace_pv_intensity_one_time_step
 from plotly.subplots import make_subplots
 
@@ -9,11 +11,11 @@ from nowcasting_dataset.geospatial import osgb_to_lat_lon
 
 # load batch
 tmp_path = "./temp"
-src_path = 's3://solar-pv-nowcasting-data/prepared_ML_training_data/v16/train'
+src_path = "s3://solar-pv-nowcasting-data/prepared_ML_training_data/v16/train"
 batch_idx = 4
-example_index=0 # is good Newcastle
-example_index=12 # is good London
-example_index=20
+example_index = 0  # is good Newcastle
+example_index = 12  # is good London
+example_index = 20
 time_index = 10
 
 # **********************
@@ -49,39 +51,47 @@ satellite = batch.satellite
 nwp = batch.nwp
 
 # loop over examples
-for example_index in range(5,6):
+for example_index in range(5, 6):
 
     x = nwp.x[example_index].mean()
     y = nwp.y[example_index].mean()
 
-    lat, lon = osgb_to_lat_lon(x=x,y=y)
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
 
     # make nwp sub plots
     traces = []
-    for time_index in [1,2,3]:
-        trace = make_traces_nwp_one_channel_one_time(nwp=nwp,example_index=example_index,channel_index=2,time_index=time_index)
+    for time_index in [1, 2, 3]:
+        trace = make_traces_nwp_one_channel_one_time(
+            nwp=nwp, example_index=example_index, channel_index=2, time_index=time_index
+        )
         traces.append(trace)
 
     # make pv sub plots
     traces_pv = []
-    for time_index in [5,17,29]:
-        trace = get_trace_pv_intensity_one_time_step(pv=pv,example_index=example_index,t_index=time_index)
+    for time_index in [5, 17, 29]:
+        trace = get_trace_pv_intensity_one_time_step(
+            pv=pv, example_index=example_index, t_index=time_index
+        )
         traces_pv.append(trace)
 
     # make figure
     fig = make_subplots(
         rows=1,
         cols=3,
-        subplot_titles=('11:00', "12:00","13:00"),
+        subplot_titles=("11:00", "12:00", "13:00"),
         specs=[
-            [{"type": "choroplethmapbox"}, {"type": "choroplethmapbox"}, {"type": "choroplethmapbox"}],
+            [
+                {"type": "choroplethmapbox"},
+                {"type": "choroplethmapbox"},
+                {"type": "choroplethmapbox"},
+            ],
         ],
     )
     for i in range(len(traces)):
-        fig.add_trace(traces[i],1,i+1)
+        fig.add_trace(traces[i], 1, i + 1)
 
     for i in range(len(traces_pv)):
-        fig.add_trace(traces_pv[i],1,i+1)
+        fig.add_trace(traces_pv[i], 1, i + 1)
 
     # fig.update_layout(mapbox_style="carto-positron", mapbox_zoom=7.2, mapbox_center={"lat": lat, "lon": lon})
     # fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
@@ -91,7 +101,3 @@ for example_index in range(5,6):
     layout_dict = {f"mapbox{i}": mapbox for i in range(1, len(traces) + 1)}
     fig.update_layout(layout_dict)
     fig.show(renderer="browser")
-
-
-
-
