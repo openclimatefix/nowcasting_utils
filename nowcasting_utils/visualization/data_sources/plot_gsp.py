@@ -84,25 +84,27 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
 def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index: int):
     """Get trace of pv intensity map"""
     time = gsp.time[example_index]
-    gsp_id = gsp.id[example_index].values
+    gsp_id = gsp.id[example_index,0].values
     name = str(time[t_index].data)
 
     # get shape from eso
+    gsp_shape = get_gsp_metadata_from_eso().to_crs("EPSG:4326")
     gsp_metadata = get_gsp_metadata_from_eso()
-    gsp_metadata = gsp_metadata.to_crs(WGS84_CRS)
 
     # select first GSP system
-    gsp_data_to_plot = gsp_metadata
-    gsp_data_to_plot = gsp_data_to_plot[gsp_data_to_plot["gsp_id"] == gsp_id[0]]
+    gsp_metadata = gsp_metadata[gsp_metadata['gsp_id'] == gsp_id]
+    gsp_shape = gsp_shape[gsp_shape.RegionID.isin(gsp_metadata.region_id)]
 
-    gsp_data_to_plot["Amount"] = gsp.power_normalized[example_index, t_index, 0].values
+    # add z axis for colour
+    gsp_shape["Amount"] = gsp.power_normalized[example_index, t_index, 0].values
 
-    shapes_dict = json.loads(gsp_data_to_plot.to_json())
+    # get json object
+    shapes_dict = json.loads(gsp_shape.to_json())
 
     trace = go.Choroplethmapbox(
         geojson=shapes_dict,
-        locations=gsp_data_to_plot.index,
-        z=gsp_data_to_plot.Amount,
+        locations=gsp_shape.index,
+        z=gsp_shape.Amount,
         colorscale="Viridis",
         name=name,
     )

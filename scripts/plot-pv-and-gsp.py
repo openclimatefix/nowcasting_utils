@@ -38,7 +38,7 @@ gsp_shape = gsp_shape[gsp_shape.RegionID.isin(gsp_metadata.region_id)]
 shapes_dict = json.loads(gsp_shape.to_json())
 
 trace_gsp = go.Choroplethmapbox(
-        geojson=shapes_dict, locations=gsp_shape.index, z=gsp_metadata.Amount, colorscale="Viridis", marker=dict(opacity=0.5)
+        geojson=shapes_dict, locations=gsp_shape.index, z=gsp_shape.Amount, colorscale="Viridis", marker=dict(opacity=0.5)
     )
 
 
