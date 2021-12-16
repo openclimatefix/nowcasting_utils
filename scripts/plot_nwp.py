@@ -1,13 +1,12 @@
 """ PLotting script for real nwp data """
 from nowcasting_dataset.dataset.batch import Batch
+from nowcasting_dataset.geospatial import osgb_to_lat_lon
+from plotly.subplots import make_subplots
+
 from nowcasting_utils.visualization.data_sources.plot_nwp import (
     make_traces_nwp_one_channel_one_time,
 )
 from nowcasting_utils.visualization.data_sources.plot_pv import get_trace_pv_intensity_one_time_step
-from plotly.subplots import make_subplots
-
-from nowcasting_dataset.geospatial import osgb_to_lat_lon
-
 
 # load batch
 tmp_path = "./temp"

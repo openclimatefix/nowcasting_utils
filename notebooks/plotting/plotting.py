@@ -1,5 +1,8 @@
 """ PLotting script for real data """
+from nowcasting_dataset.consts import SPATIAL_AND_TEMPORAL_LOCATIONS_OF_EACH_EXAMPLE_FILENAME
 from nowcasting_dataset.dataset.batch import Batch
+from nowcasting_dataset.filesystem.utils import download_to_local
+from nowcasting_dataset.utils import get_netcdf_filename
 
 from nowcasting_utils.visualization.data_sources.plot_all import (
     make_fig_time_series_pv_and_gsp,

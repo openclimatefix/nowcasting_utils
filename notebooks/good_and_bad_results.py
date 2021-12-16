@@ -1,11 +1,15 @@
-import pandas as pd
 import neptune.new as neptune
-from nowcasting_utils.visualization.line import make_trace
+
+import pandas as pd
 
 from plotly.subplots import make_subplots
 
+from nowcasting_utils.visualization.line import make_trace
+
 # oad results from neptune
+
 run = neptune.init(project="OpenClimateFix/predict-pv-yield", run="PRED-658")
+
 
 epoch = 4
 destination_path = "./temp.csv"
