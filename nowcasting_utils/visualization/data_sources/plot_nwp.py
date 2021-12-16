@@ -1,11 +1,9 @@
 """ Tests to plot satellite data """
 import numpy as np
 import plotly.graph_objects as go
+from nowcasting_dataloader.data_sources.nwp.nwp_model import NWP_MEAN, NWP_STD
 from nowcasting_dataset.data_sources.nwp.nwp_data_source import NWP
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
-
-
-from nowcasting_dataloader.data_sources.nwp.nwp_model import NWP_MEAN, NWP_STD
 
 
 def make_traces_nwp_one_channel_one_time(

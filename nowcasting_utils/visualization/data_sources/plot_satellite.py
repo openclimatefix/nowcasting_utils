@@ -2,12 +2,12 @@
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from nowcasting_dataloader.data_sources.satellite.satellite_model import SAT_MEAN, SAT_STD
 from nowcasting_dataset.data_sources.satellite.satellite_data_source import Satellite
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.utils import make_buttons, make_slider
-from nowcasting_dataloader.data_sources.satellite.satellite_model import SAT_STD, SAT_MEAN
 
 
 def make_traces_one_channel_one_time(

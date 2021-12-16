@@ -1,20 +1,17 @@
 """ General functions for plotting PV data """
+import json
 from typing import List
 
-import json
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.gsp.eso import get_gsp_metadata_from_eso
 from nowcasting_dataset.data_sources.gsp.gsp_model import GSP
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace
 from nowcasting_utils.visualization.utils import make_buttons, make_slider
-
-from nowcasting_dataset.data_sources.gsp.eso import (
-    get_gsp_metadata_from_eso,
-)
 
 WGS84_CRS = "EPSG:4326"
 
