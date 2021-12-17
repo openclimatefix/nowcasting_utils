@@ -24,8 +24,6 @@ def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
     if "gsp_id_count" in results_df.keys():
         main_metrics["Average GSP for each forecast"] = results_df["gsp_id_count"].mean()
 
-    print(main_metrics)
-
     # metrics ready for plotting
     metrics = list(main_metrics.keys())
     if normalize:
@@ -271,16 +269,6 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
         ci_absolute_error = std_absolute_error / (n_data ** 0.5)
     else:
         ci_absolute_error = np.nan
-
-    # print metrics out
-    print(name)
-    print(f"{mean_absolute_error=:0.3f} MW (+- {ci_absolute_error:0.3f})")
-    print(f"{mean_error=:0.3f} MW")
-    print(f"{root_mean_squared_error=:0.3f} MW")
-
-    print(f"{max_absolute_error=:0.3f} MW")
-
-    print("")
 
     metrics = {
         "MAE": mean_absolute_error,
