@@ -18,7 +18,7 @@ def get_trace_centroid_pv(pv: PV, example_index: int) -> go.Scatter:
     y = pv.power_normalized[example_index, :, 0]
     x = pv.time[example_index]
 
-    return make_trace(x, y, truth=True, name="centorid pv")
+    return make_trace(x, y, truth=True, name="centorid pv", mode="lines")
 
 
 def get_trace_all_pv_systems(
@@ -29,6 +29,8 @@ def get_trace_all_pv_systems(
     traces = []
     x = pv.time[example_index]
     n_pv_systems = pv.power_mw.shape[2]
+    print(pv.power_mw.shape)
+    print(n_pv_systems)
 
     if center_system:
         start_idx = 1
@@ -39,7 +41,7 @@ def get_trace_all_pv_systems(
         start_idx = 0
 
     # make the lines a little bit see-through
-    opacity = (1 / n_pv_systems) ** 0.25
+    opacity = (1 / n_pv_systems) ** 0.35
 
     for pv_system_index in range(start_idx, n_pv_systems):
         y = pv.power_normalized[example_index, :, pv_system_index]
@@ -50,8 +52,7 @@ def get_trace_all_pv_systems(
         if ~np.isnan(pv_id):
             pv_id = int(pv_id)
             name = f"PV system {pv_id}"
-
-            traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity))
+            traces.append(make_trace(x, y, truth=truth, name=name, opacity=opacity, mode="lines"))
 
     return traces
 

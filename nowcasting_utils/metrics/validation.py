@@ -1,7 +1,7 @@
 """ Functions to save validation results to logger/csv """
 import logging
 from datetime import timedelta
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from neptune.new.integrations.pytorch_lightning import NeptuneLogger

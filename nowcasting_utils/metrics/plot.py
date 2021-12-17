@@ -7,7 +7,7 @@ import pandas as pd
 from plotly import graph_objects as go
 
 colours = ["rgb(77,137,99)", "rgb(225,179,120)", "rgb(224,204,151)", "rgb(105,165,131)"]
-plotting_metrics = ["RMSE", "MAE"]
+plotting_metrics = ["MAE"]
 
 
 def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
@@ -23,8 +23,6 @@ def make_main_metrics(results_df, normalize: bool = False) -> go.Table:
 
     if "gsp_id_count" in results_df.keys():
         main_metrics["Average GSP for each forecast"] = results_df["gsp_id_count"].mean()
-
-    print(main_metrics)
 
     # metrics ready for plotting
     metrics = list(main_metrics.keys())
@@ -114,7 +112,9 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[g
     return trace_forecast_horizons
 
 
-def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.Histogram):
+def make_gsp_id_metrics(
+    results_df, model_name: str, normalize: bool = False
+) -> (go.Scatter, go.Histogram):
     """
     Make the gsp id metrics
 
@@ -170,6 +170,11 @@ def make_gsp_id_metrics(results_df, normalize: bool = False) -> (go.Scatter, go.
         marker_color=colours[0],
         showlegend=False,
     )
+
+    # save to csv
+    if normalize:
+        model_name = f"{model_name}_normalized"
+    gsp_metrics_df.to_csv(f"{model_name}.csv")
 
     return trace_gsp_id, trace_histogram
 
@@ -264,16 +269,6 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
         ci_absolute_error = std_absolute_error / (n_data ** 0.5)
     else:
         ci_absolute_error = np.nan
-
-    # print metrics out
-    print(name)
-    print(f"{mean_absolute_error=:0.3f} MW (+- {ci_absolute_error:0.3f})")
-    print(f"{mean_error=:0.3f} MW")
-    print(f"{root_mean_squared_error=:0.3f} MW")
-
-    print(f"{max_absolute_error=:0.3f} MW")
-
-    print("")
 
     metrics = {
         "MAE": mean_absolute_error,

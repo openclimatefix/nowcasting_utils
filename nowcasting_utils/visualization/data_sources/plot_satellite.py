@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from nowcasting_dataloader.data_sources.satellite.satellite_model import SAT_MEAN, SAT_STD
 from nowcasting_dataset.data_sources.satellite.satellite_data_source import Satellite
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from plotly.subplots import make_subplots
@@ -25,12 +26,16 @@ def make_traces_one_channel_one_time(
 
     """
     z = satellite.data[example_index, time_index, :, :, channel_index]
+    z = z - list(SAT_MEAN.values())[channel_index]
+    z = z / list(SAT_STD.values())[channel_index]
+    # z = -z
+
     z = z.transpose("y_index", "x_index").values
 
     x = satellite.x[example_index]
     y = satellite.y[example_index]
 
-    lat, lon = osgb_to_lat_lon(x, y)
+    lat, lon = osgb_to_lat_lon(x=x, y=y)
 
     # lets un ravel the z object
     z = z.ravel()
@@ -42,7 +47,13 @@ def make_traces_one_channel_one_time(
     lon = np.tile(lon, len(x))
 
     return go.Densitymapbox(
-        z=z, lat=lat, lon=lon, colorscale="Viridis", opacity=0.5, zmax=1000, zmin=0
+        z=z,
+        lat=lat,
+        lon=lon,
+        colorscale=[[0, "blue"], [0.3, "blue"], [1, "white"]],
+        opacity=0.3,
+        zmax=2,
+        zmin=-2,
     )
 
 

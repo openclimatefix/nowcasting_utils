@@ -1,15 +1,19 @@
 """ General functions for plotting PV data """
+import json
 from typing import List
 
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from nowcasting_dataset.data_sources.gsp.eso import get_gsp_metadata_from_eso
 from nowcasting_dataset.data_sources.gsp.gsp_model import GSP
 from nowcasting_dataset.geospatial import osgb_to_lat_lon
 from plotly.subplots import make_subplots
 
 from nowcasting_utils.visualization.line import make_trace
 from nowcasting_utils.visualization.utils import make_buttons, make_slider
+
+WGS84_CRS = "EPSG:4326"
 
 
 def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
@@ -18,30 +22,37 @@ def get_trace_centroid_gsp(gsp: GSP, example_index: int) -> go.Scatter:
     y = gsp.power_normalized[example_index, :, 0]
     x = gsp.time[example_index]
 
-    return make_trace(x, y, truth=True, name="center gsp", color="Blue")
+    return make_trace(x, y, truth=True, name="GSP", color="Blue")
 
 
-def get_trace_all_gsps(gsp: GSP, example_index: int) -> List[go.Scatter]:
+def get_trace_all_gsps(
+    gsp: GSP, example_index: int, plot_other_gsp: bool = False
+) -> List[go.Scatter]:
     """Produce plot of centroid GSP"""
 
     traces = []
     x = gsp.time[example_index]
-    n_gsps = gsp.power_mw.shape[2]
+    if plot_other_gsp:
+        n_gsps = gsp.power_mw.shape[2]
 
-    # make the lines a little bit see-through
-    opacity = (1 / n_gsps) ** 0.25
+        # make the lines a little bit see-through
+        opacity = (1 / n_gsps) ** 0.25
 
-    for gsp_index in range(1, n_gsps):
-        y = gsp.power_normalized[example_index, :, gsp_index]
+        for gsp_index in range(1, n_gsps):
+            y = gsp.power_normalized[example_index, :, gsp_index]
 
-        gsp_id = gsp.id[example_index, gsp_index].values
-        truth = False
+            gsp_id = gsp.id[example_index, gsp_index].values
+            truth = False
 
-        if ~np.isnan(gsp_id):
-            gsp_id = int(gsp_id)
-            name = f"GSP {gsp_id}"
+            if ~np.isnan(gsp_id):
+                gsp_id = int(gsp_id)
+                name = f"GSP {gsp_id}"
 
-            traces.append(make_trace(x, y, truth=truth, name=name, color="Green", opacity=opacity))
+                traces.append(
+                    make_trace(
+                        x, y, truth=truth, name=name, color="Green", opacity=opacity, mode="lines"
+                    )
+                )
 
     centroid_trace = get_trace_centroid_gsp(gsp=gsp, example_index=example_index)
     centroid_trace["legendrank"] = 1
@@ -69,35 +80,29 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
 def get_trace_gsp_intensity_one_time_step(gsp: GSP, example_index: int, t_index: int):
     """Get trace of pv intensity map"""
     time = gsp.time[example_index]
-    x = gsp.x_coords[example_index]
-    y = gsp.y_coords[example_index]
-    gsp_id = gsp.id[example_index].values
+    gsp_id = gsp.id[example_index, 0].values
+    name = str(time[t_index].data)
 
-    n_gsp_systems = gsp.power_mw.shape[2]
+    # get shape from eso
+    gsp_shape = get_gsp_metadata_from_eso().to_crs("EPSG:4326")
+    gsp_metadata = get_gsp_metadata_from_eso()
 
-    lat, lon = osgb_to_lat_lon(x=x, y=y)
+    # select first GSP system
+    gsp_metadata = gsp_metadata[gsp_metadata["gsp_id"] == gsp_id]
+    gsp_shape = gsp_shape[gsp_shape.RegionID.isin(gsp_metadata.region_id)]
 
-    z = gsp.power_normalized[example_index, t_index, :]
-    name = time[t_index].data
-    z = z.fillna(0)
+    # add z axis for colour
+    gsp_shape["Amount"] = gsp.power_normalized[example_index, t_index, 0].values
 
-    if z.max() > 0:
-        size = 200 * z
-    else:
-        size = 0
+    # get json object
+    shapes_dict = json.loads(gsp_shape.to_json())
 
-    lat = np.round(lat, 4)
-    lon = np.round(lon, 4)
-
-    text = [f"GSP {gsp_id}: {z.values:.2f}" for z, gsp_id in zip(z, gsp_id)]
-
-    # TODO change this to use GSP boundaries #55
-    trace = go.Scattermapbox(
-        lat=lat,
-        lon=lon,
-        marker=dict(color=["Blue"] + ["Green"] * (n_gsp_systems - 1), size=size, sizemode="area"),
-        name=str(name),
-        text=text,
+    trace = go.Choroplethmapbox(
+        geojson=shapes_dict,
+        locations=gsp_shape.index,
+        z=gsp_shape.Amount,
+        colorscale="Viridis",
+        name=name,
     )
 
     return trace
