@@ -266,7 +266,7 @@ def run_metrics(y_hat: pd.Series, y: pd.Series, name: str) -> dict:
     std_absolute_error = (y - y_hat).abs().std()
     n_data = len(y)
     if n_data > 0:
-        ci_absolute_error = std_absolute_error / (n_data ** 0.5)
+        ci_absolute_error = std_absolute_error / (n_data**0.5)
     else:
         ci_absolute_error = np.nan
 
