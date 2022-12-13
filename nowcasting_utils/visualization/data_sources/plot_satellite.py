@@ -152,7 +152,7 @@ def make_animation_all_channels(satellite: Satellite, example_index: int):
         traces_all.append(traces)
 
     # make subplot
-    n_cols = int(np.ceil(n_channels ** 0.5))
+    n_cols = int(np.ceil(n_channels**0.5))
     n_rows = int(np.ceil(n_channels / n_cols))
     print(n_cols, n_rows)
 

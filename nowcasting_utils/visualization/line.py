@@ -99,7 +99,7 @@ def plot_batch_results(
         x_hat = x
 
     batchsize = y.shape[0]
-    N = int(np.ceil(batchsize ** 0.5))
+    N = int(np.ceil(batchsize**0.5))
 
     subplot_titles = [str(i) for i in range(batchsize)]
 
