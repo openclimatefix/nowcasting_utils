@@ -51,6 +51,12 @@ def make_validation_results(
     # TODO #64 vectorize
     n_forecast_timesteps = predictions_mw.shape[1]
     for i in range(n_forecast_timesteps):
+
+        if len(capacity_mwp.shape) == 1:
+            capacity_time_step = capacity_mwp
+        else:
+            capacity_time_step = capacity_mwp[:, i]
+
         predictions_mw_df = pd.DataFrame(
             predictions_mw[:, i], columns=["forecast_gsp_pv_outturn_mw"]
         )
@@ -60,7 +66,7 @@ def make_validation_results(
         )
         predictions_mw_df["gsp_id"] = gsp_ids
         predictions_mw_df["t0_datetime_utc"] = t0_datetimes_utc
-        predictions_mw_df["capacity_mwp"] = capacity_mwp[:, i]
+        predictions_mw_df["capacity_mwp"] = capacity_time_step
 
         results_per_forecast_horizon.append(predictions_mw_df)
 
