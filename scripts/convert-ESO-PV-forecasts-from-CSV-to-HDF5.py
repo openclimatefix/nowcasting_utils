@@ -16,19 +16,21 @@ Each DataArray has three dimensions:
 
 1. `gsp_name`: A string identifying the Grid Supply Point region.
 2. `forecast_date_time`: The UTC datetime when ESO ran their forecast.
-    The `forecast_date_time` will be a little time (about an hour or two?)
+    The `forecast_date_time` will be about an hour or two
     after the initialisation time of the numerical weather predictions
     fed into ESO's forecasting algorithm.  This script takes the floor('30T') of the
     original forecast_date_time from ESO.  `forecast_date_time` tells us when ESO
     ran their PV forecast. The `target_date_time` (the time that each forecast is
     _about_) can be calculated as the sum of `forecast_date_time` and `step`.
+    The `step` is computed after taking the floor('30T') of the `forecast_date_time`,
+    so the re-computed `target_date_time` should be correct.
     To give a little more background:  For most forecasts, any given row is identified
     by _two_ datetimes:  The datetime that the forecast was run (the `forecast_date_time`);
     and the datetime that the forecast is _about_ (the `target_date_time`).
 3. `step`: The Timedelta between the forecast_date_time and the target_date_time.
 
 It's not possible to append to NetCDF files, so this script loads everything into memory,
-and strip away stuff we don't need, and maintain a list of xr.DataSets to be concatenated.
+and strips away stuff we don't need, and maintains a list of xr.DataSets to be concatenated.
 """
 
 from pathlib import Path
@@ -61,7 +63,7 @@ def filenames_and_datetime_periods(path: Path) -> pd.Series:
     """Gets all CSV filenames in `path`.
 
     Returns a Series where the Index is a pd.PeriodIndex at monthly frequency,
-    and the values at the full Path to the CSV file.  The index is sorted.
+    and the values are the full Path to the CSV file.  The index is sorted.
 
     This is the header and first line of an ESO CSVs:
 
@@ -167,10 +169,10 @@ def convert_to_dataarray(df: pd.DataFrame) -> xr.DataArray:
     df = df.drop(columns="TARGET_DATE_TIME")
 
     # Make sure "step" is positive:
-    # (step can be negative for ASL forecasts, for some reasons).
+    # (step can be negative for ASL forecasts. I don't know why!).
     df = df[df.step >= pd.Timedelta(0)]
 
-    # Rename to more column names more like the ones we're used to.
+    # Rename to column names more like the ones we're used to in OCF.
     df = df.rename(columns={"SITE_ID": "gsp_name"})
 
     # Set index
