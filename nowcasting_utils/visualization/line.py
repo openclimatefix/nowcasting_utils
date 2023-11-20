@@ -118,7 +118,6 @@ def plot_batch_results(
     fig.layout.annotations[-1]["yanchor"] = "bottom"
 
     for i in range(0, batchsize):
-
         row = i // N + 1
         col = i % N + 1
 

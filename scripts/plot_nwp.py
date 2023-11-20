@@ -52,7 +52,6 @@ nwp = batch.nwp
 
 # loop over examples
 for example_index in range(5, 6):
-
     x = nwp.x[example_index].mean()
     y = nwp.y[example_index].mean()
 

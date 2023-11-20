@@ -26,7 +26,6 @@ satellite = batch.satellite
 
 # loop over examples
 for example_index in range(11, 13):
-
     x = satellite.x[example_index].mean()
     y = satellite.y[example_index].mean()
 
