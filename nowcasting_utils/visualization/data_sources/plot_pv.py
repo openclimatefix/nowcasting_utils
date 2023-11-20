@@ -64,7 +64,6 @@ def get_traces_pv_intensity(pv: PV, example_index: int):
     traces = [go.Choroplethmapbox(colorscale="Viridis")]
 
     for t_index in range(len(time)):
-
         trace = get_trace_pv_intensity_one_time_step(
             pv=pv, example_index=example_index, t_index=t_index
         )

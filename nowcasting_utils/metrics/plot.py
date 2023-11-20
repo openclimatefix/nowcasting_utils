@@ -63,7 +63,6 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[g
     forecast_horizon_metrics = {}
     # loop over the number of forecast horizons
     for i in range(n_forecast_hoirzons):
-
         forecast_horizon = (i + 1) * time_delta
         forecast_horizon_hours = forecast_horizon.seconds / 3600
 
@@ -92,7 +91,6 @@ def make_forecast_horizon_metrics(results_df, normalize: bool = False) -> List[g
     trace_forecast_horizons = []
     # loop over the different columns / metrics and plot them
     for i in range(len(plotting_metrics)):
-
         col = plotting_metrics[i]
         colour = colours[i]
 
@@ -127,7 +125,6 @@ def make_gsp_id_metrics(
     n_gsp_ids = int(results_df["gsp_id"].max())
     gsp_metrics = {}
     for i in range(n_gsp_ids):
-
         gsp_id = i + 1
 
         results_df_one_forecast_hoirzon = results_df[results_df["gsp_id"] == gsp_id]
@@ -146,7 +143,6 @@ def make_gsp_id_metrics(
     # plot metrics
     trace_gsp_id = []
     for i in range(len(plotting_metrics)):
-
         col = plotting_metrics[i]
         colour = colours[i]
 
@@ -202,7 +198,6 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
         )
 
     for i in range(len(target_datetimes_utc)):
-
         target_datetime_utc = target_datetimes_utc[i]
 
         results_df_one_datetime = results_df[
@@ -221,7 +216,6 @@ def make_t0_datetime_utc_metrics(results_df, normalize: bool = False) -> (go.Sca
     # plot metrics
     trace_gsp_id = []
     for i in range(len(plotting_metrics)):
-
         col = plotting_metrics[i]
         colour = colours[i]
 

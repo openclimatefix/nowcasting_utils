@@ -68,7 +68,6 @@ def get_traces_gsp_intensity(gsp: GSP, example_index: int):
     traces = []
 
     for t_index in range(len(time)):
-
         trace = get_trace_gsp_intensity_one_time_step(
             gsp=gsp, example_index=example_index, t_index=t_index
         )

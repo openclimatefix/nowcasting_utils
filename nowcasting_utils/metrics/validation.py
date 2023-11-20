@@ -51,7 +51,6 @@ def make_validation_results(
     # TODO #64 vectorize
     n_forecast_timesteps = predictions_mw.shape[1]
     for i in range(n_forecast_timesteps):
-
         if len(capacity_mwp.shape) == 1:
             capacity_time_step = capacity_mwp
         else:

@@ -28,7 +28,6 @@ all_indexes = good_index + medium_index + bad_index
 traces = []
 subplot_titles = []
 for i in range(len(all_indexes)):
-
     print(i)
 
     index = all_indexes[i] % 32
